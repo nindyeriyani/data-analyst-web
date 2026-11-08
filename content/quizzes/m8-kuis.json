@@ -1,0 +1,167 @@
+[
+  {
+    "question": "Dalam metode STAR, bagian yang seharusnya paling panjang adalah…",
+    "options": [
+      "Action: apa yang Anda lakukan, langkah demi langkah",
+      "Situation",
+      "Task",
+      "Result"
+    ],
+    "answer": 0,
+    "explanation": "Pewawancara ingin tahu kontribusi Anda sendiri. Konteks cukup singkat, tindakan dijelaskan rinci, lalu hasil dengan angka."
+  },
+  {
+    "question": "Jawaban terbaik untuk \"Apa kelemahan Anda?\" adalah…",
+    "options": [
+      "\"Saya terlalu perfeksionis.\"",
+      "Kelemahan nyata yang sedang diperbaiki, dengan contoh langkahnya",
+      "\"Saya tidak punya kelemahan.\"",
+      "Kelemahan yang tidak berhubungan dengan pekerjaan sama sekali"
+    ],
+    "answer": 1,
+    "explanation": "Jawaban klise atau mengelak terdengar tidak jujur. Kelemahan nyata dengan rencana perbaikan menunjukkan kesadaran diri."
+  },
+  {
+    "question": "Pewawancara bertanya: \"Penjualan turun 20% bulan ini. Apa yang Anda periksa?\" Langkah pertama yang paling tepat adalah…",
+    "options": [
+      "Langsung menyalahkan pesaing",
+      "Membuat dashboard baru",
+      "Memastikan datanya benar dan lengkap, lalu memecah penurunan per dimensi",
+      "Menyarankan diskon besar"
+    ],
+    "answer": 2,
+    "explanation": "Cek dulu kualitas data (data terlambat masuk, perubahan definisi), lalu cari di mana penurunan terkonsentrasi: kanal, wilayah, kategori, jenis pelanggan."
+  },
+  {
+    "question": "Saat tidak tahu jawaban sebuah pertanyaan teknis di wawancara, sebaiknya…",
+    "options": [
+      "Menebak dengan yakin",
+      "Mengalihkan ke topik lain",
+      "Diam saja",
+      "Mengakui dengan jujur, lalu menjelaskan cara Anda akan mencari tahu dan mengujinya"
+    ],
+    "answer": 3,
+    "explanation": "Kejujuran dan cara berpikir untuk mencari tahu lebih dihargai daripada jawaban salah yang disampaikan dengan yakin."
+  },
+  {
+    "question": "Pola soal SQL \"tiga produk terlaris di setiap kategori\" biasanya diselesaikan dengan…",
+    "options": [
+      "ROW_NUMBER() atau RANK() dengan PARTITION BY kategori",
+      "GROUP BY saja",
+      "LEFT JOIN ... IS NULL",
+      "DISTINCT"
+    ],
+    "answer": 0,
+    "explanation": "Window function memberi peringkat di dalam setiap kategori, lalu difilter di query luar."
+  },
+  {
+    "question": "Soal SQL \"pelanggan yang belum pernah memesan\" biasanya diselesaikan dengan…",
+    "options": [
+      "INNER JOIN",
+      "LEFT JOIN lalu WHERE kolom dari tabel pesanan IS NULL",
+      "ORDER BY DESC",
+      "HAVING COUNT(*) > 0"
+    ],
+    "answer": 1,
+    "explanation": "LEFT JOIN mempertahankan semua pelanggan; yang tidak punya pasangan pesanan memiliki kolom pesanan NULL."
+  },
+  {
+    "question": "Di menit ke-15 dari batas 20 menit, query Anda belum benar. Strategi terbaik adalah…",
+    "options": [
+      "Menghapus semua lalu mulai dari awal",
+      "Menyerah tanpa menulis apa pun",
+      "Menulis solusi paling mendekati dan menjelaskan bagian yang belum selesai",
+      "Menyalin jawaban dari internet"
+    ],
+    "answer": 2,
+    "explanation": "Solusi parsial yang dijelaskan dengan baik sering tetap dinilai, karena menunjukkan cara berpikir."
+  },
+  {
+    "question": "Di latihan take-home, pesanan naik 36% tetapi pendapatan hanya naik 21%. Penjelasan yang paling tepat adalah…",
+    "options": [
+      "Datanya pasti salah",
+      "Pengunjung turun",
+      "Konversi turun",
+      "Nilai rata-rata pesanan turun karena diskon"
+    ],
+    "answer": 3,
+    "explanation": "Pendapatan = pesanan × nilai rata-rata pesanan. Diskon menurunkan nilai rata-rata sekitar 11%, sehingga kenaikan pendapatan lebih kecil dari kenaikan pesanan."
+  },
+  {
+    "question": "Informasi apa yang paling dibutuhkan untuk menilai apakah promo itu menguntungkan?",
+    "options": [
+      "Biaya diskon, biaya iklan, dan margin",
+      "Warna banner promo",
+      "Jumlah karyawan",
+      "Nama pelanggan"
+    ],
+    "answer": 0,
+    "explanation": "Pendapatan yang naik belum tentu menguntungkan. Tanpa biaya dan margin, keuntungan tidak bisa dihitung."
+  },
+  {
+    "question": "Kenapa perbandingan dua minggu sebelum dan dua minggu selama promo belum membuktikan promo penyebab kenaikan?",
+    "options": [
+      "Karena dua minggu terlalu lama",
+      "Karena bukan eksperimen acak; faktor lain seperti musim atau tanggal gajian bisa ikut berpengaruh",
+      "Karena data harian tidak bisa dijumlahkan",
+      "Karena kanalnya ada dua"
+    ],
+    "answer": 1,
+    "explanation": "Perbandingan sebelum dan sesudah rentan terhadap faktor lain. A/B test dengan pembagian acak memberi bukti yang lebih kuat."
+  },
+  {
+    "question": "Lowongan meminta lima keterampilan, dan Anda menguasai empat di antaranya. Sebaiknya…",
+    "options": [
+      "Tidak melamar",
+      "Menulis di CV bahwa Anda menguasai kelimanya",
+      "Melamar, dan menonjolkan keterampilan yang dikuasai serta kemauan belajar yang kelima",
+      "Mengirim CV tanpa membaca lowongan"
+    ],
+    "answer": 2,
+    "explanation": "Daftar syarat sering berisi keinginan. Melamar dengan jujur tetap layak; jangan menulis keterampilan yang tidak dikuasai."
+  },
+  {
+    "question": "Cara menyesuaikan CV untuk satu lowongan yang paling tepat adalah…",
+    "options": [
+      "Mengganti desain CV setiap kali",
+      "Menambahkan semua kata kunci lowongan walaupun tidak dikuasai",
+      "Memperpanjang CV menjadi tiga halaman",
+      "Memakai istilah yang sama dengan lowongan untuk keterampilan yang memang Anda kuasai, dan mengurutkan proyek yang paling relevan di atas"
+    ],
+    "answer": 3,
+    "explanation": "ATS dan perekrut mencari kecocokan kata kunci, tetapi semua yang tertulis harus bisa dipertanggungjawabkan saat wawancara."
+  },
+  {
+    "question": "Kesalahan yang paling cepat membuat lamaran ditolak adalah…",
+    "options": [
+      "Salah menyebut nama perusahaan di surat lamaran",
+      "Surat lamaran tiga paragraf",
+      "Melampirkan tautan portofolio",
+      "Menyebut pengalaman magang"
+    ],
+    "answer": 0,
+    "explanation": "Nama perusahaan yang salah menunjukkan surat ditulis tanpa perhatian. Selalu periksa sebelum mengirim."
+  },
+  {
+    "question": "Fungsi pelacak lamaran adalah…",
+    "options": [
+      "Menggantikan CV",
+      "Mencatat setiap lamaran, statusnya, dan jadwal tindak lanjut",
+      "Menyimpan data internal magang",
+      "Mengirim lamaran otomatis"
+    ],
+    "answer": 1,
+    "explanation": "Dengan pelacak, Anda tahu lamaran mana yang perlu ditindaklanjuti dan bisa belajar dari polanya."
+  },
+  {
+    "question": "Menceritakan proyek portofolio dalam dua menit sebaiknya berurutan…",
+    "options": [
+      "Daftar alat, lalu kode",
+      "Hasil, lalu kesulitan teknis",
+      "Pertanyaan, data dan metode, temuan, lalu rekomendasi dan pelajaran",
+      "Riwayat pendidikan, lalu proyek"
+    ],
+    "answer": 2,
+    "explanation": "Urutan ini mudah diikuti pendengar dan menonjolkan cara berpikir, bukan hanya alat."
+  }
+]
