@@ -296,7 +296,7 @@ Centang setiap tahap yang selesai.
 - [x] 4. Komponen kuis.
 - [x] 5. Halaman modul dengan sidebar.
 - [x] 6. Dashboard lengkap.
-- [ ] 7. Jadwal, glosarium, sumber.
+- [x] 7. Jadwal, glosarium, sumber.
 - [ ] 8. Supabase: migrasi, auth magic link, middleware, sinkronisasi progres, rubrik, catatan, tautan, nama pengguna.
 - [ ] 9. Rapikan tampilan di HP, uji alur lengkap, deploy produksi.
 - [ ] 10. Lengkapi seluruh isi materi dan kuis per modul.

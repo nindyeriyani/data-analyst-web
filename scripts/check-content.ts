@@ -4,6 +4,8 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { MODULES, SECTIONS, COURSE_ITEMS, BADGE_ITEMS, sumMinutes } from "../content/course.ts";
+import { GLOSSARY } from "../content/glossary.ts";
+import { RESOURCE_GROUPS } from "../content/resources.ts";
 import { TOTAL_WEEKS, formatHours, formatShort, formatWeekRange, weekEnd } from "../lib/schedule.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -93,6 +95,30 @@ for (const file of readdirSync(QUIZZES_DIR).filter((f) => f.endsWith(".json"))) 
   });
   if (questions.length < QUIZ_BANK_SIZE) {
     warnings.push(`${where}: bank soal baru ${questions.length}, target ${QUIZ_BANK_SIZE}`);
+  }
+}
+
+// --- Glosarium dan sumber ------------------------------------------------------
+
+const moduleIds = new Set(MODULES.map((m) => m.id));
+const terms = new Set<string>();
+for (const entry of GLOSSARY) {
+  const key = entry.term.toLowerCase();
+  if (terms.has(key)) errors.push(`glosarium: istilah "${entry.term}" ganda`);
+  terms.add(key);
+  if (entry.moduleId && !moduleIds.has(entry.moduleId)) {
+    errors.push(`glosarium: "${entry.term}" merujuk modul "${entry.moduleId}" yang tidak ada`);
+  }
+  if (!entry.definition.trim()) errors.push(`glosarium: "${entry.term}" tanpa definisi`);
+}
+
+const urls = new Set<string>();
+for (const group of RESOURCE_GROUPS) {
+  if (group.resources.length === 0) warnings.push(`sumber: kelompok "${group.title}" kosong`);
+  for (const r of group.resources) {
+    if (!r.url.startsWith("https://")) errors.push(`sumber: "${r.title}" harus memakai https`);
+    if (urls.has(r.url)) errors.push(`sumber: URL ganda ${r.url}`);
+    urls.add(r.url);
   }
 }
 
