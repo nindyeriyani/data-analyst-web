@@ -251,7 +251,7 @@ export const MODULES: Module[] = [
     description:
       "Python untuk analisis data di Google Colab: dasar bahasa, pandas untuk membersihkan dan meringkas data, dan grafik dengan matplotlib.",
     objectives: [
-      "Menulis Python dasar dengan memanfaatkan pengalaman JavaScript.",
+      "Menulis Python dasar: tipe data, list, dictionary, kondisi, perulangan, dan fungsi.",
       "Membaca, memfilter, dan meringkas data dengan pandas.",
       "Membersihkan data: nilai kosong, duplikat, tipe data, dan teks.",
       "Menggabungkan tabel dengan merge dan meringkas dengan groupby serta pivot_table.",
@@ -260,7 +260,7 @@ export const MODULES: Module[] = [
     weeks: [5, 6],
     items: [
       { id: "m3-intro", type: "intro", title: "Pengantar Python untuk analisis data", minutes: 10, week: 5, section: "mulai" },
-      { id: "m3-python-js", type: "reading", title: "Python untuk orang yang sudah paham JavaScript", minutes: 45, week: 5, section: "pelajari" },
+      { id: "m3-python-dasar", type: "reading", title: "Dasar Python untuk analisis", minutes: 45, week: 5, section: "pelajari" },
       {
         id: "m3-kaggle-python", type: "course", title: "Kaggle Learn: Python", minutes: 180, week: 5, section: "pelajari",
         url: "https://www.kaggle.com/learn/python",
@@ -502,7 +502,7 @@ export const MODULES: Module[] = [
       {
         id: "m7-situs", type: "reading", title: "Situs portofolio sederhana", minutes: 60, week: 11, section: "pelajari",
         url: "https://pages.github.com/",
-        note: "Pilih GitHub Pages atau Vercel. Pengalaman front-end Anda jadi nilai tambah di sini.",
+        note: "Pilih GitHub Pages atau Vercel. Keduanya gratis untuk situs statis.",
       },
       {
         id: "m7-cv", type: "reading", title: "CV data analyst", minutes: 60, week: 11, section: "pelajari",

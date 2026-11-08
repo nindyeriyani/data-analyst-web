@@ -154,3 +154,11 @@ export function formatHours(minutes: number): string {
   // Koma desimal ditulis manual agar hasil server dan browser selalu sama.
   return `≈ ${String(hours).replace(".", ",")} jam`;
 }
+
+/** Durasi item: "15 menit", "2 jam", "1 jam 30 menit". */
+export function formatDuration(minutes: number): string {
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  if (hours === 0) return `${rest} menit`;
+  return rest === 0 ? `${hours} jam` : `${hours} jam ${rest} menit`;
+}

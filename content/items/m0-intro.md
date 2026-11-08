@@ -17,8 +17,8 @@ Kursus ini membawa Anda dari dasar spreadsheet sampai portofolio dan lamaran ker
 3. Tandai item selesai setelah benar-benar dikerjakan, bukan sekadar dibaca.
 4. Setiap item punya tenggat hari Minggu di minggunya. Kalau tertinggal, kejar dulu item yang paling lama.
 
-> [!fe] Keunggulan front-end Anda
-> Anda sudah terbiasa membaca dokumentasi, memecahkan error, dan berpikir dalam struktur data seperti array dan objek. Ketiganya dipakai setiap hari oleh data analyst. Tabel di SQL dan DataFrame di pandas pada dasarnya adalah array berisi objek.
+> [!tip] Kebiasaan yang langsung terpakai
+> Membaca dokumentasi, membaca pesan error dengan teliti, dan mencoba lagi dengan perubahan kecil adalah kebiasaan yang dipakai data analyst setiap hari, baik di spreadsheet, SQL, maupun Python. Latih ketiganya sejak minggu pertama.
 
 ## Tiga aturan selama kursus
 

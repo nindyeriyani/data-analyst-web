@@ -2,14 +2,7 @@
 
 Data di database jarang tersimpan dalam satu tabel besar. Pesanan ada di tabel `orders`, data pelanggan ada di tabel `customers`. Keduanya dihubungkan oleh kolom yang sama, biasanya sebuah id. `JOIN` menggabungkan baris dari dua tabel berdasarkan kolom penghubung itu.
 
-> [!fe] Keunggulan front-end Anda
-> Kalau pernah menggabungkan dua array di JavaScript, Anda sudah paham idenya:
->
-> ```js
-> orders.map(o => ({ ...o, customer: customers.find(c => c.id === o.customer_id) }))
-> ```
->
-> Itu kira-kira sama dengan `LEFT JOIN`. Bedanya, database melakukannya jauh lebih cepat untuk jutaan baris.
+Cara kerjanya: untuk setiap baris di `orders`, database mencari baris di `customers` yang `customer_id`-nya sama, lalu menempelkan kolom-kolom pelanggan di samping baris pesanan itu. Hasilnya satu tabel baru yang berisi kolom dari kedua tabel.
 
 ## Data latihan
 

@@ -10,7 +10,7 @@ Aplikasi ini adalah pelacak belajar sekaligus wadah materi: dashboard progres, m
 
 ### Tentang pelajar (konteks untuk materi dan contoh)
 
-- Latar belakang front-end (HTML, CSS, JavaScript). Pernah belajar SQL dasar. Pernah memakai Python, tapi sebagian besar dibantu AI.
+- Latar belakang front-end (HTML, CSS, JavaScript), hanya sebagai konteks dan bukan bahan perumpamaan (lihat aturan materi di bawah). Pernah belajar SQL dasar. Pernah memakai Python, tapi sebagian besar dibantu AI.
 - Sedang magang sebagai data analyst di instansi pemerintahan sampai 9 Februari 2027. Di sana tidak ada orang teknis maupun IT.
 - Memakai MacBook, sehingga Power BI Desktop tidak dipakai. Alat dashboard: Tableau Public dan Looker Studio.
 - Fokus Python (bukan R). Seluruh jalur belajar gratis.
@@ -114,8 +114,8 @@ Isi materi item ada di `content/items/<itemId>.md`. Kalau file tidak ada, halama
 ### Format Markdown materi
 
 - Markdown biasa plus tabel GFM dan blok kode.
+- Jangan memakai perumpamaan atau perbandingan dengan front-end, JavaScript, HTML, atau CSS di materi, kuis, maupun `note`. Jelaskan konsep data secara langsung dengan contoh data.
 - Callout memakai sintaks gaya GitHub alert:
-  - `> [!fe] Judul` untuk kotak “Keunggulan front-end Anda” (warna oranye).
   - `> [!tip] Judul` untuk tips (warna biru).
   - `> [!warning] Judul` untuk peringatan (warna merah muda).
 - Kunci jawaban yang disembunyikan memakai `<details><summary>Cek jawaban</summary>…</details>`.
@@ -254,12 +254,12 @@ create policy "own settings" on public.settings
 ## Desain
 
 - Bersih, mudah dibaca, nyaman untuk sesi belajar panjang. Layout dan pola mengikuti aplikasi kursus Katie (dashboard, kartu modul berwarna per fase, sidebar modul).
-- Warna (light mode):
+- Warna:
   - Latar `#F3F6F6`, permukaan `#FFFFFF`, teks `#12282C`, teks sekunder `#566A6E`, garis `#DAE3E4`.
   - Aksi utama `#0D6B62`.
   - Fase 1 `#0E7C72` (hijau toska), fase 2 `#4A43C6` (ungu), fase 3 `#AD540F` (oranye).
   - Selesai `#157A3A`, tertinggal `#B42318`.
-- Dark mode mengikuti pengaturan perangkat (`prefers-color-scheme`), definisikan semua warna sebagai CSS variables yang dipakai lewat Tailwind.
+- Aplikasi selalu tampil dalam mode terang (tanpa dark mode). Definisikan semua warna sebagai CSS variables yang dipakai lewat Tailwind.
 - Responsif sampai layar HP. Fokus keyboard terlihat. Hormati `prefers-reduced-motion`.
 - Teks antarmuka memakai huruf kapital di awal kalimat saja (sentence case), tanpa label huruf kapital semua.
 
@@ -285,11 +285,11 @@ Centang setiap tahap yang selesai.
 
 - [x] 1. Inisialisasi Next.js + TypeScript + Tailwind, font, CSS variables dan dark mode, header, deploy pertama ke Vercel.
 - [x] 2. Model konten: `course.ts` dengan semua modul dan item, `lib/schedule.ts`, beberapa file materi dan kuis contoh.
-- [ ] 3. Halaman item: render markdown, callout, tombol salin data csv, kartu tautan keluar.
+- [x] 3. Halaman item: render markdown, callout, tombol salin data csv, kartu tautan keluar.
 - [ ] 4. Komponen kuis.
 - [ ] 5. Halaman modul dengan sidebar.
 - [ ] 6. Dashboard lengkap.
 - [ ] 7. Jadwal, glosarium, sumber.
 - [ ] 8. Supabase: migrasi, auth magic link, middleware, sinkronisasi progres, rubrik, catatan, tautan, nama pengguna.
-- [ ] 9. Rapikan tampilan di HP dan dark mode, uji alur lengkap, deploy produksi.
+- [ ] 9. Rapikan tampilan di HP, uji alur lengkap, deploy produksi.
 - [ ] 10. Lengkapi seluruh isi materi dan kuis per modul.
