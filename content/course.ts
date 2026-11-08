@@ -92,7 +92,7 @@ export const MODULES: Module[] = [
         note: "Tugas harian, alat yang dipakai, dan perbedaan data analyst dengan data scientist dan data engineer.",
       },
       {
-        id: "m0-alur", type: "reading", title: "Alur analisis: tanya, siapkan, olah, analisis, bagikan", minutes: 30, week: 1, section: "pelajari",
+        id: "m0-alur", type: "reading", title: "Alur analisis: tanya, siapkan, olah, analisis, bagikan, bertindak", minutes: 30, week: 1, section: "pelajari",
         note: "Enam langkah yang dipakai di setiap proyek kursus ini, dari merumuskan pertanyaan sampai menyampaikan temuan.",
       },
       {
