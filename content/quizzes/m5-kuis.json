@@ -1,0 +1,167 @@
+[
+  {
+    "question": "Pertanyaan \"Kecamatan mana yang permohonannya paling banyak?\" paling tepat dijawab dengan…",
+    "options": [
+      "Grafik batang yang diurutkan",
+      "Grafik garis",
+      "Pie dengan 20 irisan",
+      "Histogram"
+    ],
+    "answer": 0,
+    "explanation": "Perbandingan antarkategori paling mudah dibaca dengan batang yang diurutkan dari besar ke kecil."
+  },
+  {
+    "question": "Kenapa sumbu angka pada grafik batang sebaiknya dimulai dari nol?",
+    "options": [
+      "Agar grafik lebih berwarna",
+      "Karena panjang batang dibaca sebagai besaran; sumbu terpotong membesar-besarkan perbedaan",
+      "Karena Tableau mewajibkannya",
+      "Agar label tidak tumpang tindih"
+    ],
+    "answer": 1,
+    "explanation": "Pembaca membandingkan panjang batang. Kalau sumbu dimulai dari 90, selisih kecil terlihat berlipat."
+  },
+  {
+    "question": "Pie chart paling pantas dipakai ketika…",
+    "options": [
+      "Ada 12 kategori",
+      "Ingin menunjukkan tren bulanan",
+      "Hanya ada dua atau tiga bagian dari satu keseluruhan",
+      "Ingin membandingkan dua angka yang tidak berhubungan"
+    ],
+    "answer": 2,
+    "explanation": "Mata sulit membandingkan sudut. Untuk banyak bagian, grafik batang lebih akurat."
+  },
+  {
+    "question": "Grafik dengan dua sumbu y dalam satu gambar berisiko karena…",
+    "options": [
+      "Tidak bisa dibuat di Tableau",
+      "Butuh data tanggal",
+      "Warnanya terlalu sedikit",
+      "Skala kedua sumbu bisa diatur sehingga hubungan apa pun tampak ada"
+    ],
+    "answer": 3,
+    "explanation": "Dengan skala bebas, dua garis bisa dibuat tampak berimpit atau berjauhan sesuka hati. Pisahkan menjadi dua grafik."
+  },
+  {
+    "question": "Judul grafik mana yang paling baik?",
+    "options": [
+      "Medan tertinggal jauh: pendapatannya seperempat Surabaya",
+      "Grafik pendapatan per kota",
+      "Pendapatan",
+      "Data kota Q3"
+    ],
+    "answer": 0,
+    "explanation": "Judul yang menyatakan temuan memberi tahu pembaca apa yang harus dilihat. Angka di judul harus dicek ke data."
+  },
+  {
+    "question": "Cara menyorot satu kategori penting di grafik batang adalah…",
+    "options": [
+      "Memberi setiap batang warna berbeda",
+      "Satu warna kuat untuk kategori itu, abu-abu untuk sisanya",
+      "Menambahkan efek 3D",
+      "Memperbesar semua label"
+    ],
+    "answer": 1,
+    "explanation": "Kontras warna mengarahkan mata pembaca langsung ke hal yang penting."
+  },
+  {
+    "question": "Struktur cerita data yang disarankan adalah…",
+    "options": [
+      "Grafik, grafik, grafik",
+      "Metode, kode, lampiran",
+      "Konteks, temuan, rekomendasi",
+      "Judul, legenda, catatan kaki"
+    ],
+    "answer": 2,
+    "explanation": "Konteks menjelaskan kenapa penting, temuan memberi bukti, rekomendasi memberi langkah berikutnya."
+  },
+  {
+    "question": "Total pendapatan bulanan turun, tetapi setelah dipecah per kanal, satu kanal justru tumbuh. Pelajarannya adalah…",
+    "options": [
+      "Total selalu menyesatkan, jangan dipakai",
+      "Kanal yang tumbuh pasti salah data",
+      "Grafik garis tidak cocok untuk tren",
+      "Memecah data per kelompok bisa mengungkap cerita yang tersembunyi di angka total"
+    ],
+    "answer": 3,
+    "explanation": "Angka total menyembunyikan arah yang berbeda di dalam kelompok. Pecah per dimensi penting sebelum menyimpulkan."
+  },
+  {
+    "question": "Kenapa sebaiknya tidak hanya mengandalkan merah dan hijau untuk membedakan status di dashboard?",
+    "options": [
+      "Sebagian orang buta warna merah-hijau; tambahkan label atau ikon",
+      "Merah dan hijau tidak tersedia di Looker Studio",
+      "Warna membuat file lebih besar",
+      "Hijau selalu berarti buruk"
+    ],
+    "answer": 0,
+    "explanation": "Identitas atau status sebaiknya tidak bergantung pada warna saja."
+  },
+  {
+    "question": "Di dashboard, kartu skor (scorecard) biasanya diletakkan…",
+    "options": [
+      "Di paling bawah sebagai lampiran",
+      "Di bagian atas sebagai angka kunci sebelum grafik rinci",
+      "Di halaman terpisah",
+      "Di dalam tooltip"
+    ],
+    "answer": 1,
+    "explanation": "Pembaca membaca dari kiri atas. Angka kunci di atas memberi gambaran cepat sebelum rincian."
+  },
+  {
+    "question": "Apa yang terjadi saat workbook disimpan ke Tableau Public?",
+    "options": [
+      "Workbook hanya bisa dilihat pemiliknya",
+      "Data tidak ikut tersimpan",
+      "Workbook dan datanya dapat diakses siapa saja",
+      "Workbook otomatis terhapus setelah 30 hari"
+    ],
+    "answer": 2,
+    "explanation": "Dokumentasi Tableau menyebutkan workbook dan data di profil Tableau Public tidak bersifat privat. Jangan memakai data internal."
+  },
+  {
+    "question": "Di Tableau, kolom kategori seperti kota dan kanal biasanya disebut…",
+    "options": [
+      "Measure",
+      "Calculated field",
+      "Extract",
+      "Dimension"
+    ],
+    "answer": 3,
+    "explanation": "Dimension untuk kategori dan tanggal; measure untuk angka yang bisa diringkas."
+  },
+  {
+    "question": "Fitur Tableau yang membuat klik pada satu grafik memfilter grafik lain di dashboard adalah…",
+    "options": [
+      "Use as Filter",
+      "Show Me",
+      "Extract",
+      "Swap Sheets"
+    ],
+    "answer": 0,
+    "explanation": "Mengaktifkan Use as Filter pada sheet di dashboard menjadikan tandanya filter untuk sheet lain."
+  },
+  {
+    "question": "Kontrol rentang tanggal di Looker Studio (Data Studio) membutuhkan…",
+    "options": [
+      "Data dari BigQuery saja",
+      "Minimal satu sumber data dengan field bertipe tanggal",
+      "Akun berbayar",
+      "Grafik pie di halaman yang sama"
+    ],
+    "answer": 1,
+    "explanation": "Dokumentasi menyebutkan setidaknya satu sumber data di laporan harus punya dimensi tanggal."
+  },
+  {
+    "question": "Laporan Looker Studio untuk data instansi tempat magang sebaiknya dibuat…",
+    "options": [
+      "Di akun Google pribadi agar mudah dipamerkan",
+      "Di Tableau Public agar bisa dilihat publik",
+      "Dengan akun instansi, dan data tetap di Sheets atau Drive instansi",
+      "Dengan menyalin data ke laptop pribadi"
+    ],
+    "answer": 2,
+    "explanation": "Data instansi harus tetap di lingkungan instansi; portofolio cukup memuat cerita dan sketsa tanpa data internal."
+  }
+]
