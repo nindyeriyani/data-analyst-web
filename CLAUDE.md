@@ -306,5 +306,5 @@ Centang setiap tahap yang selesai.
 - [x] 6. Dashboard lengkap.
 - [x] 7. Jadwal, glosarium, sumber.
 - [x] 8. Supabase: migrasi, auth magic link, proxy, sinkronisasi progres, rubrik, catatan, tautan, nama pengguna, penguncian modul.
-- [ ] 9. Rapikan tampilan di HP, uji alur lengkap, deploy produksi.
-- [ ] 10. Lengkapi seluruh isi materi dan kuis per modul.
+- [x] 9. Rapikan tampilan di HP, uji alur lengkap, deploy produksi.
+- [x] 10. Lengkapi seluruh isi materi dan kuis per modul.
