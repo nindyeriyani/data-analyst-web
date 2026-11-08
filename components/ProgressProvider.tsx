@@ -27,7 +27,7 @@ import {
 } from "@/lib/schedule";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
-import { DISPLAY_NAME } from "@/lib/user";
+import { DISPLAY_NAME, avatarUrlOf, providerFirstNameOf } from "@/lib/user";
 
 /** Satu baris item_state (tanpa user_id dan item_id). */
 export interface ItemRow {
@@ -59,6 +59,8 @@ interface ProgressValue {
   updateItem: (itemId: string, patch: ItemPatch, options?: { debounceMs?: number }) => Promise<boolean>;
   displayName: string;
   email: string | null;
+  /** Foto profil dari akun Google yang tersambung, atau null. */
+  avatarUrl: string | null;
   setDisplayName: (name: string) => Promise<boolean>;
   /** Jadwal yang berlaku. Null saat render di server (tanggal hari ini belum diketahui). */
   schedule: Schedule | null;
@@ -92,6 +94,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   const [userId, setUserId] = useState<string | null>(null);
   const userIdRef = useRef<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [displayName, setDisplayNameState] = useState(DISPLAY_NAME);
   // Pengaturan jadwal tersimpan (null = belum diatur, pakai bawaan).
   const [savedStart, setSavedStart] = useState<DateString | null>(null);
@@ -143,6 +146,10 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       userIdRef.current = userData.user.id;
       setUserId(userData.user.id);
       setEmail(userData.user.email ?? null);
+      setAvatarUrl(avatarUrlOf(userData.user));
+      // Nama dari Google dipakai kalau pengguna belum mengatur nama panggilan.
+      const providerName = providerFirstNameOf(userData.user);
+      if (providerName) setDisplayNameState(providerName);
       if (settings.data?.display_name) setDisplayNameState(settings.data.display_name);
       if (typeof settings.data?.start_date === "string") setSavedStart(settings.data.start_date);
       if (typeof settings.data?.target_weeks === "number") setSavedWeeks(settings.data.target_weeks);
@@ -301,6 +308,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       updateItem,
       displayName,
       email,
+      avatarUrl,
       setDisplayName,
       schedule,
       scheduleIsCustom: savedStart !== null,
@@ -317,6 +325,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       updateItem,
       displayName,
       email,
+      avatarUrl,
       setDisplayName,
       schedule,
       savedStart,

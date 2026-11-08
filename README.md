@@ -38,6 +38,21 @@ Template email bawaan Supabase tidak perlu diubah (dan memang terkunci tanpa cus
 
 Catatan: tanpa custom SMTP, Supabase hanya mengirim email ke alamat anggota tim organisasi Supabase. Pakai email akun Supabase Anda sebagai `ALLOWED_EMAIL`.
 
+### Masuk dengan Google (opsional, untuk foto profil)
+
+Login Google memakai email yang sama dengan `ALLOWED_EMAIL`, sehingga tersambung otomatis ke akun yang sudah ada (progres tetap sama). Foto dan nama dari akun Google dipakai di header.
+
+1. **Google Cloud Console** (console.cloud.google.com): buat project baru, misalnya `kursus-data-analyst`.
+2. **Google Auth Platform, Branding**: isi nama aplikasi dan email dukungan.
+3. **Audience**: pilih External. Selama status Testing, tambahkan email Anda sebagai test user.
+4. **Clients, Create client**: tipe Web application.
+   - Authorized JavaScript origins: `https://<domain-vercel>` dan `http://localhost:3000`
+   - Authorized redirect URIs: Callback URL yang tertera di Supabase (langkah 5), biasanya `https://<id-proyek>.supabase.co/auth/v1/callback`
+   - Klik Create, lalu salin Client ID dan Client Secret.
+5. **Supabase, Authentication, Sign In / Providers, Google**: aktifkan, isi Client ID dan Client Secret, lalu Save. Callback URL untuk langkah 4 tertera di halaman ini.
+
+Redirect URLs di URL Configuration (langkah 7 di atas) sudah mencakup `/auth/callback**`, jadi tidak perlu diubah.
+
 ### Jika ada masalah
 
 - **"Gagal memuat progres" atau galat izin (permission denied) di konsol.** Proyek Supabase baru kadang tidak otomatis membuka tabel ke API. Jalankan di SQL Editor:

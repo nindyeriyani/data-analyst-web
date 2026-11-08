@@ -19,7 +19,7 @@ export default function LoginPage() {
 
         <div className="rounded-2xl border border-line bg-surface p-6">
           <h1 className="text-xl font-bold text-text">Masuk</h1>
-          <p className="mt-1 mb-5 text-sm text-muted">Kami kirim tautan masuk ke email Anda, tanpa kata sandi.</p>
+          <p className="mt-1 mb-5 text-sm text-muted">Masuk dengan akun Google, atau dengan tautan yang dikirim ke email. Tanpa kata sandi.</p>
 
           {configured ? (
             <Suspense>

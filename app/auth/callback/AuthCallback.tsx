@@ -36,6 +36,13 @@ export default function AuthCallback() {
     const tokenHash = params.get("token_hash");
     const type = params.get("type") as EmailOtpType | null;
     const code = params.get("code");
+    // Galat dari penyedia login, misalnya akun Google yang tidak punya akses.
+    const providerError = params.get("error") ?? hash.get("error");
+    if (providerError) {
+      window.history.replaceState(null, "", window.location.pathname);
+      window.location.replace("/login?error=akses");
+      return;
+    }
 
     (async () => {
       let ok = false;
