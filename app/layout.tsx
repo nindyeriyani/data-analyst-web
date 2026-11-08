@@ -16,12 +16,12 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Kursus Data Analyst",
-    template: "%s · Kursus Data Analyst",
+    default: "Data Analyst",
+    template: "%s · Data Analyst",
   },
   description: "Pelacak belajar menjadi data analyst, dengan jadwal yang Anda atur sendiri.",
   robots: { index: false, follow: false },
-  appleWebApp: { capable: true, title: "Kursus DA", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "Data Analyst", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {

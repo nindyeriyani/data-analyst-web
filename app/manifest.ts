@@ -3,8 +3,8 @@ import type { MetadataRoute } from "next";
 // Manifest agar aplikasi bisa ditambahkan ke layar utama HP dan dibuka tanpa bilah alamat.
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Kursus Data Analyst",
-    short_name: "Kursus DA",
+    name: "Data Analyst",
+    short_name: "Data Analyst",
     description: "Pelacak belajar menjadi data analyst, dengan jadwal yang Anda atur sendiri.",
     lang: "id",
     start_url: "/",

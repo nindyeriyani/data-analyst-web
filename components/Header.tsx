@@ -13,7 +13,7 @@ export default function Header() {
           className="-my-2 flex items-center gap-2 py-2 font-semibold text-text"
         >
           <Logo />
-          <span>Kursus Data Analyst</span>
+          <span>Data Analyst</span>
         </Link>
 
         <nav aria-label="Navigasi utama" className="ml-auto hidden md:block">

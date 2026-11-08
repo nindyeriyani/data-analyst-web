@@ -14,7 +14,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="mb-6 flex items-center justify-center gap-2 font-semibold text-text">
           <Logo />
-          <span>Kursus Data Analyst</span>
+          <span>Data Analyst</span>
         </div>
 
         <div className="rounded-2xl border border-line bg-surface p-6">

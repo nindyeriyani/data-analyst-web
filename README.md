@@ -1,4 +1,4 @@
-# Kursus Data Analyst
+# Data Analyst
 
 Aplikasi web pribadi untuk belajar menjadi data analyst dalam 12 minggu. Panduan lengkap proyek ada di [CLAUDE.md](CLAUDE.md).
 

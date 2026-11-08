@@ -1,4 +1,4 @@
-# CLAUDE.md — Kursus Data Analyst
+# CLAUDE.md — Data Analyst
 
 File ini adalah panduan proyek untuk Claude Code. Baca seluruhnya sebelum mengerjakan apa pun.
 
@@ -174,7 +174,7 @@ Sumber belajar utama (semua gratis): Kaggle Learn, SQLBolt, BigQuery sandbox, Go
 ## Halaman dan fitur
 
 ### Header (semua halaman)
-Logo dan judul “Kursus Data Analyst”, navigasi Dashboard, Jadwal, Glosarium, Sumber, lalu inisial nama pengguna. Di layar kecil, navigasi pindah ke bar bawah.
+Logo dan judul “Data Analyst”, navigasi Dashboard, Jadwal, Glosarium, Sumber, lalu inisial nama pengguna. Di layar kecil, navigasi pindah ke bar bawah.
 
 ### Dashboard (`/`)
 1. Sapaan “Halo, {nama}” dengan tanggal mulai atau minggu berjalan (dan tautan “Atur jadwal” selama jadwal masih bawaan), tombol “Lanjutkan: {item berikutnya}” (item pertama yang belum selesai, urut tenggat), dan tombol “Lihat jadwal”.
