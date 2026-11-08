@@ -1,0 +1,167 @@
+[
+  {
+    "question": "Kode df[\"harga\"].str.replace(\".\", \"\") dengan regex=True mengubah \"Rp 1.500\" menjadi…",
+    "options": [
+      "\"\" (teks kosong)",
+      "\"Rp 1500\"",
+      "\"1500\"",
+      "\"Rp 1.500\""
+    ],
+    "answer": 0,
+    "explanation": "Dengan regex, titik berarti \"karakter apa saja\", sehingga semua karakter terhapus. Pakai regex=False untuk mengganti titik apa adanya."
+  },
+  {
+    "question": "Kolom berisi 2026-03-02 dan 03/03/2026 (hari/bulan/tahun). Cara paling aman mengubahnya menjadi tanggal adalah…",
+    "options": [
+      "pd.to_datetime(kolom, format=\"mixed\", dayfirst=True)",
+      "Membaca setiap format secara eksplisit dengan errors=\"coerce\", lalu menggabungkan hasilnya dengan fillna",
+      "Membiarkannya sebagai teks",
+      "astype(int)"
+    ],
+    "answer": 1,
+    "explanation": "Pembacaan otomatis dengan dayfirst bisa salah membaca tanggal ISO tanpa pesan galat. Membaca per format membuat hasilnya bisa dipastikan."
+  },
+  {
+    "question": "Nilai kepuasan dengan skala 1–5 ada yang bernilai 0 dan 6. Penanganan yang paling bisa dipertanggungjawabkan adalah…",
+    "options": [
+      "Membulatkan 0 menjadi 1 dan 6 menjadi 5",
+      "Menghapus seluruh kolom",
+      "Mengubahnya menjadi kosong (NaN) dan mencatat keputusannya",
+      "Membiarkannya agar rata-rata tetap lengkap"
+    ],
+    "answer": 2,
+    "explanation": "Maksud nilai di luar skala tidak bisa ditebak. Mengosongkannya dan mencatat keputusan lebih jujur daripada mengarang nilai."
+  },
+  {
+    "question": "df.duplicated().sum() menghasilkan 2. Artinya…",
+    "options": [
+      "Ada 2 kolom kembar",
+      "Ada 2 nilai kosong",
+      "Ada 2 baris yang unik",
+      "Ada 2 baris yang identik dengan baris sebelumnya"
+    ],
+    "answer": 3,
+    "explanation": "duplicated() menandai baris yang sama persis dengan baris yang sudah muncul sebelumnya."
+  },
+  {
+    "question": "Kode df.groupby(\"kategori\")[\"pendapatan\"].sum() setara dengan SQL…",
+    "options": [
+      "SELECT kategori, SUM(pendapatan) FROM df GROUP BY kategori",
+      "SELECT SUM(pendapatan) FROM df",
+      "SELECT kategori FROM df ORDER BY pendapatan",
+      "SELECT * FROM df WHERE kategori = pendapatan"
+    ],
+    "answer": 0,
+    "explanation": "groupby mengelompokkan, lalu sum() meringkas setiap kelompok, persis seperti GROUP BY dengan SUM."
+  },
+  {
+    "question": "Apa fungsi bentuk agg(pesanan=(\"id_pesanan\", \"count\"), pendapatan=(\"pendapatan\", \"sum\"))?",
+    "options": [
+      "Menggabungkan dua tabel",
+      "Membuat beberapa ringkasan sekaligus dengan nama kolom hasil yang jelas",
+      "Mengurutkan hasil",
+      "Menghapus kolom id_pesanan"
+    ],
+    "answer": 1,
+    "explanation": "Named aggregation memberi nama setiap hasil ringkasan, sehingga tabel hasil langsung mudah dibaca."
+  },
+  {
+    "question": "Di pivot_table, apa guna fill_value=0?",
+    "options": [
+      "Menghapus baris yang kosong",
+      "Membuat semua nilai menjadi nol",
+      "Mengisi kombinasi baris dan kolom yang tidak punya data dengan 0",
+      "Menambahkan baris total"
+    ],
+    "answer": 2,
+    "explanation": "Tanpa fill_value, kombinasi yang tidak ada tampil sebagai NaN. Baris total ditambahkan dengan margins=True."
+  },
+  {
+    "question": "Tabel a berisi kunci 1, 2, 3. Tabel b berisi kunci 2, 3, 3, 4. Berapa baris hasil a.merge(b, on=\"kunci\", how=\"left\")?",
+    "options": [
+      "3",
+      "5",
+      "2",
+      "4"
+    ],
+    "answer": 3,
+    "explanation": "Semua baris a dipertahankan; kunci 3 cocok dua kali di b sehingga muncul dua kali: 1 (tanpa pasangan), 2, 3, 3."
+  },
+  {
+    "question": "Setelah merge, jumlah baris bertambah dari 100 menjadi 130 tanpa diduga. Penyebab yang paling mungkin adalah…",
+    "options": [
+      "Ada kunci ganda di salah satu tabel",
+      "merge selalu menambah 30%",
+      "Kolom kunci bertipe tanggal",
+      "Ada nilai kosong di kolom angka"
+    ],
+    "answer": 0,
+    "explanation": "Kunci yang muncul lebih dari sekali membuat baris pasangannya digandakan, sama seperti JOIN di SQL."
+  },
+  {
+    "question": "Padanan LEFT JOIN di pandas adalah…",
+    "options": [
+      "merge(..., how=\"inner\")",
+      "merge(..., how=\"left\")",
+      "concat(...)",
+      "groupby(...)"
+    ],
+    "answer": 1,
+    "explanation": "how=\"left\" mempertahankan semua baris tabel kiri dan mengisi NaN bila tidak ada pasangan."
+  },
+  {
+    "question": "Pertanyaan \"Bagaimana pendapatan berubah dari Juli sampai September?\" paling tepat digambarkan dengan…",
+    "options": [
+      "ax.hist(...)",
+      "ax.pie(...)",
+      "ax.plot(...) (grafik garis)",
+      "ax.scatter(...) tanpa urutan waktu"
+    ],
+    "answer": 2,
+    "explanation": "Perubahan dari waktu ke waktu paling mudah dibaca sebagai grafik garis."
+  },
+  {
+    "question": "Kegunaan histogram adalah…",
+    "options": [
+      "Membandingkan total antarkategori",
+      "Menunjukkan bagian dari keseluruhan",
+      "Menampilkan tren bulanan",
+      "Menunjukkan bagaimana nilai-nilai tersebar"
+    ],
+    "answer": 3,
+    "explanation": "Histogram mengelompokkan nilai ke dalam rentang (bins) dan menghitung banyaknya nilai di setiap rentang."
+  },
+  {
+    "question": "Judul grafik mana yang paling baik untuk laporan?",
+    "options": [
+      "Novel menyumbang pendapatan terbesar",
+      "Grafik 1",
+      "Pendapatan",
+      "Hasil groupby kategori"
+    ],
+    "answer": 0,
+    "explanation": "Judul yang menyatakan temuan memberi tahu pembaca apa yang harus dilihat."
+  },
+  {
+    "question": "Kenapa angka pendapatan dibagi 1.000.000 dan label sumbu ditulis \"Pendapatan (juta rupiah)\"?",
+    "options": [
+      "Agar grafik berjalan lebih cepat",
+      "Agar angka di sumbu ringkas dan mudah dibaca",
+      "Karena matplotlib tidak bisa menampilkan angka besar",
+      "Agar nilainya berubah menjadi persen"
+    ],
+    "answer": 1,
+    "explanation": "Angka seperti 2.610.000 sulit dibaca di sumbu; 2,61 dengan satuan juta jauh lebih jelas."
+  },
+  {
+    "question": "Dua dari 8 pendaftar tidak mengisi usia. Untuk analisis per kelompok usia, pilihan yang paling jujur adalah…",
+    "options": [
+      "Isi dengan 0",
+      "Isi dengan usia tertua",
+      "Biarkan kosong dan sebutkan bahwa 2 dari 8 tidak mengisi usia",
+      "Hapus seluruh dataset"
+    ],
+    "answer": 2,
+    "explanation": "Mengisi usia berarti menebak data orang. Membiarkan kosong sambil menyebutkan keterbatasannya lebih bisa dipertanggungjawabkan."
+  }
+]

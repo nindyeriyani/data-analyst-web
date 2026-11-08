@@ -1,0 +1,167 @@
+[
+  {
+    "question": "Apa hasil dari \"12\" + \"3\" di Python?",
+    "options": [
+      "\"123\"",
+      "15",
+      "Galat",
+      "\"12 3\""
+    ],
+    "answer": 0,
+    "explanation": "Tanda kutip membuat keduanya teks, dan + pada teks berarti menyambung. Ini sebabnya angka yang tersimpan sebagai teks berbahaya."
+  },
+  {
+    "question": "Dengan harga = [10, 20, 30], apa hasil harga[-1]?",
+    "options": [
+      "10",
+      "30",
+      "20",
+      "Galat karena indeks negatif"
+    ],
+    "answer": 1,
+    "explanation": "Indeks negatif dihitung dari belakang; -1 adalah elemen terakhir."
+  },
+  {
+    "question": "Struktur Python mana yang paling cocok untuk menyimpan satu baris data, misalnya satu pesanan dengan kolom kota dan jumlah?",
+    "options": [
+      "List",
+      "String",
+      "Dictionary",
+      "Boolean"
+    ],
+    "answer": 2,
+    "explanation": "Dictionary menyimpan pasangan kunci dan nilai, misalnya {\"kota\": \"Bandung\", \"jumlah\": 2}, sehingga setiap nilai punya nama."
+  },
+  {
+    "question": "Di Python, apa yang menentukan baris mana yang termasuk isi sebuah if atau for?",
+    "options": [
+      "Kurung kurawal",
+      "Titik koma di akhir baris",
+      "Kata kunci end",
+      "Indentasi (biasanya empat spasi)"
+    ],
+    "answer": 3,
+    "explanation": "Python memakai indentasi untuk menandai blok. Indentasi yang salah bisa menghasilkan IndentationError atau logika yang keliru."
+  },
+  {
+    "question": "Apa hasil dari [h * 2 for h in [1, 2, 3] if h > 1]?",
+    "options": [
+      "[4, 6]",
+      "[2, 4, 6]",
+      "[1, 4, 6]",
+      "[2, 3]"
+    ],
+    "answer": 0,
+    "explanation": "List comprehension mengambil h yang lebih dari 1 (2 dan 3), lalu mengalikannya dengan 2."
+  },
+  {
+    "question": "Perintah pandas mana yang menampilkan nama kolom, tipe data, dan banyaknya nilai tidak kosong?",
+    "options": [
+      "df.head()",
+      "df.info()",
+      "df.describe()",
+      "df.shape"
+    ],
+    "answer": 1,
+    "explanation": "info() merangkum struktur DataFrame; describe() merangkum statistik kolom angka; head() menampilkan baris pertama."
+  },
+  {
+    "question": "Kenapa df[[\"kota\", \"jumlah\"]] memakai kurung siku ganda?",
+    "options": [
+      "Agar hasilnya diurutkan",
+      "Agar kolom dihapus",
+      "Karena beberapa nama kolom diberikan sebagai list",
+      "Agar hasilnya berupa angka"
+    ],
+    "answer": 2,
+    "explanation": "Kurung luar untuk memilih dari DataFrame, kurung dalam adalah list nama kolom."
+  },
+  {
+    "question": "Penulisan filter pandas yang benar untuk Bandung DAN jumlah minimal 3 adalah…",
+    "options": [
+      "df[df[\"kota\"] == \"Bandung\" and df[\"jumlah\"] >= 3]",
+      "df[df[\"kota\"] == \"Bandung\" & df[\"jumlah\"] >= 3]",
+      "df.filter(\"kota = Bandung AND jumlah >= 3\")",
+      "df[(df[\"kota\"] == \"Bandung\") & (df[\"jumlah\"] >= 3)]"
+    ],
+    "answer": 3,
+    "explanation": "pandas memakai & untuk DAN, dan setiap syarat wajib diberi kurung."
+  },
+  {
+    "question": "Padanan WHERE kota IN ('Medan', 'Jakarta') di pandas adalah…",
+    "options": [
+      "df[df[\"kota\"].isin([\"Medan\", \"Jakarta\"])]",
+      "df[df[\"kota\"] == [\"Medan\", \"Jakarta\"]]",
+      "df.loc[\"Medan\", \"Jakarta\"]",
+      "df[\"kota\"].unique()"
+    ],
+    "answer": 0,
+    "explanation": ".isin() memeriksa apakah setiap nilai ada di dalam daftar."
+  },
+  {
+    "question": "Apa yang terjadi saat menjalankan df[\"pendapatan\"] = df[\"jumlah\"] * df[\"harga_satuan\"]?",
+    "options": [
+      "Hanya baris pertama yang dihitung",
+      "Kolom baru dibuat dan dihitung untuk semua baris sekaligus",
+      "Galat karena perlu perulangan for",
+      "Kolom jumlah tertimpa"
+    ],
+    "answer": 1,
+    "explanation": "Operasi pada kolom pandas berlaku untuk seluruh baris sekaligus, tanpa perulangan."
+  },
+  {
+    "question": "Kolom tanggal terbaca sebagai teks setelah read_csv. Apa akibatnya?",
+    "options": [
+      "Tidak ada, pandas otomatis mengerti tanggal",
+      "Kolom tidak bisa ditampilkan",
+      "Bulan dan selisih hari tidak bisa dihitung sampai diubah dengan pd.to_datetime",
+      "Baris dengan tanggal terhapus"
+    ],
+    "answer": 2,
+    "explanation": "Teks hanya bisa diurutkan seperti kata. Setelah pd.to_datetime, Anda bisa memakai .dt.month, to_period, atau menghitung selisih."
+  },
+  {
+    "question": "Seri pandas berisi 100, 200, dan NaN. Apa hasil .mean()?",
+    "options": [
+      "100",
+      "NaN",
+      "Galat",
+      "150"
+    ],
+    "answer": 3,
+    "explanation": "Fungsi ringkasan pandas melewatkan NaN secara bawaan, sehingga rata-ratanya (100 + 200) / 2 = 150."
+  },
+  {
+    "question": "df[\"besar\"] berisi True, False, True. Apa hasil df[\"besar\"].sum()?",
+    "options": [
+      "2",
+      "3",
+      "True",
+      "Galat"
+    ],
+    "answer": 0,
+    "explanation": "True dihitung sebagai 1 dan False sebagai 0, jadi sum() menghitung banyaknya baris yang memenuhi syarat."
+  },
+  {
+    "question": "File yang diunggah lewat panel Files di Google Colab…",
+    "options": [
+      "Tersimpan permanen di Google Drive",
+      "Hilang ketika sesi atau runtime berakhir",
+      "Otomatis tersimpan di GitHub",
+      "Hanya bisa dibaca oleh SQL"
+    ],
+    "answer": 1,
+    "explanation": "Unggahan di panel Files bersifat sementara. Unggah ulang, atau simpan file di Google Drive."
+  },
+  {
+    "question": "Kenapa notebook sebaiknya diuji dengan Restart session and run all sebelum dibagikan?",
+    "options": [
+      "Agar file lebih kecil",
+      "Agar grafik berwarna",
+      "Untuk memastikan notebook berjalan dari atas ke bawah tanpa bergantung pada urutan menjalankan sel sebelumnya",
+      "Karena GitHub mewajibkannya"
+    ],
+    "answer": 2,
+    "explanation": "Notebook yang hanya berhasil bila sel dijalankan dalam urutan tertentu sulit dipercaya dan sulit diulang orang lain."
+  }
+]
