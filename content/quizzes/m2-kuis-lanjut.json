@@ -1,0 +1,167 @@
+[
+  {
+    "question": "Tabel customers punya 4 pelanggan, satu di antaranya belum pernah memesan. Query customers LEFT JOIN orders menghasilkan baris untuk pelanggan itu dengan kolom dari orders berisi…",
+    "options": [
+      "NULL",
+      "0",
+      "Baris itu tidak muncul",
+      "Nilai dari pesanan terakhir"
+    ],
+    "answer": 0,
+    "explanation": "LEFT JOIN mempertahankan semua baris tabel kiri. Kolom dari tabel kanan yang tidak punya pasangan diisi NULL."
+  },
+  {
+    "question": "Cara paling umum menemukan pelanggan yang belum pernah memesan adalah…",
+    "options": [
+      "INNER JOIN lalu WHERE o.order_id IS NULL",
+      "LEFT JOIN orders lalu WHERE o.order_id IS NULL",
+      "RIGHT JOIN lalu HAVING COUNT(*) = 0",
+      "SELECT DISTINCT customer_id FROM orders"
+    ],
+    "answer": 1,
+    "explanation": "LEFT JOIN menyisakan pelanggan tanpa pesanan dengan kolom pesanan NULL; filter IS NULL mengambil hanya mereka. INNER JOIN justru membuang mereka."
+  },
+  {
+    "question": "Setelah orders (satu baris per pesanan) di-JOIN dengan order_items (satu baris per barang), SUM dari kolom ongkos kirim di tabel orders menjadi terlalu besar. Kenapa?",
+    "options": [
+      "BigQuery membulatkan angka",
+      "SUM tidak boleh dipakai setelah JOIN",
+      "Setiap baris pesanan diulang sebanyak jumlah barangnya",
+      "Ongkos kirim bertipe teks"
+    ],
+    "answer": 2,
+    "explanation": "JOIN satu-ke-banyak mengulang data sisi \"satu\" untuk setiap pasangan di sisi \"banyak\". Ringkas di tabel yang tepat atau di CTE sebelum JOIN."
+  },
+  {
+    "question": "Apa keuntungan utama CTE (WITH) dibandingkan subquery yang bertumpuk?",
+    "options": [
+      "CTE selalu lebih cepat",
+      "CTE bisa mengubah isi tabel",
+      "CTE tidak menghitung kuota BigQuery",
+      "Langkah-langkah query punya nama dan bisa dibaca dari atas ke bawah"
+    ],
+    "answer": 3,
+    "explanation": "CTE membuat query panjang mudah dibaca dan diperiksa per langkah. Kecepatannya umumnya sama dengan subquery."
+  },
+  {
+    "question": "Pada CASE WHEN p >= 300000 THEN 'Besar' WHEN p >= 150000 THEN 'Sedang' ELSE 'Kecil' END, pesanan dengan p = 320000 mendapat label…",
+    "options": [
+      "Besar",
+      "Sedang",
+      "Besar dan Sedang",
+      "Kecil"
+    ],
+    "answer": 0,
+    "explanation": "CASE memeriksa syarat dari atas dan berhenti pada syarat pertama yang benar."
+  },
+  {
+    "question": "Apa beda utama window function dengan GROUP BY?",
+    "options": [
+      "Window function hanya untuk tanggal",
+      "Window function menghitung dari sekelompok baris tetapi tetap mempertahankan setiap baris",
+      "GROUP BY tidak bisa memakai SUM",
+      "Window function selalu lebih cepat"
+    ],
+    "answer": 1,
+    "explanation": "GROUP BY meringkas menjadi satu baris per kelompok, sedangkan window function menambahkan hasil perhitungan ke setiap baris."
+  },
+  {
+    "question": "Ada dua nilai seri di peringkat 2. Urutan peringkat dengan RANK() adalah…",
+    "options": [
+      "1, 2, 2, 3",
+      "1, 2, 3, 4",
+      "1, 2, 2, 4",
+      "1, 1, 2, 3"
+    ],
+    "answer": 2,
+    "explanation": "RANK memberi peringkat sama untuk nilai seri lalu melompati nomor berikutnya. DENSE_RANK tidak melompat (1, 2, 2, 3)."
+  },
+  {
+    "question": "Anda butuh tepat satu pesanan terbesar per kategori walaupun ada nilai seri. Fungsi yang paling tepat adalah…",
+    "options": [
+      "RANK()",
+      "DENSE_RANK()",
+      "COUNT()",
+      "ROW_NUMBER() dengan pengurut kedua"
+    ],
+    "answer": 3,
+    "explanation": "ROW_NUMBER selalu memberi nomor unik. Pengurut kedua seperti id membuat hasilnya konsisten setiap kali dijalankan."
+  },
+  {
+    "question": "Kenapa query berikut galat: SELECT ..., ROW_NUMBER() OVER (...) AS n FROM t WHERE n = 1?",
+    "options": [
+      "WHERE dikerjakan sebelum window function dihitung, jadi n belum ada",
+      "ROW_NUMBER harus ditulis di GROUP BY",
+      "Alias tidak boleh berupa huruf",
+      "WHERE tidak boleh memakai angka"
+    ],
+    "answer": 0,
+    "explanation": "Hitung window function di CTE atau subquery, lalu filter hasilnya di query luar."
+  },
+  {
+    "question": "LAG(pendapatan) OVER (ORDER BY bulan) pada baris bulan pertama menghasilkan…",
+    "options": [
+      "0",
+      "NULL",
+      "Pendapatan bulan pertama itu sendiri",
+      "Galat"
+    ],
+    "answer": 1,
+    "explanation": "Baris pertama tidak punya baris sebelumnya, jadi LAG menghasilkan NULL. Perubahan persen untuk bulan pertama juga NULL."
+  },
+  {
+    "question": "SUM(pendapatan) OVER (ORDER BY bulan) menghasilkan…",
+    "options": [
+      "Total pendapatan semua bulan di setiap baris",
+      "Pendapatan bulan sebelumnya",
+      "Total berjalan dari bulan pertama sampai bulan di baris itu",
+      "Rata-rata pendapatan"
+    ],
+    "answer": 2,
+    "explanation": "Dengan ORDER BY di dalam OVER, SUM menjadi kumulatif. Tanpa ORDER BY, setiap baris berisi total keseluruhan."
+  },
+  {
+    "question": "Di BigQuery, cara yang benar-benar mengurangi data yang dipindai (dan kuota) adalah…",
+    "options": [
+      "Menambahkan LIMIT 10",
+      "Menambahkan ORDER BY",
+      "Memakai SELECT *",
+      "Menyebut kolom yang dibutuhkan saja"
+    ],
+    "answer": 3,
+    "explanation": "BigQuery menghitung data per kolom yang dipindai. LIMIT diterapkan di akhir sehingga tidak mengurangi data yang dibaca."
+  },
+  {
+    "question": "Pertanyaan: kota mana yang punya lebih dari 10 pesanan lewat marketplace? Syarat kanal = 'Marketplace' dan COUNT(*) > 10 masing-masing ditulis di…",
+    "options": [
+      "WHERE dan HAVING",
+      "HAVING dan WHERE",
+      "Keduanya di WHERE",
+      "Keduanya di HAVING"
+    ],
+    "answer": 0,
+    "explanation": "Syarat per baris (kanal) di WHERE sebelum dikelompokkan; syarat atas hasil agregat (COUNT) di HAVING."
+  },
+  {
+    "question": "Setelah JOIN orders dan order_items, banyaknya pesanan unik dihitung dengan…",
+    "options": [
+      "COUNT(*)",
+      "COUNT(DISTINCT o.order_id)",
+      "SUM(o.order_id)",
+      "MAX(o.order_id)"
+    ],
+    "answer": 1,
+    "explanation": "Setelah JOIN, satu pesanan muncul sekali untuk setiap barangnya. COUNT(DISTINCT) menghitung pesanannya, bukan barisnya."
+  },
+  {
+    "question": "Subquery di WHERE jumlah * harga > (SELECT AVG(jumlah * harga) FROM t) dipakai untuk…",
+    "options": [
+      "Menghapus baris yang di bawah rata-rata dari tabel",
+      "Mengubah rata-rata menjadi bilangan bulat",
+      "Memilih baris yang nilainya di atas rata-rata seluruh tabel",
+      "Mengelompokkan baris per rata-rata"
+    ],
+    "answer": 2,
+    "explanation": "Subquery dihitung dulu menjadi satu angka (rata-rata), lalu setiap baris dibandingkan dengan angka itu."
+  }
+]
