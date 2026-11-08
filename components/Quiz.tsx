@@ -10,7 +10,7 @@ import type { QuizQuestion } from "@/lib/content";
 import { QUESTIONS_PER_ATTEMPT } from "@/lib/progress-rules";
 
 /**
- * Status kuis. Bentuk ini yang nanti disimpan di kolom item_state.quiz (tahap 8).
+ * Status kuis, disimpan di kolom item_state.quiz.
  * Semua indeks soal mengacu ke urutan di file JSON, indeks jawaban ke urutan asli options.
  */
 export interface QuizState {
@@ -76,10 +76,37 @@ const BADGE_STYLES: Record<OptionState, string> = {
   locked: "bg-surface-2 text-muted",
 };
 
-export default function Quiz({ itemId, questions: pool }: { itemId: string; questions: QuizQuestion[] }) {
-  const { isCompleted, setCompleted } = useProgress();
+/** Status tersimpan yang valid untuk bank soal ini, atau status kosong. */
+function parseQuizState(raw: unknown, poolSize: number): QuizState {
+  if (!raw || typeof raw !== "object") return EMPTY_STATE;
+  const r = raw as Partial<QuizState>;
+  const isIndexList = (v: unknown): v is number[] =>
+    Array.isArray(v) && v.every((i) => Number.isInteger(i) && i >= 0 && i < poolSize);
+  if (!isIndexList(r.questions) || !isIndexList(r.seen ?? [])) return EMPTY_STATE;
+  return {
+    questions: r.questions,
+    optionOrder: r.optionOrder && typeof r.optionOrder === "object" ? r.optionOrder : {},
+    answers: r.answers && typeof r.answers === "object" ? r.answers : {},
+    seen: r.seen ?? [],
+  };
+}
+
+export default function Quiz({ itemId, questions }: { itemId: string; questions: QuizQuestion[] }) {
+  const { ready, getItem } = useProgress();
+  if (!ready) {
+    return (
+      <section aria-busy="true" className="my-8 rounded-2xl border border-line bg-surface p-5 text-sm text-muted">
+        Memuat kuis…
+      </section>
+    );
+  }
+  return <QuizBody itemId={itemId} pool={questions} initial={parseQuizState(getItem(itemId)?.quiz, questions.length)} />;
+}
+
+function QuizBody({ itemId, pool, initial }: { itemId: string; pool: QuizQuestion[]; initial: QuizState }) {
+  const { isCompleted, updateItem } = useProgress();
   const passed = isCompleted(itemId);
-  const [state, setState] = useState<QuizState>(EMPTY_STATE);
+  const [state, setState] = useState<QuizState>(initial);
   const [announcement, setAnnouncement] = useState("");
   const headingRef = useRef<HTMLHeadingElement>(null);
 
@@ -95,16 +122,20 @@ export default function Quiz({ itemId, questions: pool }: { itemId: string; ques
   // (misalnya ketukan cepat) tidak boleh saling menimpa.
   const latest = useRef<QuizState>(state);
 
-  // Satu-satunya tempat status kuis berubah. Di tahap 8, perubahan ini di-upsert
-  // ke item_state.quiz, dan item ditandai selesai saat kuis lulus.
-  function updateState(next: QuizState) {
+  // Satu-satunya tempat status kuis berubah: tampil langsung, lalu disimpan ke
+  // item_state.quiz. Kuis yang lulus sekaligus menandai item selesai.
+  // Jika penyimpanan gagal, status dikembalikan (pesan galat dari ProgressProvider).
+  function updateState(next: QuizState, passedNow = false) {
+    const previous = latest.current;
     latest.current = next;
     setState(next);
-  }
-
-  // Kuis yang lulus otomatis menandai item selesai.
-  function markPassed() {
-    setCompleted(itemId, true);
+    const patch = passedNow ? { quiz: { ...next }, completed_at: new Date().toISOString() } : { quiz: { ...next } };
+    void updateItem(itemId, patch).then((ok) => {
+      if (!ok && latest.current === next) {
+        latest.current = previous;
+        setState(previous);
+      }
+    });
   }
 
   function start() {
@@ -119,21 +150,22 @@ export default function Quiz({ itemId, questions: pool }: { itemId: string; ques
     if (current.answers[questionIndex] !== undefined) return;
 
     const answers: QuizState["answers"] = { ...current.answers, [questionIndex]: optionIndex };
-    updateState({ ...current, answers });
+    const count = current.questions.length;
+    const doneCount = current.questions.filter((q) => answers[q] !== undefined).length;
+    const score = current.questions.filter((q) => answers[q] === pool[q].answer).length;
+    const finishedNow = doneCount === count;
+    // Lulus sekali sudah cukup; latihan ulang tidak mengubah waktu selesai.
+    updateState({ ...current, answers }, finishedNow && score === count && !passed);
 
     const question = pool[questionIndex];
-    const count = current.questions.length;
     const position = current.questions.indexOf(questionIndex) + 1;
     const isRight = optionIndex === question.answer;
     let message = isRight
       ? `Soal ${position} benar.`
       : `Soal ${position} salah. Jawaban yang benar: ${question.options[question.answer]}.`;
 
-    const doneCount = current.questions.filter((q) => answers[q] !== undefined).length;
-    if (doneCount === count) {
-      const score = current.questions.filter((q) => answers[q] === pool[q].answer).length;
+    if (finishedNow) {
       if (score === count) {
-        markPassed();
         message += ` Percobaan selesai. Nilai ${score} dari ${count}. Kuis lulus.`;
       } else {
         message += ` Percobaan selesai. Nilai ${score} dari ${count}. Perlu nilai sempurna untuk lulus.`;

@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, useRef, type MouseEvent } from "react";
 import ItemTypeIcon from "@/components/ItemTypeIcon";
-import { ItemStatusDot } from "@/components/ProgressBits";
-import { useProgress } from "@/components/ProgressProvider";
+import { ItemStatusDot, LockIcon } from "@/components/ProgressBits";
+import { useModuleLock, useProgress } from "@/components/ProgressProvider";
 import { MODULES, SECTIONS, itemsBySection, moduleNumber, type Module } from "@/content/course";
 import { moduleProgress } from "@/lib/progress-rules";
 import { PHASE_BG } from "@/components/phase-styles";
@@ -18,7 +18,16 @@ function moduleShortLabel(mod: Module): string {
 
 function ModuleCount({ mod }: { mod: Module }) {
   const { completed } = useProgress();
+  const { locked } = useModuleLock(mod.id);
   const { done, total } = moduleProgress(mod, completed);
+  if (locked) {
+    return (
+      <span className="shrink-0 text-muted" title="Terkunci">
+        <LockIcon size={14} />
+        <span className="sr-only">Terkunci</span>
+      </span>
+    );
+  }
   return (
     <span className="shrink-0 text-xs tabular-nums text-muted">
       {done}/{total}

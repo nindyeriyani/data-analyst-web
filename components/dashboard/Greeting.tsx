@@ -5,7 +5,6 @@ import { useProgress } from "@/components/ProgressProvider";
 import { MODULES, getModuleOfItem, moduleNumber } from "@/content/course";
 import { nextDueItem } from "@/lib/progress-rules";
 import { COURSE_START, EXTRA_WEEK, currentWeek, daysUntil, formatLong } from "@/lib/schedule";
-import { DISPLAY_NAME } from "@/lib/user";
 
 function subtitle(today: string | null): string {
   if (today === null) return "Kursus 12 minggu, 9 November 2026 sampai 31 Januari 2027.";
@@ -26,14 +25,14 @@ function subtitle(today: string | null): string {
 }
 
 export default function Greeting() {
-  const { completed, today } = useProgress();
+  const { completed, today, displayName } = useProgress();
   const next = nextDueItem(completed);
   const nextModule = next ? getModuleOfItem(next.id) : undefined;
 
   return (
     <section aria-labelledby="sapaan" className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
       <h1 id="sapaan" className="text-2xl font-bold text-text sm:text-3xl">
-        Halo, {DISPLAY_NAME}
+        Halo, {displayName}
       </h1>
       <p className="mt-2 text-muted">{subtitle(today)}</p>
 

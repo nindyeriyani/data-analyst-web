@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { PHASE_BG } from "@/components/phase-styles";
-import { useProgress } from "@/components/ProgressProvider";
+import { LockIcon } from "@/components/ProgressBits";
+import { useModuleLock, useProgress } from "@/components/ProgressProvider";
 import { MODULES, PHASES, moduleMinutes, moduleNumber, type Module, type PhaseId } from "@/content/course";
 import { MODULE_STATUS_LABELS, moduleProgress, moduleStatus, type ModuleStatus } from "@/lib/progress-rules";
 import { formatHours, formatWeeksRange } from "@/lib/schedule";
@@ -25,6 +26,7 @@ function ModuleCard({ mod }: { mod: Module }) {
   const { completed, today } = useProgress();
   const { done, total } = moduleProgress(mod, completed);
   const status = moduleStatus(mod, completed, today);
+  const { locked } = useModuleLock(mod.id);
   const percent = Math.round((done / total) * 100);
 
   return (
@@ -68,9 +70,16 @@ function ModuleCard({ mod }: { mod: Module }) {
               <span className="text-muted">
                 {done} dari {total} selesai
               </span>
-              <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${STATUS_STYLES[status]}`}>
-                {MODULE_STATUS_LABELS[status]}
-              </span>
+              {locked ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-xs font-semibold text-muted">
+                  <LockIcon size={12} />
+                  Terkunci
+                </span>
+              ) : (
+                <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${STATUS_STYLES[status]}`}>
+                  {MODULE_STATUS_LABELS[status]}
+                </span>
+              )}
             </div>
           </div>
         </div>

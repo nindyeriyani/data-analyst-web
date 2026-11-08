@@ -51,15 +51,19 @@ Jangan pernah memakai service role key atau secret key di kode aplikasi.
 
 ```
 app/
-  layout.tsx              # font, header, tema
-  page.tsx                # Dashboard
-  jadwal/page.tsx
-  glosarium/page.tsx
-  sumber/page.tsx
-  modul/[moduleId]/page.tsx
-  modul/[moduleId]/[itemId]/page.tsx
-  login/page.tsx
-  auth/callback/route.ts  # tukar kode magic link menjadi sesi
+  layout.tsx              # html, font, tema (tanpa header)
+  (kursus)/               # route group: semua halaman yang perlu login
+    layout.tsx            # ProgressProvider, header, navigasi bawah
+    page.tsx              # Dashboard
+    jadwal/page.tsx
+    glosarium/page.tsx
+    sumber/page.tsx
+    pengaturan/page.tsx   # nama panggilan dan tombol keluar
+    modul/[moduleId]/layout.tsx       # sidebar modul
+    modul/[moduleId]/page.tsx
+    modul/[moduleId]/[itemId]/page.tsx
+  login/page.tsx          # form magic link (server action di login/actions.ts)
+  auth/callback/page.tsx  # tukar token dari tautan magic link menjadi sesi (di browser)
 components/               # komponen UI
 content/
   course.ts               # struktur kursus: fase, modul, item (satu sumber kebenaran)
@@ -69,9 +73,10 @@ content/
   resources.ts
 lib/
   schedule.ts             # logika tanggal dan tenggat
-  progress.ts             # baca/tulis progres ke Supabase
+  progress-rules.ts       # aturan progres: status, kunci modul, ringkasan dashboard
   supabase/               # client untuk browser dan server
-middleware.ts             # proteksi semua halaman kecuali /login dan /auth/*
+components/ProgressProvider.tsx  # baca/tulis progres ke Supabase (optimistic)
+proxy.ts                  # pengganti middleware di Next.js 16: proteksi semua halaman kecuali /login dan /auth/*
 supabase/migrations/      # file SQL skema
 ```
 
@@ -238,10 +243,11 @@ create policy "own settings" on public.settings
 
 ### Akses satu pengguna
 
-- Login dengan magic link email di `/login`.
-- `middleware.ts` mengarahkan pengguna yang belum login ke `/login`, dan menolak sesi dengan email selain `ALLOWED_EMAIL`.
-- Setelah akun pemilik dibuat, matikan pendaftaran baru di dashboard Supabase (Authentication, pengaturan sign-up).
-- Daftarkan `http://localhost:3000/auth/callback` dan domain Vercel `/auth/callback` sebagai Redirect URL di Supabase.
+- Login dengan magic link email di `/login`. Server action hanya mengirim tautan jika email sama dengan `ALLOWED_EMAIL`, dengan `shouldCreateUser: false`; pesan yang tampil sama untuk email apa pun.
+- Akun pemilik dibuat sekali di dashboard Supabase (Authentication, Users, Add user, centang Auto Confirm). Pendaftaran baru dimatikan.
+- Tautan memakai alur implicit agar bisa dibuka di perangkat lain dengan template email bawaan Supabase (template tidak bisa diubah tanpa custom SMTP). `emailRedirectTo` berbentuk `<origin>/auth/callback?next=<jalur>`; Supabase menambahkan `#access_token=…&refresh_token=…`, lalu halaman `/auth/callback` (Client Component) memanggil `setSession` di browser. Halaman itu juga menerima `?token_hash=` dan `?code=` sebagai cadangan.
+- `proxy.ts` (Next.js 16 mengganti nama `middleware.ts` menjadi `proxy.ts`) memperbarui sesi, mengarahkan pengguna yang belum login ke `/login?next=…`, menolak sesi dengan email selain `ALLOWED_EMAIL`, dan mengembalikan 404 untuk URL modul atau item yang tidak ada. Identitas diverifikasi dengan `getClaims()`, bukan `getSession()`.
+- Redirect URL di Supabase: `http://localhost:3000/auth/callback**` dan `https://<domain-vercel>/auth/callback**`.
 
 ### Pola sinkronisasi
 
@@ -297,6 +303,6 @@ Centang setiap tahap yang selesai.
 - [x] 5. Halaman modul dengan sidebar.
 - [x] 6. Dashboard lengkap.
 - [x] 7. Jadwal, glosarium, sumber.
-- [ ] 8. Supabase: migrasi, auth magic link, middleware, sinkronisasi progres, rubrik, catatan, tautan, nama pengguna.
+- [x] 8. Supabase: migrasi, auth magic link, proxy, sinkronisasi progres, rubrik, catatan, tautan, nama pengguna, penguncian modul.
 - [ ] 9. Rapikan tampilan di HP, uji alur lengkap, deploy produksi.
 - [ ] 10. Lengkapi seluruh isi materi dan kuis per modul.

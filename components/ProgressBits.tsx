@@ -4,15 +4,36 @@
 // bilah progres modul, label tenggat, tombol lanjutkan, dan tombol tandai selesai.
 
 import Link from "next/link";
-import { useProgress } from "@/components/ProgressProvider";
-import { getModule, type Item } from "@/content/course";
+import { useModuleLock, useProgress } from "@/components/ProgressProvider";
+import { getModule, getModuleOfItem, type Item } from "@/content/course";
 import { itemStatus, moduleProgress, nextItem } from "@/lib/progress-rules";
 import { formatShort, itemDueDate } from "@/lib/schedule";
 
 type ItemRef = Pick<Item, "id" | "title" | "type" | "week">;
 
+function LockIcon({ size = 14 }: { size?: number }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4" />
+    </svg>
+  );
+}
+
+export { LockIcon };
+
 export function ItemCheckbox({ item }: { item: ItemRef }) {
-  const { isCompleted, setCompleted } = useProgress();
+  const { ready, isCompleted, setCompleted } = useProgress();
+  const { locked } = useModuleLock(getModuleOfItem(item.id)?.id);
   const done = isCompleted(item.id);
   const isQuiz = item.type === "quiz";
 
@@ -20,10 +41,16 @@ export function ItemCheckbox({ item }: { item: ItemRef }) {
     <input
       type="checkbox"
       checked={done}
-      disabled={isQuiz}
+      disabled={isQuiz || !ready || locked}
       onChange={(e) => setCompleted(item.id, e.target.checked)}
-      aria-label={`${done ? "Selesai" : "Tandai selesai"}: ${item.title}`}
-      title={isQuiz ? "Selesai otomatis saat kuis lulus dengan nilai sempurna" : undefined}
+      aria-label={`${done ? "Selesai" : "Tandai selesai"}: ${item.title}${locked ? " (modul terkunci)" : ""}`}
+      title={
+        locked
+          ? "Modul ini masih terkunci"
+          : isQuiz
+            ? "Selesai otomatis saat kuis lulus dengan nilai sempurna"
+            : undefined
+      }
       className="size-5 shrink-0 cursor-pointer accent-[var(--done)] disabled:cursor-not-allowed"
     />
   );
@@ -31,7 +58,17 @@ export function ItemCheckbox({ item }: { item: ItemRef }) {
 
 export function ItemStatusDot({ item }: { item: Pick<Item, "id" | "week"> }) {
   const { completed, today } = useProgress();
+  const { locked } = useModuleLock(getModuleOfItem(item.id)?.id);
   const status = itemStatus(item, completed, today);
+
+  if (locked) {
+    return (
+      <span className="flex size-4 shrink-0 items-center justify-center text-muted">
+        <LockIcon size={13} />
+        <span className="sr-only">Terkunci</span>
+      </span>
+    );
+  }
 
   if (status === "done") {
     return (
@@ -118,7 +155,7 @@ export function ContinueButton({ moduleId }: { moduleId: string }) {
 }
 
 export function CompleteButton({ itemId }: { itemId: string }) {
-  const { isCompleted, setCompleted } = useProgress();
+  const { ready, isCompleted, setCompleted } = useProgress();
   const done = isCompleted(itemId);
 
   return (
@@ -137,7 +174,8 @@ export function CompleteButton({ itemId }: { itemId: string }) {
           <button
             type="button"
             onClick={() => setCompleted(itemId, false)}
-            className="ml-auto rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-text transition-colors hover:border-primary hover:text-primary"
+            disabled={!ready}
+            className="ml-auto disabled:opacity-60 rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-text transition-colors hover:border-primary hover:text-primary"
           >
             Batalkan selesai
           </button>
@@ -148,7 +186,8 @@ export function CompleteButton({ itemId }: { itemId: string }) {
           <button
             type="button"
             onClick={() => setCompleted(itemId, true)}
-            className="ml-auto rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
+            disabled={!ready}
+            className="ml-auto disabled:opacity-60 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
           >
             Tandai selesai
           </button>
