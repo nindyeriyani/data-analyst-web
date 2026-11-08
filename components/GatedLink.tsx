@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { useProgress } from "@/components/ProgressProvider";
+import { LOCKS_ENABLED } from "@/lib/progress-rules";
 
 /** Tautan yang terkunci selama item `requiresItemId` (misalnya kuis) belum selesai. */
 export function GatedLink({
@@ -23,7 +24,7 @@ export function GatedLink({
   lockedChildren: ReactNode;
 }) {
   const { isCompleted } = useProgress();
-  if (!isCompleted(requiresItemId)) {
+  if (LOCKS_ENABLED && !isCompleted(requiresItemId)) {
     return (
       <div aria-disabled="true" className={lockedClassName}>
         {lockedChildren}

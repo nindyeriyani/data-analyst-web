@@ -18,7 +18,7 @@ import {
   type ReactNode,
 } from "react";
 import { getModule, type Item } from "@/content/course";
-import { blockingQuizzes } from "@/lib/progress-rules";
+import { LOCKS_ENABLED, blockingQuizzes } from "@/lib/progress-rules";
 import { todayString, type DateString } from "@/lib/schedule";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -292,7 +292,7 @@ export function useProgress(): ProgressValue {
 /** Status kunci sebuah modul. Selama progres dimuat, `ready` false dan `locked` belum pasti. */
 export function useModuleLock(moduleId: string | undefined): { ready: boolean; locked: boolean; blocking: Item[] } {
   const { ready, completed } = useProgress();
-  if (!moduleId || !getModule(moduleId)) return { ready, locked: false, blocking: [] };
+  if (!LOCKS_ENABLED || !moduleId || !getModule(moduleId)) return { ready, locked: false, blocking: [] };
   const blocking = blockingQuizzes(moduleId, completed);
   return { ready, locked: ready && blocking.length > 0, blocking };
 }

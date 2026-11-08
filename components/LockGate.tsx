@@ -8,11 +8,11 @@ import type { ReactNode } from "react";
 import { LockIcon } from "@/components/ProgressBits";
 import { useModuleLock } from "@/components/ProgressProvider";
 import { getModuleOfItem, moduleNumber } from "@/content/course";
-import { quizzesBefore } from "@/lib/progress-rules";
+import { LOCKS_ENABLED, quizzesBefore } from "@/lib/progress-rules";
 
 export default function LockGate({ moduleId, children }: { moduleId: string; children: ReactNode }) {
   const { ready, locked, blocking } = useModuleLock(moduleId);
-  const mayBeLocked = quizzesBefore(moduleId).length > 0;
+  const mayBeLocked = LOCKS_ENABLED && quizzesBefore(moduleId).length > 0;
 
   // Modul tanpa syarat (m0) langsung tampil. Modul lain menunggu progres dimuat
   // agar isi tidak sempat terlihat lalu hilang.

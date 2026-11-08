@@ -22,6 +22,13 @@ import { COURSE_START, TOTAL_WEEKS, isOverdue, weekEnd, type DateString } from "
 /** Jumlah soal per percobaan kuis. Nilai lulus adalah semua soal benar. */
 export const QUESTIONS_PER_ATTEMPT = 5;
 
+/**
+ * Sakelar penguncian. false = semua modul terbuka dan tombol "Berikutnya" di halaman
+ * kuis tidak dikunci (dipakai sementara untuk melihat seluruh isi kursus).
+ * Ubah kembali ke true untuk mengaktifkan penguncian modul.
+ */
+export const LOCKS_ENABLED = false;
+
 /** Kuis di semua modul sebelum moduleId, urut kursus. */
 export function quizzesBefore(moduleId: string): Item[] {
   const index = MODULES.findIndex((m) => m.id === moduleId);
