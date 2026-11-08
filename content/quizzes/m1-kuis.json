@@ -1,0 +1,167 @@
+[
+  {
+    "question": "Manakah yang termasuk prinsip data rapi?",
+    "options": [
+      "Satu baris untuk satu observasi, satu kolom untuk satu variabel",
+      "Setiap bulan ditulis sebagai kolom terpisah",
+      "Subtotal diletakkan setelah setiap kelompok",
+      "Judul laporan ditulis di baris pertama tabel"
+    ],
+    "answer": 0,
+    "explanation": "Data rapi: satu baris satu observasi, satu kolom satu variabel, satu nilai per sel. Bulan sebagai kolom adalah bentuk lebar yang sulit diringkas."
+  },
+  {
+    "question": "Kolom angka terlihat normal, tetapi rata kiri dan tidak ikut dijumlah oleh SUM. Kemungkinan penyebabnya adalah…",
+    "options": [
+      "Kolomnya terlalu sempit",
+      "Angka tersimpan sebagai teks",
+      "Lokal spreadsheet belum diatur",
+      "Ada rumus SUM lain di sheet yang sama"
+    ],
+    "answer": 1,
+    "explanation": "Angka yang tersimpan sebagai teks biasanya rata kiri dan diabaikan SUM tanpa pesan galat. Periksa dengan ISNUMBER, lalu ubah dengan VALUE."
+  },
+  {
+    "question": "Rumus mana yang mengubah \" coblong \" menjadi \"Coblong\"?",
+    "options": [
+      "=UPPER(A2)",
+      "=VALUE(A2)",
+      "=PROPER(TRIM(A2))",
+      "=UNIQUE(A2)"
+    ],
+    "answer": 2,
+    "explanation": "TRIM membuang spasi di depan, belakang, dan spasi ganda; PROPER membuat huruf kapital di awal setiap kata."
+  },
+  {
+    "question": "Pada SUMIFS di Google Sheets, argumen pertama adalah…",
+    "options": [
+      "Syarat pertama",
+      "Rentang syarat pertama",
+      "Nama kolom",
+      "Rentang yang dijumlahkan"
+    ],
+    "answer": 3,
+    "explanation": "SUMIFS(rentang_dijumlah; rentang1; syarat1; ...). Urutannya berbeda dari SUMIF, jadi sering tertukar."
+  },
+  {
+    "question": "Dengan lokal spreadsheet Indonesia, penulisan rumus yang benar adalah…",
+    "options": [
+      "=COUNTIFS(C2:C13; \"Coblong\")",
+      "=COUNTIFS(C2:C13, \"Coblong\")",
+      "=COUNTIFS(C2:C13 \"Coblong\")",
+      "=COUNTIFS(C2:C13: \"Coblong\")"
+    ],
+    "answer": 0,
+    "explanation": "Lokal yang memakai koma sebagai desimal, termasuk Indonesia, memisahkan argumen dengan titik koma."
+  },
+  {
+    "question": "XLOOKUP menghasilkan #N/A padahal nilainya terlihat ada di tabel. Penyebab yang paling mungkin adalah…",
+    "options": [
+      "Tabel pencarian terlalu panjang",
+      "Ada perbedaan kecil seperti spasi tambahan atau ejaan",
+      "XLOOKUP tidak bisa mencari teks",
+      "Rentang hasil harus berada di sebelah kiri"
+    ],
+    "answer": 1,
+    "explanation": "XLOOKUP mencari kecocokan persis secara bawaan. Spasi di belakang atau ejaan berbeda membuat nilai tidak ditemukan. Bersihkan dulu dengan TRIM."
+  },
+  {
+    "question": "Kenapa rentang tabel pencarian di XLOOKUP biasanya ditulis dengan tanda $, misalnya $I$2:$I$4?",
+    "options": [
+      "Agar hasilnya berformat mata uang",
+      "Agar rumus lebih cepat dihitung",
+      "Agar rentangnya tidak bergeser saat rumus ditarik ke bawah",
+      "Agar XLOOKUP mencari dari bawah ke atas"
+    ],
+    "answer": 2,
+    "explanation": "Tanda $ membuat referensi absolut. Tanpanya, rentang ikut bergeser setiap kali rumus disalin ke baris lain."
+  },
+  {
+    "question": "Laporan memakai sel yang digabung (merge) untuk nama kecamatan. Apa akibatnya untuk analisis?",
+    "options": [
+      "Tidak ada, hanya tampilan",
+      "Pivot table menghitung dua kali",
+      "Grafik otomatis menjadi pie",
+      "Filter dan pivot table hanya membaca sel pertama sehingga baris lain dianggap kosong"
+    ],
+    "answer": 3,
+    "explanation": "Nilai sel gabungan hanya tersimpan di sel pertama. Baris lainnya kosong, sehingga filter dan ringkasan menjadi salah."
+  },
+  {
+    "question": "Untuk menghitung banyaknya permohonan per kecamatan di pivot table, kolom id diringkas dengan…",
+    "options": [
+      "COUNTA",
+      "SUM",
+      "AVERAGE",
+      "MAX"
+    ],
+    "answer": 0,
+    "explanation": "COUNTA menghitung sel yang berisi apa pun, termasuk teks seperti id. SUM pada kolom teks menghasilkan 0."
+  },
+  {
+    "question": "Pertanyaan \"Bagaimana jumlah pengunjung perpustakaan dari Januari sampai Desember?\" paling tepat ditampilkan dengan…",
+    "options": [
+      "Pie",
+      "Grafik garis",
+      "Tabel tanpa grafik",
+      "Grafik sebar"
+    ],
+    "answer": 1,
+    "explanation": "Perubahan dari waktu ke waktu paling mudah dibaca dengan grafik garis."
+  },
+  {
+    "question": "Tanggal 03/11/2026 dalam data dengan konteks minggu pertama November dibaca sebagai 11 Maret. Apa penyebabnya?",
+    "options": [
+      "Data rusak saat disalin",
+      "Format tahun salah",
+      "Lokal spreadsheet memakai urutan bulan/hari",
+      "Tanggal harus diketik dengan huruf"
+    ],
+    "answer": 2,
+    "explanation": "Lokal Amerika membaca bulan/hari/tahun. Atur lokal ke Indonesia atau pakai format tahun-bulan-hari yang tidak ambigu."
+  },
+  {
+    "question": "Satu baris penjualan tidak punya jumlah. Tindakan yang paling bisa dipertanggungjawabkan adalah…",
+    "options": [
+      "Isi dengan rata-rata jumlah transaksi lain",
+      "Isi dengan 1 karena pasti ada pembelian",
+      "Hapus barisnya tanpa catatan",
+      "Tanyakan ke sumbernya; kalau tidak bisa, keluarkan dari total dan catat keputusannya"
+    ],
+    "answer": 3,
+    "explanation": "Menebak angka tidak bisa dipertanggungjawabkan, dan menghapus diam-diam menyembunyikan masalah. Catat keputusan agar pembaca tahu."
+  },
+  {
+    "question": "Kenapa data mentah sebaiknya disimpan di sheet terpisah sebelum dibersihkan?",
+    "options": [
+      "Agar langkah yang keliru bisa diulang dari data asli",
+      "Agar file lebih kecil",
+      "Karena pivot table hanya bisa membaca sheet pertama",
+      "Agar rumus berjalan lebih cepat"
+    ],
+    "answer": 0,
+    "explanation": "Menyimpan data asli memungkinkan Anda mengulang pembersihan dan membuktikan perubahan apa saja yang dilakukan."
+  },
+  {
+    "question": "Pivot table menunjukkan rata-rata hari proses Cicendo 7 hari, tertinggi dari semua kecamatan. Informasi tambahan apa yang paling penting sebelum menyimpulkan Cicendo paling lambat?",
+    "options": [
+      "Warna grafik yang dipakai",
+      "Jumlah permohonan di setiap kecamatan",
+      "Nama petugas di Cicendo",
+      "Urutan abjad kecamatan"
+    ],
+    "answer": 1,
+    "explanation": "Rata-rata dari tiga permohonan jauh kurang meyakinkan dibanding rata-rata dari ratusan. Selalu tampilkan jumlah baris di samping rata-rata."
+  },
+  {
+    "question": "Fitur Hapus duplikat (Remove duplicates) di Google Sheets menghapus…",
+    "options": [
+      "Semua baris dengan id yang sama walaupun isinya berbeda",
+      "Baris yang kosong",
+      "Baris yang identik di semua kolom yang dipilih",
+      "Kolom yang namanya sama"
+    ],
+    "answer": 2,
+    "explanation": "Fitur ini hanya menghapus baris yang persis sama pada kolom yang dipilih. Id ganda dengan isi berbeda perlu diperiksa terpisah, misalnya dengan COUNTIF."
+  }
+]

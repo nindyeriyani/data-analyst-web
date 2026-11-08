@@ -183,6 +183,8 @@ body {
   padding: 0.125rem 0.375rem;
   font-family: var(--font-mono);
   font-size: 0.875em;
+  /* Rumus panjang tanpa spasi boleh dipatahkan agar tidak melebarkan halaman di HP. */
+  overflow-wrap: anywhere;
 }
 
 /* Callout: rapatkan jarak di dalam kotak */
