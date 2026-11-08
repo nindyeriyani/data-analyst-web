@@ -48,7 +48,7 @@ export default function LoginForm() {
           <button
             type="submit"
             disabled={pending || remaining > 0}
-            className="w-full rounded-full border border-line bg-surface px-4 py-2.5 text-sm font-medium text-text hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-full border border-line bg-surface px-5 py-3 text-base font-semibold text-text hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
           >
             {pending ? "Mengirim…" : remaining > 0 ? `Kirim ulang dalam ${remaining} detik` : "Kirim ulang tautan"}
           </button>
@@ -62,7 +62,7 @@ export default function LoginForm() {
   return (
     <div className="space-y-5">
       <GoogleButton next={safeNextPath(next)} />
-      <div className="flex items-center gap-3 text-xs text-muted">
+      <div className="flex items-center gap-3 text-sm text-muted">
         <span className="h-px flex-1 bg-line" />
         atau dengan tautan email
         <span className="h-px flex-1 bg-line" />
@@ -70,7 +70,7 @@ export default function LoginForm() {
       <form action={action} className="space-y-4">
         <input type="hidden" name="next" value={next} />
         <div>
-          <label htmlFor={emailId} className="mb-1.5 block text-sm font-medium text-text">
+          <label htmlFor={emailId} className="mb-2 block text-sm font-semibold text-text">
             Email
           </label>
           <input
@@ -82,7 +82,7 @@ export default function LoginForm() {
             inputMode="email"
             placeholder="nama@contoh.com"
             aria-describedby={error ? `${emailId}-error` : undefined}
-            className="w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-base text-text placeholder:text-muted focus:border-primary"
+            className="w-full rounded-xl border border-line bg-bg px-4 py-3 text-base text-text placeholder:text-muted transition-colors focus:border-primary focus:bg-surface"
           />
         </div>
 
@@ -99,7 +99,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover disabled:opacity-60"
+          className="w-full rounded-full bg-primary px-5 py-3 text-base font-semibold text-on-primary shadow-sm transition-colors hover:bg-primary-hover disabled:opacity-60"
         >
           {pending ? "Mengirim…" : "Kirim tautan masuk"}
         </button>
@@ -133,7 +133,7 @@ function GoogleButton({ next }: { next: string }) {
         type="button"
         onClick={signIn}
         disabled={pending}
-        className="flex w-full items-center justify-center gap-3 rounded-full border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-text transition-colors hover:border-primary disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-3 rounded-full border border-line bg-surface px-5 py-3 text-base font-semibold text-text transition-colors hover:border-primary hover:bg-primary-soft disabled:opacity-60"
       >
         <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18">
           <path
