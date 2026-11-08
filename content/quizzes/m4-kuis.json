@@ -1,0 +1,167 @@
+[
+  {
+    "question": "Data waktu proses permohonan berisi beberapa nilai yang sangat besar. Ukuran pemusatan yang paling mewakili adalah…",
+    "options": [
+      "Median",
+      "Rata-rata",
+      "Rentang",
+      "Simpangan baku"
+    ],
+    "answer": 0,
+    "explanation": "Median tidak terpengaruh nilai ekstrem, sehingga lebih mewakili data yang miring seperti waktu proses atau pendapatan."
+  },
+  {
+    "question": "Rata-rata jauh lebih besar daripada median. Ini tanda bahwa data kemungkinan…",
+    "options": [
+      "Simetris",
+      "Miring ke kanan atau ada nilai ekstrem besar",
+      "Miring ke kiri",
+      "Tidak punya outlier"
+    ],
+    "answer": 1,
+    "explanation": "Nilai besar di ekor kanan menarik rata-rata ke atas, sedangkan median tetap di tengah."
+  },
+  {
+    "question": "Ukuran yang paling tepat untuk \"layanan yang paling sering diminta\" adalah…",
+    "options": [
+      "Rata-rata",
+      "Median",
+      "Modus",
+      "IQR"
+    ],
+    "answer": 2,
+    "explanation": "Modus adalah nilai yang paling sering muncul, cocok untuk data kategori."
+  },
+  {
+    "question": "IQR (jangkauan antarkuartil) adalah…",
+    "options": [
+      "Nilai terbesar dikurangi nilai terkecil",
+      "Rata-rata jarak setiap nilai dari rata-rata",
+      "Nilai tengah data",
+      "Q3 dikurangi Q1, lebar 50% data di tengah"
+    ],
+    "answer": 3,
+    "explanation": "IQR menggambarkan sebaran sebagian besar data dan tidak terpengaruh nilai ekstrem."
+  },
+  {
+    "question": "Dengan Q1 = 4 dan Q3 = 8, batas atas outlier menurut aturan IQR adalah…",
+    "options": [
+      "14",
+      "12",
+      "10",
+      "16"
+    ],
+    "answer": 0,
+    "explanation": "IQR = 8 − 4 = 4. Batas atas = Q3 + 1,5 × IQR = 8 + 6 = 14."
+  },
+  {
+    "question": "Ditemukan satu permohonan yang selesai dalam 30 hari karena berkasnya hilang. Tindakan terbaik adalah…",
+    "options": [
+      "Menghapusnya agar rata-rata bagus",
+      "Mempertahankannya, memakai median untuk ringkasan, dan melaporkannya terpisah",
+      "Menggantinya dengan rata-rata",
+      "Mengubahnya menjadi 3 hari"
+    ],
+    "answer": 1,
+    "explanation": "Outlier yang nyata bisa menjadi temuan penting. Jangan dibuang diam-diam; laporkan dan pilih ringkasan yang tahan terhadap nilai ekstrem."
+  },
+  {
+    "question": "Kenapa simpangan baku dari pandas bisa sedikit berbeda dengan kalkulator lain?",
+    "options": [
+      "pandas membulatkan ke bilangan bulat",
+      "pandas mengabaikan nilai terbesar",
+      "pandas memakai versi sampel (dibagi n − 1), sebagian alat memakai versi populasi (dibagi n)",
+      "Kalkulator selalu salah"
+    ],
+    "answer": 2,
+    "explanation": "Untuk data kecil, pembagi n − 1 dan n memberi hasil yang sedikit berbeda."
+  },
+  {
+    "question": "Koefisien korelasi r = −0,9 artinya…",
+    "options": [
+      "Tidak ada hubungan",
+      "Hubungan lemah",
+      "Keduanya naik bersama",
+      "Hubungan linear kuat: yang satu naik, yang lain cenderung turun"
+    ],
+    "answer": 3,
+    "explanation": "Tanda negatif menunjukkan arah berlawanan; nilai mendekati 1 secara mutlak menunjukkan hubungan kuat."
+  },
+  {
+    "question": "Penjualan es teh dan pengunjung kolam renang berkorelasi 0,99. Penjelasan yang paling masuk akal adalah…",
+    "options": [
+      "Keduanya dipengaruhi faktor ketiga, yaitu suhu",
+      "Minum es teh membuat orang berenang",
+      "Berenang membuat orang membeli es teh",
+      "Korelasi 0,99 membuktikan sebab-akibat"
+    ],
+    "answer": 0,
+    "explanation": "Faktor ketiga (variabel perancu) bisa membuat dua hal bergerak bersama tanpa hubungan sebab di antara keduanya."
+  },
+  {
+    "question": "Kecamatan dengan petugas lebih banyak punya antrean lebih panjang. Kemungkinan yang paling masuk akal adalah…",
+    "options": [
+      "Petugas menyebabkan antrean",
+      "Arah sebabnya terbalik: kecamatan yang antreannya panjang diberi petugas tambahan",
+      "Data pasti salah",
+      "Antrean dan petugas tidak berhubungan sama sekali"
+    ],
+    "answer": 1,
+    "explanation": "Korelasi tidak memberi tahu arah sebab. Bisa saja kondisi (antrean panjang) yang mendorong keputusan (menambah petugas)."
+  },
+  {
+    "question": "p-value 0,01 pada uji perbandingan dua versi SMS artinya…",
+    "options": [
+      "Peluang H0 benar adalah 1%",
+      "Versi B 1% lebih baik",
+      "Kalau sebenarnya tidak ada perbedaan, hasil sebesar ini jarang terjadi (sekitar 1%)",
+      "Perbedaannya pasti penting secara bisnis"
+    ],
+    "answer": 2,
+    "explanation": "p-value mengukur seberapa jarang data seperti ini muncul jika H0 benar, bukan peluang H0 benar dan bukan besar efeknya."
+  },
+  {
+    "question": "Uji dengan 100 orang per versi menghasilkan p = 0,42 untuk selisih 4 poin persen. Kesimpulan yang tepat adalah…",
+    "options": [
+      "Kedua versi terbukti sama",
+      "Versi B pasti lebih buruk",
+      "Versi B pasti lebih baik",
+      "Belum ada cukup bukti untuk menyimpulkan perbedaan; sampelnya mungkin terlalu kecil"
+    ],
+    "answer": 3,
+    "explanation": "Tidak signifikan berarti bukti belum cukup, bukan bukti bahwa tidak ada perbedaan."
+  },
+  {
+    "question": "Dengan 100.000 orang per versi, selisih 0,4 poin persen signifikan (p < 0,01). Hal yang tetap perlu dipertimbangkan adalah…",
+    "options": [
+      "Apakah selisih sekecil itu sepadan dengan biaya perubahan",
+      "Mengulang uji sampai p lebih kecil lagi",
+      "Mengabaikan p-value",
+      "Mengurangi ukuran sampel"
+    ],
+    "answer": 0,
+    "explanation": "Signifikan secara statistik belum tentu penting secara praktis. Laporkan besar perbedaannya di samping p-value."
+  },
+  {
+    "question": "Syarat paling penting agar A/B test bisa menunjukkan sebab-akibat adalah…",
+    "options": [
+      "Versi B dikirim ke wilayah yang paling aktif",
+      "Penerima versi A dan B ditentukan secara acak",
+      "Versi A diuji bulan lalu dan versi B bulan ini",
+      "Banyak hal diubah sekaligus agar efeknya besar"
+    ],
+    "answer": 1,
+    "explanation": "Pembagian acak membuat kedua kelompok sebanding, sehingga perbedaan hasil bisa dikaitkan dengan perlakuannya."
+  },
+  {
+    "question": "Seorang analis mengecek hasil A/B test setiap hari dan berhenti begitu p di bawah 0,05. Apa masalahnya?",
+    "options": [
+      "Tidak ada masalah",
+      "p-value tidak bisa dihitung setiap hari",
+      "Berhenti saat kebetulan signifikan membuat kesimpulan menyesatkan; lama uji seharusnya ditentukan sebelum mulai",
+      "Hasilnya pasti tidak signifikan"
+    ],
+    "answer": 2,
+    "explanation": "Mengintip berulang kali meningkatkan peluang menemukan hasil signifikan karena kebetulan."
+  }
+]
