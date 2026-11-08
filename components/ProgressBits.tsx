@@ -176,7 +176,7 @@ export function CompleteButton({ itemId }: { itemId: string }) {
             type="button"
             onClick={() => setCompleted(itemId, false)}
             disabled={!ready}
-            className="ml-auto disabled:opacity-60 rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-text transition-colors hover:border-primary hover:text-primary"
+            className="ml-auto disabled:opacity-60 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-text transition-colors hover:border-primary hover:text-primary"
           >
             Batalkan selesai
           </button>
@@ -188,7 +188,7 @@ export function CompleteButton({ itemId }: { itemId: string }) {
             type="button"
             onClick={() => setCompleted(itemId, true)}
             disabled={!ready}
-            className="ml-auto disabled:opacity-60 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
+            className="ml-auto disabled:opacity-60 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
           >
             Tandai selesai
           </button>
@@ -198,21 +198,19 @@ export function CompleteButton({ itemId }: { itemId: string }) {
   );
 }
 
-/** Tenggat dan minggu sebuah item, untuk kepala halaman item. */
+/** "Tenggat Min, 6 Des 2026 · minggu 3", untuk kepala halaman item. */
 export function ItemDueInfo({ item }: { item: Pick<Item, "id" | "week"> }) {
-  const { schedule } = useProgress();
-  if (!schedule) {
-    return <span className="text-muted">Tenggat …</span>;
-  }
+  const { completed, today, schedule } = useProgress();
+  if (!schedule) return <span>Tenggat …</span>;
   const due = itemDueDate(schedule, item);
+  const late = itemStatus(item, completed, today, schedule) === "late";
   return (
-    <>
-      <span className="text-muted">Tenggat</span>{" "}
-      <time dateTime={due} className="font-medium text-text">
-        {formatShort(due)}
-      </time>
-      <span className="text-muted"> · Minggu </span>
-      <span className="font-medium text-text">{itemDueWeek(schedule, item)}</span>
-    </>
+    <span className={late ? "font-medium text-late" : undefined}>
+      {late ? "Tertinggal · tenggat" : "Tenggat"}{" "}
+      <time dateTime={due}>
+        {formatShort(due)} {due.slice(0, 4)}
+      </time>{" "}
+      · minggu {itemDueWeek(schedule, item)}
+    </span>
   );
 }

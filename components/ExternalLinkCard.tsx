@@ -1,3 +1,4 @@
+import { ItemTypeTile } from "@/components/ItemTypeIcon";
 import type { ItemType } from "@/content/course";
 
 function hostname(url: string): string {
@@ -24,15 +25,18 @@ export default function ExternalLinkCard({
       aria-label="Tautan keluar"
       className="my-8 flex flex-col gap-4 rounded-2xl border border-line bg-surface p-5 sm:flex-row sm:items-center sm:justify-between"
     >
-      <div className="min-w-0">
-        <p className="text-sm font-medium text-muted">{hostname(url)}</p>
-        {note && <p className="mt-1 leading-relaxed text-text">{note}</p>}
+      <div className="flex min-w-0 items-start gap-4">
+        <ItemTypeTile type={type} className="size-11 rounded-xl" />
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-muted">{hostname(url)}</p>
+          {note && <p className="mt-1 leading-relaxed text-text">{note}</p>}
+        </div>
       </div>
       <a
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
+        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
       >
         {label}
         <svg

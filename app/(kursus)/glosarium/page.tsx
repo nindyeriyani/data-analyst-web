@@ -19,7 +19,7 @@ export default function GlossaryPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="text-2xl font-bold text-text sm:text-3xl">Glosarium</h1>
+      <h1 className="text-3xl font-extrabold tracking-tight text-text sm:text-4xl">Glosarium</h1>
       <p className="mt-2 text-muted">Istilah yang sering muncul selama kursus, dengan definisi singkat.</p>
       <div className="mt-4">
         <GlossarySearch entries={entries} />

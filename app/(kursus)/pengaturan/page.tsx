@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Pengaturan" };
 export default function SettingsPage() {
   return (
     <div className="mx-auto max-w-xl">
-      <h1 className="text-2xl font-bold text-text sm:text-3xl">Pengaturan</h1>
+      <h1 className="text-3xl font-extrabold tracking-tight text-text sm:text-4xl">Pengaturan</h1>
       <div className="mt-6 space-y-6">
         <SettingsForm />
         <ScheduleSettings />
@@ -17,7 +17,7 @@ export default function SettingsPage() {
           <p className="mt-1 text-sm text-muted">Progres tetap tersimpan dan bisa dibuka lagi setelah masuk kembali.</p>
           <button
             type="submit"
-            className="mt-3 rounded-lg border border-line px-4 py-2 text-sm font-medium text-text hover:border-late hover:text-late"
+            className="mt-3 rounded-full border border-line px-4 py-2 text-sm font-medium text-text hover:border-late hover:text-late"
           >
             Keluar
           </button>

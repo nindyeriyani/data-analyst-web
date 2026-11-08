@@ -5,13 +5,13 @@ function itemHref(item: Item): string {
   return `/modul/${getModuleOfItem(item.id)?.id}/${item.id}`;
 }
 
-const BASE = "flex min-w-0 flex-1 flex-col gap-1 rounded-xl border p-4";
-const ACTIVE = `group ${BASE} border-line bg-surface transition-colors hover:border-primary`;
+const BASE = "flex min-w-0 flex-1 flex-col gap-1 rounded-2xl border p-4 sm:p-5";
+const ACTIVE = `group ${BASE} border-line bg-surface transition-[border-color,box-shadow] hover:border-primary hover:shadow-sm`;
 
 function PagerContent({ item, direction }: { item: Item; direction: "prev" | "next" }) {
   return (
     <>
-      <span className="text-sm text-muted">{direction === "next" ? "Berikutnya →" : "← Sebelumnya"}</span>
+      <span className="text-sm font-medium text-muted">{direction === "next" ? "Berikutnya →" : "← Sebelumnya"}</span>
       <span className="font-semibold text-text group-hover:text-primary">{item.title}</span>
     </>
   );

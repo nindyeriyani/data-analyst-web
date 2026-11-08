@@ -51,7 +51,7 @@ export function RubricChecklist({ itemId, rubric }: { itemId: string; rubric: st
   return (
     <section aria-labelledby="rubrik" className="my-8 rounded-2xl border border-line bg-surface p-5">
       <div className="flex items-baseline justify-between gap-2">
-        <h2 id="rubrik" className="font-semibold text-text">
+        <h2 id="rubrik" className="font-bold text-text">
           Rubrik
         </h2>
         <span className="text-sm text-muted">
@@ -106,7 +106,7 @@ export function WorkLink({ itemId }: { itemId: string }) {
   return (
     <section className="my-8 rounded-2xl border border-line bg-surface p-5">
       <div className="flex items-baseline justify-between gap-2">
-        <label htmlFor={inputId} className="font-semibold text-text">
+        <label htmlFor={inputId} className="font-bold text-text">
           Tautan hasil kerja
         </label>
         <SaveIndicator status={status} />
@@ -134,7 +134,7 @@ export function WorkLink({ itemId }: { itemId: string }) {
             href={saved}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-lg border border-line px-4 py-2 text-sm font-medium text-text hover:border-primary hover:text-primary"
+            className="inline-flex items-center justify-center rounded-full border border-line px-4 py-2 text-sm font-medium text-text hover:border-primary hover:text-primary"
           >
             Buka
             <span className="sr-only"> tautan hasil kerja (membuka tab baru)</span>
@@ -165,7 +165,7 @@ export function ReflectionNote({ itemId }: { itemId: string }) {
   return (
     <section className="my-8 rounded-2xl border border-line bg-surface p-5">
       <div className="flex items-baseline justify-between gap-2">
-        <label htmlFor={inputId} className="font-semibold text-text">
+        <label htmlFor={inputId} className="font-bold text-text">
           Catatan refleksi
         </label>
         <SaveIndicator status={status} />

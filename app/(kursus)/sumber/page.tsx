@@ -10,7 +10,7 @@ function hostname(url: string): string {
 export default function ResourcesPage() {
   return (
     <div className="mx-auto max-w-4xl">
-      <h1 className="text-2xl font-bold text-text sm:text-3xl">Sumber belajar</h1>
+      <h1 className="text-3xl font-extrabold tracking-tight text-text sm:text-4xl">Sumber belajar</h1>
       <p className="mt-2 text-muted">Semua gratis. Tautan dibuka di tab baru.</p>
 
       <nav aria-label="Kelompok sumber" className="mt-5">

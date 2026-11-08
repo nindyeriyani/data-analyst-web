@@ -5,7 +5,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import ItemTypeIcon from "@/components/ItemTypeIcon";
+import { ItemTypeTile } from "@/components/ItemTypeIcon";
 import { PHASE_BG } from "@/components/phase-styles";
 import { ItemCheckbox, ItemStatusDot } from "@/components/ProgressBits";
 import { useProgress } from "@/components/ProgressProvider";
@@ -70,7 +70,7 @@ function WeekCard({
       )}
       <div className="p-4 sm:p-5">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-          <h2 id={`minggu-${week}-judul`} className="text-lg font-semibold text-text">
+          <h2 id={`minggu-${week}-judul`} className="text-lg font-bold text-text">
             Minggu {week}{" "}
             <span className="ml-1 text-base font-normal text-muted">{formatWeekRange(schedule, week)}</span>
           </h2>
@@ -116,9 +116,7 @@ function WeekCard({
             {items.map((item) => (
               <li key={item.id} className="flex items-center gap-3 py-2.5">
                 <ItemCheckbox item={item} />
-                <span aria-hidden="true" className="hidden shrink-0 text-muted sm:block">
-                  <ItemTypeIcon type={item.type} size={16} />
-                </span>
+                <ItemTypeTile type={item.type} className="hidden size-8 sm:flex" />
                 <div className="min-w-0 flex-1">
                   <Link
                     href={`/modul/${getModuleOfItem(item.id)?.id}/${item.id}`}

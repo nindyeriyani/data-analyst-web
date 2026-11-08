@@ -48,7 +48,7 @@ export default function LoginForm() {
           <button
             type="submit"
             disabled={pending || remaining > 0}
-            className="w-full rounded-lg border border-line bg-surface px-4 py-2.5 text-sm font-medium text-text hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-full border border-line bg-surface px-4 py-2.5 text-sm font-medium text-text hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
           >
             {pending ? "Mengirim…" : remaining > 0 ? `Kirim ulang dalam ${remaining} detik` : "Kirim ulang tautan"}
           </button>
@@ -99,7 +99,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover disabled:opacity-60"
+          className="w-full rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover disabled:opacity-60"
         >
           {pending ? "Mengirim…" : "Kirim tautan masuk"}
         </button>
@@ -133,7 +133,7 @@ function GoogleButton({ next }: { next: string }) {
         type="button"
         onClick={signIn}
         disabled={pending}
-        className="flex w-full items-center justify-center gap-3 rounded-lg border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-text transition-colors hover:border-primary disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-3 rounded-full border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-text transition-colors hover:border-primary disabled:opacity-60"
       >
         <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18">
           <path

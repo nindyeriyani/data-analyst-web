@@ -21,7 +21,6 @@ export interface QuizState {
 }
 
 const EMPTY_STATE: QuizState = { questions: [], optionOrder: {}, answers: {}, seen: [] };
-const LETTERS = ["A", "B", "C", "D", "E", "F"];
 
 function shuffle<T>(items: T[]): T[] {
   const result = [...items];
@@ -61,19 +60,11 @@ function newAttempt(pool: QuizQuestion[], previous: QuizState): QuizState {
 type OptionState = "idle" | "correct" | "wrong" | "reveal" | "locked";
 
 const OPTION_STYLES: Record<OptionState, string> = {
-  idle: "border-line bg-surface text-text hover:border-primary hover:bg-surface-2",
+  idle: "border-line bg-bg text-text hover:border-primary hover:bg-primary-soft",
   correct: "border-done bg-done/10 text-text",
   wrong: "border-late bg-late/10 text-text",
   reveal: "border-done border-dashed bg-surface text-text",
-  locked: "border-line bg-surface text-muted",
-};
-
-const BADGE_STYLES: Record<OptionState, string> = {
-  idle: "bg-surface-2 text-muted",
-  correct: "bg-done text-white",
-  wrong: "bg-late text-white",
-  reveal: "border-2 border-done text-done",
-  locked: "bg-surface-2 text-muted",
+  locked: "border-line bg-bg text-muted",
 };
 
 /** Status tersimpan yang valid untuk bank soal ini, atau status kosong. */
@@ -216,7 +207,7 @@ function QuizBody({ itemId, pool, initial }: { itemId: string; pool: QuizQuestio
             <button
               type="button"
               onClick={start}
-              className="mt-4 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
+              className="mt-4 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
             >
               Mulai kuis
             </button>
@@ -236,23 +227,17 @@ function QuizBody({ itemId, pool, initial }: { itemId: string; pool: QuizQuestio
             const isAnswered = chosen !== undefined;
             const isRight = chosen === question.answer;
             const order = state.optionOrder[qIndex] ?? range(question.options.length);
-            const answerLetter = LETTERS[order.indexOf(question.answer)];
 
             return (
-              <li
-                key={qIndex}
-                className={`rounded-2xl border bg-surface p-5 ${
-                  !isAnswered ? "border-line" : isRight ? "border-done/50" : "border-late/50"
-                }`}
-              >
+              <li key={qIndex} className="rounded-2xl border border-line bg-surface p-4 sm:p-5">
                 <fieldset>
-                  <legend className="mb-4 flex gap-3 font-semibold leading-relaxed text-text">
-                    <span className="text-muted">{position + 1}.</span>
+                  <legend className="mb-4 flex gap-2 font-bold leading-relaxed text-text">
+                    <span className="text-primary">{position + 1}.</span>
                     <span>{question.question}</span>
                   </legend>
 
                   <div className="grid gap-2">
-                    {order.map((oIndex, displayIndex) => {
+                    {order.map((oIndex) => {
                       const optionState: OptionState = !isAnswered
                         ? "idle"
                         : oIndex === chosen
@@ -272,17 +257,21 @@ function QuizBody({ itemId, pool, initial }: { itemId: string; pool: QuizQuestio
                           aria-pressed={oIndex === chosen}
                           className={`flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-left leading-relaxed transition-colors disabled:cursor-default ${OPTION_STYLES[optionState]}`}
                         >
-                          <span
-                            aria-hidden="true"
-                            className={`flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${BADGE_STYLES[optionState]}`}
-                          >
-                            {optionState === "correct" || optionState === "reveal"
-                              ? "✓"
-                              : optionState === "wrong"
-                                ? "✕"
-                                : LETTERS[displayIndex]}
-                          </span>
                           <span className="min-w-0 flex-1">{question.options[oIndex]}</span>
+                          {(optionState === "correct" || optionState === "reveal" || optionState === "wrong") && (
+                            <span
+                              aria-hidden="true"
+                              className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full text-[0.65rem] font-bold ${
+                                optionState === "wrong"
+                                  ? "bg-late text-white"
+                                  : optionState === "correct"
+                                    ? "bg-done text-white"
+                                    : "border-2 border-done text-done"
+                              }`}
+                            >
+                              {optionState === "wrong" ? "✕" : "✓"}
+                            </span>
+                          )}
                           {optionState === "correct" && <span className="sr-only">(jawaban Anda, benar)</span>}
                           {optionState === "wrong" && <span className="sr-only">(jawaban Anda, salah)</span>}
                           {optionState === "reveal" && <span className="sr-only">(jawaban yang benar)</span>}
@@ -293,16 +282,17 @@ function QuizBody({ itemId, pool, initial }: { itemId: string; pool: QuizQuestio
                 </fieldset>
 
                 {isAnswered && (
-                  <div
-                    className={`mt-4 rounded-xl px-4 py-3 text-sm leading-relaxed text-text ${
-                      isRight ? "bg-done/10" : "bg-late/10"
-                    }`}
-                  >
-                    <p className={`mb-1 font-semibold ${isRight ? "text-done" : "text-late"}`}>
-                      {isRight ? "Benar" : `Belum tepat. Jawaban yang benar: ${answerLetter}`}
-                    </p>
-                    <p>{question.explanation}</p>
-                  </div>
+                  <p className="mt-3 rounded-xl bg-surface-2 px-4 py-3 text-sm leading-relaxed text-text">
+                    {isRight ? (
+                      <strong className="font-bold text-done">Benar.</strong>
+                    ) : (
+                      <>
+                        <strong className="font-bold text-late">Belum tepat.</strong> Jawaban yang benar: “
+                        {question.options[question.answer]}”.
+                      </>
+                    )}{" "}
+                    {question.explanation}
+                  </p>
                 )}
               </li>
             );
@@ -329,8 +319,8 @@ function QuizBody({ itemId, pool, initial }: { itemId: string; pool: QuizQuestio
             onClick={start}
             className={
               perfect
-                ? "mt-4 rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-text transition-colors hover:border-primary hover:text-primary"
-                : "mt-4 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
+                ? "mt-4 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-text transition-colors hover:border-primary hover:text-primary"
+                : "mt-4 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
             }
           >
             {perfect ? "Latihan lagi dengan soal lain" : "Ulangi dengan soal baru"}

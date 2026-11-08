@@ -4,14 +4,12 @@ import { notFound } from "next/navigation";
 import ExternalLinkCard from "@/components/ExternalLinkCard";
 import ItemPager from "@/components/ItemPager";
 import { ReflectionNote, RubricChecklist, WorkLink } from "@/components/ItemWork";
-import ItemTypeIcon from "@/components/ItemTypeIcon";
 import Markdown from "@/components/Markdown";
 import { CompleteButton, ItemDueInfo } from "@/components/ProgressBits";
 import Quiz from "@/components/Quiz";
-import { ITEM_TYPE_LABELS, MODULES, getModule, moduleNumber, type Module } from "@/content/course";
+import { ITEM_TYPE_LABELS, MODULES, SECTIONS, getModule, moduleNumber, type Module } from "@/content/course";
 import { getItemMarkdown, getQuiz } from "@/lib/content";
 import { formatDuration } from "@/lib/schedule";
-import { PHASE_TEXT } from "@/components/phase-styles";
 
 type Props = PageProps<"/modul/[moduleId]/[itemId]">;
 
@@ -47,45 +45,30 @@ export default async function ItemPage({ params }: Props) {
   const showNoteAsBody = !markdown && !item.url && item.note;
 
   return (
-    <article className="mx-auto max-w-3xl">
-      <nav aria-label="Breadcrumb" className="mb-5 text-sm text-muted">
-        <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
+    <article className="max-w-3xl">
+      <nav aria-label="Breadcrumb" className="mb-4 text-sm text-muted">
+        <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
           <li>
-            <Link href="/" className="hover:text-primary hover:underline">
-              Dashboard
-            </Link>
-          </li>
-          <li aria-hidden="true">›</li>
-          <li>
-            <Link href={`/modul/${mod.id}`} className="hover:text-primary hover:underline">
+            <Link href={`/modul/${mod.id}`} className="font-semibold text-primary hover:underline">
               {moduleLabel(mod)}
             </Link>
           </li>
           <li aria-hidden="true">›</li>
-          <li aria-current="page" className="text-text">
-            {item.title}
-          </li>
+          <li>{SECTIONS.find((section) => section.id === item.section)?.label}</li>
+          <li aria-hidden="true">›</li>
+          <li aria-current="page">{ITEM_TYPE_LABELS[item.type]}</li>
         </ol>
       </nav>
 
-      <header className="mb-8 border-b border-line pb-6">
-        <p className={`mb-2 flex items-center gap-2 text-sm font-semibold ${PHASE_TEXT[mod.phase]}`}>
-          <ItemTypeIcon type={item.type} />
-          {ITEM_TYPE_LABELS[item.type]}
+      <header className="mb-8">
+        <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-text sm:text-4xl">{item.title}</h1>
+        <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-muted">
+          <span>
+            {ITEM_TYPE_LABELS[item.type]} · {formatDuration(item.minutes)}
+          </span>
+          <span aria-hidden="true">·</span>
+          <ItemDueInfo item={item} />
         </p>
-        <h1 className="text-2xl font-bold leading-tight text-text sm:text-3xl">{item.title}</h1>
-        <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-          <div className="flex gap-1.5">
-            <dt className="text-muted">Durasi</dt>
-            <dd className="font-medium text-text">{formatDuration(item.minutes)}</dd>
-          </div>
-          <div className="flex gap-1.5">
-            <dt className="sr-only">Tenggat dan minggu</dt>
-            <dd>
-              <ItemDueInfo item={item} />
-            </dd>
-          </div>
-        </dl>
       </header>
 
       {markdown && <Markdown source={markdown} />}
@@ -97,7 +80,7 @@ export default async function ItemPage({ params }: Props) {
       )}
 
       {!markdown && !quiz && (
-        <p className="mt-6 rounded-xl border border-dashed border-line px-4 py-3 text-sm text-muted">
+        <p className="mt-6 rounded-2xl border border-dashed border-line px-4 py-3 text-sm text-muted">
           Materi lengkap untuk item ini belum ditulis.
         </p>
       )}

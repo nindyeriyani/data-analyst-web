@@ -20,13 +20,13 @@ export default function CourseError({ error, retry }: { error: unknown; retry: (
         <button
           type="button"
           onClick={() => retry()}
-          className="rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary hover:bg-primary-hover"
+          className="rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary hover:bg-primary-hover"
         >
           Coba lagi
         </button>
         <Link
           href="/"
-          className="rounded-lg border border-line bg-surface px-4 py-2.5 text-sm font-medium text-text hover:border-primary hover:text-primary"
+          className="rounded-full border border-line bg-surface px-4 py-2.5 text-sm font-medium text-text hover:border-primary hover:text-primary"
         >
           Ke dashboard
         </Link>

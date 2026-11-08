@@ -41,7 +41,7 @@ export default function SettingsForm() {
         <button
           type="submit"
           disabled={!ready || status === "saving" || !value.trim()}
-          className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary hover:bg-primary-hover disabled:opacity-60"
+          className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-on-primary hover:bg-primary-hover disabled:opacity-60"
         >
           {status === "saving" ? "Menyimpan…" : "Simpan"}
         </button>

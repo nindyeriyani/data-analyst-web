@@ -16,7 +16,7 @@ export default function NotFound() {
         <p className="mt-2 text-muted">Alamatnya mungkin salah ketik, atau modul dan item ini tidak ada di kursus.</p>
         <Link
           href="/"
-          className="mt-6 inline-flex items-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary hover:bg-primary-hover"
+          className="mt-6 inline-flex items-center rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary hover:bg-primary-hover"
         >
           Kembali ke dashboard
         </Link>

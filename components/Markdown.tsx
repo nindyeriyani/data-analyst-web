@@ -25,9 +25,8 @@ function toText(node: HastNode | HastChild): string {
 // Callout
 
 const CALLOUT_STYLES: Record<CalloutKind, string> = {
-  tip: "border-callout-tip-line bg-callout-tip-bg [--callout-accent:var(--callout-tip-text)]",
-  warning:
-    "border-callout-warning-line bg-callout-warning-bg [--callout-accent:var(--callout-warning-text)]",
+  tip: "bg-callout-tip-bg [--callout-accent:var(--callout-tip-text)]",
+  warning: "bg-callout-warning-bg [--callout-accent:var(--callout-warning-text)]",
 };
 
 const CALLOUT_ICONS: Record<CalloutKind, string> = {
@@ -48,25 +47,28 @@ const Aside: Components["aside"] = (props) => {
   const title = typeof data["data-title"] === "string" ? data["data-title"] : CALLOUT_DEFAULT_TITLES[kind];
 
   return (
-    <aside className={`callout my-6 rounded-xl border-l-4 border px-4 py-3 sm:px-5 ${CALLOUT_STYLES[kind]}`}>
-      <p className="mb-1 flex items-center gap-2 font-semibold text-[var(--callout-accent)]">
+    <aside className={`callout my-6 flex gap-4 rounded-2xl px-4 py-4 sm:px-5 ${CALLOUT_STYLES[kind]}`}>
+      <span
+        aria-hidden="true"
+        className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[var(--callout-accent)] text-surface"
+      >
         <svg
-          aria-hidden="true"
           viewBox="0 0 24 24"
           width="18"
           height="18"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.8"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="shrink-0"
         >
           <path d={CALLOUT_ICONS[kind]} />
         </svg>
-        {title}
-      </p>
-      <div className="callout-body">{children}</div>
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="mb-1 font-bold text-text">{title}</p>
+        <div className="callout-body">{children}</div>
+      </div>
     </aside>
   );
 };
@@ -115,7 +117,7 @@ const Anchor: Components["a"] = ({ href, title, children }) => {
 };
 
 const Table: Components["table"] = ({ children }) => (
-  <div className="table-wrap my-5 overflow-x-auto rounded-xl border border-line">
+  <div className="table-wrap my-6 overflow-x-auto rounded-2xl border border-line">
     <table>{children}</table>
   </div>
 );
