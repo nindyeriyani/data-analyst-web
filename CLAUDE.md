@@ -174,16 +174,16 @@ Sumber belajar utama (semua gratis): Kaggle Learn, SQLBolt, BigQuery sandbox, Go
 ## Halaman dan fitur
 
 ### Header (semua halaman)
-Logo dan judul “Data Analyst”, navigasi Dashboard, Jadwal, Glosarium, Sumber, lalu inisial nama pengguna. Di layar kecil, navigasi pindah ke bar bawah.
+Logo dan judul “Data Analyst” dengan baris kecil “Kursus pribadi · n minggu · ≈x jam/minggu”, navigasi Dashboard, Jadwal, Glosarium, Sumber (menu aktif berlatar pil), penanda sinkronisasi (“Tersimpan”, “Menyimpan…”), lalu foto atau inisial nama pengguna. Di layar kecil, navigasi pindah ke bar bawah.
 
 ### Dashboard (`/`)
-1. Sapaan “Halo, {nama}” dengan tanggal mulai atau minggu berjalan (dan tautan “Atur jadwal” selama jadwal masih bawaan), tombol “Lanjutkan: {item berikutnya}” (item pertama yang belum selesai, urut tenggat), dan tombol “Lihat jadwal”.
-2. Grafik batang per minggu kalender (sebanyak lama kursus): tinggi batang = total menit item minggu itu, bagian terisi = menit item yang selesai. Minggu berjalan diberi penanda.
-3. Empat kartu angka: progres (x dari total item, dengan cincin persen), status (“Sesuai jadwal”, “Tertinggal n item”, atau “Belum mulai”), hitung mundur hari ke akhir jadwal, dan tenggat terdekat.
-4. “Minggu ini”: item yang jatuh tempo minggu berjalan, bisa dicentang langsung. Sebelum kursus mulai, tampilkan minggu 1. Kalau minggu ini tanpa tenggat (jadwal yang diregangkan), tampilkan tenggat berikutnya.
-5. Badge pencapaian (6): Modul pertama (m0 selesai), SQL tuntas (proyek m2), Python tuntas (proyek m3), Proyek portofolio pertama (proyek pertama m6), Portofolio online (proyek m7), Lamaran pertama (item lamaran di m8). Badge yang belum diraih tampil abu-abu.
-6. “Baru selesai”: 4 item terakhir yang diselesaikan beserta tanggalnya.
-7. Kartu semua modul, dikelompokkan per fase. Setiap kartu: pita warna fase berisi label “Modul n, minggu a–b” dan grafik batang mini (satu batang per item, terisi jika selesai), judul, jumlah item, estimasi jam, rentang tanggal, bilah progres, dan status (Belum mulai, Berjalan, Selesai, Tertinggal).
+1. Hero berlatar biru tipis: baris kecil (“Mulai Sen, 9 Nov” atau “Minggu n dari m”), sapaan “Halo, {nama}”, kalimat status (dan tautan “Atur jadwal” selama jadwal masih bawaan), tombol pil “Lanjutkan: {item berikutnya}” (item pertama yang belum selesai, urut tenggat) dan “Lihat jadwal”, serta ilustrasi alur data di kanan (disembunyikan di HP).
+2. Empat kartu angka mendatar (ikon di kiri, angka besar, keterangan kecil): progres (x / total item, dengan cincin persen), status (“Sesuai jadwal”, “Tertinggal n item”, atau “Belum mulai”), hitung mundur hari ke akhir jadwal, dan tenggat terdekat.
+3. Grafik batang per minggu kalender (sebanyak lama kursus): tinggi batang = total menit item minggu itu, bagian terisi = menit item yang selesai. Minggu berjalan diberi penanda.
+4. “Minggu ini” (judul di luar kartu): subjudul tenggat minggu itu, lalu item yang jatuh tempo dengan ikon tipe berwarna, bisa dicentang langsung; item selesai menampilkan chip hijau “✓ tanggal”. Sebelum kursus mulai, tampilkan minggu 1. Kalau minggu ini tanpa tenggat (jadwal yang diregangkan), tampilkan tenggat berikutnya.
+5. Badge pencapaian (6) dalam grid 3×2, dengan tanggal diraih atau tanggal target: Modul pertama (m0 selesai), SQL tuntas (proyek m2), Python tuntas (proyek m3), Proyek portofolio pertama (proyek pertama m6), Portofolio online (proyek m7), Lamaran pertama (item lamaran di m8). Badge yang belum diraih tampil abu-abu.
+6. “Baru selesai”: 4 item terakhir yang diselesaikan, tanggal dalam huruf mono hijau.
+7. “Isi kursus”: kartu semua modul, dikelompokkan per fase (nama fase berwarna dan rentang tanggal). Setiap kartu: pita gradasi warna fase berisi label pil putih “Modul n · minggu a–b” dan grafik batang mini (satu batang per item, terisi jika selesai), judul, jumlah item, estimasi jam, rentang tanggal, bilah progres, dan status (Belum mulai, Berjalan, Selesai, Tertinggal).
 
 ### Halaman modul (`/modul/[moduleId]`)
 Sidebar kiri berisi daftar semua modul yang bisa dibuka-tutup (modul aktif terbuka), dengan item per bagian dan bulatan status. Konten utama: kepala modul berwarna fase (label fase dan minggu, judul, deskripsi, bilah progres, ringkasan “x dari y selesai, ≈ jam, tenggat”), tombol mulai atau lanjutkan, kotak tujuan belajar, lalu daftar item per bagian dengan kotak centang, ikon tipe, judul, tipe dan durasi, serta tenggat. Di layar kecil, sidebar menjadi menu yang bisa dibuka.
@@ -274,10 +274,12 @@ Migrasi: `0001_init.sql` (skema awal), `0002_rls_select_uid.sql` (policy memakai
 
 - Bersih, mudah dibaca, nyaman untuk sesi belajar panjang. Layout dan pola mengikuti aplikasi kursus Katie (dashboard, kartu modul berwarna per fase, sidebar modul).
 - Warna:
-  - Latar `#F3F6F6`, permukaan `#FFFFFF`, teks `#12282C`, teks sekunder `#566A6E`, garis `#DAE3E4`.
-  - Aksi utama `#0D6B62`.
-  - Fase 1 `#0E7C72` (hijau toska), fase 2 `#4A43C6` (ungu), fase 3 `#AD540F` (oranye).
+  - Latar `#F4F6FA`, permukaan `#FFFFFF`, teks `#161B26`, teks sekunder `#5B6474`, garis `#E0E5EC`.
+  - Aksi utama `#0B57D0` (biru), latar tipis `#E8F0FE`.
+  - Fase 1 `#0B57D0` (biru), fase 2 `#1E7E34` (hijau), fase 3 `#7B3FC4` (ungu); masing-masing punya ujung gradasi (`--phase-n-to`) dan latar tipis (`--phase-n-soft`).
+  - Ikon tipe item berwarna (`--type-*`): pengantar dan bacaan biru, kursus luar merah, lab toska, kuis kuning, proyek hijau, magang oranye, refleksi ungu. Kelasnya di `components/phase-styles.ts`.
   - Selesai `#157A3A`, tertinggal `#B42318`.
+- Tombol utama berbentuk pil (`rounded-full`). Lebar konten diatur per halaman, bukan di layout.
 - Aplikasi selalu tampil dalam mode terang (tanpa dark mode). Definisikan semua warna sebagai CSS variables yang dipakai lewat Tailwind.
 - Responsif sampai layar HP. Fokus keyboard terlihat. Hormati `prefers-reduced-motion`.
 - Teks antarmuka memakai huruf kapital di awal kalimat saja (sentence case), tanpa label huruf kapital semua.

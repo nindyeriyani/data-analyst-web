@@ -25,9 +25,9 @@ export function NavList({
         const active = pathname !== null && isActivePath(pathname, item.href);
         const className =
           variant === "top"
-            ? `block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+            ? `block rounded-full px-4 py-2 text-[0.9375rem] font-medium transition-colors ${
                 active
-                  ? "bg-surface-2 text-text"
+                  ? "bg-primary-soft text-primary"
                   : "text-muted hover:bg-surface-2 hover:text-text"
               }`
             : `flex flex-col items-center gap-1 py-2 text-xs font-medium ${

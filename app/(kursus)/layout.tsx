@@ -8,7 +8,8 @@ export default function CourseLayout({ children }: { children: ReactNode }) {
   return (
     <ProgressProvider>
       <Header />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-24 sm:px-6 md:pb-10">{children}</main>
+      {/* Lebar konten diatur per halaman (mx-auto max-w-…), agar halaman modul bisa memakai sidebar penuh. */}
+      <main className="w-full flex-1 px-4 py-6 pb-24 sm:px-6 md:pb-10">{children}</main>
       <BottomNav />
     </ProgressProvider>
   );

@@ -8,14 +8,14 @@ import WeeklyChart from "@/components/dashboard/WeeklyChart";
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-6xl space-y-8">
       <Greeting />
-      <WeeklyChart />
       <StatCards />
+      <WeeklyChart />
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1.75fr)_minmax(0,1fr)]">
         <ThisWeek />
-        <div className="space-y-6">
+        <div className="space-y-5">
           <Badges />
           <RecentlyCompleted />
         </div>

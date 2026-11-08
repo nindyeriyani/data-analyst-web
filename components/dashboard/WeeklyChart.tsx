@@ -35,7 +35,7 @@ export default function WeeklyChart() {
     <section aria-labelledby="grafik-judul" className="rounded-2xl border border-line bg-surface p-4 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-2">
         <div>
-          <h2 id="grafik-judul" className="font-semibold text-text">
+          <h2 id="grafik-judul" className="font-bold text-text">
             Jam belajar per minggu
           </h2>
           <p className="mt-1 text-sm text-muted">

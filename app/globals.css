@@ -8,26 +8,54 @@
 :root {
   color-scheme: light;
 
-  --bg: #f3f6f6;
+  --bg: #f4f6fa;
   --surface: #ffffff;
-  --surface-2: #e9eff0;
-  --text: #12282c;
-  --text-muted: #566a6e;
-  --line: #dae3e4;
+  --surface-2: #eef1f6;
+  --text: #161b26;
+  --text-muted: #5b6474;
+  --line: #e0e5ec;
 
-  --primary: #0d6b62;
-  --primary-hover: #0a5750;
+  --primary: #0b57d0;
+  --primary-hover: #0842a0;
+  --primary-soft: #e8f0fe;
   --on-primary: #ffffff;
 
-  --phase-1: #0e7c72;
-  --phase-2: #4a43c6;
-  --phase-3: #ad540f;
+  /* Warna fase: warna utama, ujung gradasi pita, dan latar tipis. */
+  --phase-1: #0b57d0;
+  --phase-1-to: #4a8af0;
+  --phase-1-soft: #e8f0fe;
+  --phase-2: #1e7e34;
+  --phase-2-to: #2d9a4a;
+  --phase-2-soft: #e6f4ea;
+  --phase-3: #7b3fc4;
+  --phase-3-to: #a06bdd;
+  --phase-3-soft: #f3eafb;
   --on-phase: #ffffff;
 
   --done: #157a3a;
   --late: #b42318;
 
-  --focus: #0d6b62;
+  /* Ikon tipe item: latar tipis dan warna ikon. */
+  --type-blue-bg: #e8f0fe;
+  --type-blue: #0b57d0;
+  --type-red-bg: #fdecec;
+  --type-red: #c5221f;
+  --type-teal-bg: #e3f5f2;
+  --type-teal: #0b7a6d;
+  --type-amber-bg: #fef4dc;
+  --type-amber: #a15c00;
+  --type-green-bg: #e6f4ea;
+  --type-green: #1e7e34;
+  --type-orange-bg: #fdeee2;
+  --type-orange: #b4500c;
+  --type-purple-bg: #f3eafb;
+  --type-purple: #7b3fc4;
+
+  /* Aksen dekoratif (ilustrasi dashboard). */
+  --accent-coral: #ea6b5d;
+  --accent-amber: #f5a524;
+
+  --focus: #0b57d0;
 
   /* Callout materi: latar lembut, garis tepi, dan warna judul. */
   --callout-tip-bg: #edf4fd;
@@ -48,12 +76,34 @@
 
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
   --color-on-primary: var(--on-primary);
 
   --color-phase-1: var(--phase-1);
+  --color-phase-1-to: var(--phase-1-to);
+  --color-phase-1-soft: var(--phase-1-soft);
   --color-phase-2: var(--phase-2);
+  --color-phase-2-to: var(--phase-2-to);
+  --color-phase-2-soft: var(--phase-2-soft);
   --color-phase-3: var(--phase-3);
+  --color-phase-3-to: var(--phase-3-to);
+  --color-phase-3-soft: var(--phase-3-soft);
   --color-on-phase: var(--on-phase);
+
+  --color-type-blue-bg: var(--type-blue-bg);
+  --color-type-blue: var(--type-blue);
+  --color-type-red-bg: var(--type-red-bg);
+  --color-type-red: var(--type-red);
+  --color-type-teal-bg: var(--type-teal-bg);
+  --color-type-teal: var(--type-teal);
+  --color-type-amber-bg: var(--type-amber-bg);
+  --color-type-amber: var(--type-amber);
+  --color-type-green-bg: var(--type-green-bg);
+  --color-type-green: var(--type-green);
+  --color-type-orange-bg: var(--type-orange-bg);
+  --color-type-orange: var(--type-orange);
+  --color-type-purple-bg: var(--type-purple-bg);
+  --color-type-purple: var(--type-purple);
 
   --color-done: var(--done);
   --color-late: var(--late);

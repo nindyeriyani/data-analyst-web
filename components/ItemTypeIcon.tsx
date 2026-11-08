@@ -1,4 +1,5 @@
 import type { ItemType } from "@/content/course";
+import { TYPE_TILE } from "@/components/phase-styles";
 
 const PATHS: Record<ItemType, string> = {
   intro: "M12 3l9 5-9 5-9-5zM3 13l9 5 9-5",
@@ -26,5 +27,17 @@ export default function ItemTypeIcon({ type, size = 18 }: { type: ItemType; size
     >
       <path d={PATHS[type]} />
     </svg>
+  );
+}
+
+/** Kotak ikon berwarna sesuai tipe item. */
+export function ItemTypeTile({ type, className = "" }: { type: ItemType; className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${TYPE_TILE[type]} ${className}`}
+    >
+      <ItemTypeIcon type={type} />
+    </span>
   );
 }

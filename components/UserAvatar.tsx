@@ -15,7 +15,7 @@ export default function UserAvatar() {
     <Link
       href="/pengaturan"
       title={`${displayName} · Pengaturan`}
-      className="ml-auto flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary text-sm font-semibold text-on-primary hover:bg-primary-hover md:ml-2"
+      className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary text-sm font-semibold text-on-primary hover:bg-primary-hover md:ml-2"
     >
       {showPhoto ? (
         // Foto kecil dari Google; next/image tidak diperlukan untuk gambar 32px dari domain luar.
@@ -23,8 +23,8 @@ export default function UserAvatar() {
         <img
           src={avatarUrl}
           alt=""
-          width={32}
-          height={32}
+          width={36}
+          height={36}
           referrerPolicy="no-referrer"
           className="size-full object-cover"
           onError={() => setFailed(avatarUrl)}

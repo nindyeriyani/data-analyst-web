@@ -46,6 +46,8 @@ const SAVE_ERROR = "Gagal menyimpan. Periksa koneksi lalu coba lagi.";
 interface ProgressValue {
   /** True setelah progres dari Supabase selesai dimuat. */
   ready: boolean;
+  /** True selama ada perubahan yang sedang dikirim ke Supabase. */
+  saving: boolean;
   loadError: string | null;
   /** Tanggal hari ini di zona waktu perangkat. Null saat render di server. */
   today: DateString | null;
@@ -100,6 +102,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   const [savedStart, setSavedStart] = useState<DateString | null>(null);
   const [savedWeeks, setSavedWeeks] = useState<number | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [savingCount, setSavingCount] = useState(0);
   const pending = useRef(new Map<string, Pending>());
 
   const commitRows = useCallback((next: Record<string, ItemRow>) => {
@@ -175,12 +178,14 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       pending.current.delete(itemId);
       if (entry.timer) clearTimeout(entry.timer);
 
+      setSavingCount((n) => n + 1);
       const { error } = await getSupabaseBrowserClient()
         .from("item_state")
         .upsert(
           { user_id: userIdRef.current, item_id: itemId, ...entry.patch, updated_at: new Date().toISOString() },
           { onConflict: "user_id,item_id" },
         );
+      setSavingCount((n) => n - 1);
 
       if (error) {
         // Kembalikan hanya kolom yang belum diubah lagi sejak percobaan ini.
@@ -298,6 +303,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   const value = useMemo<ProgressValue>(
     () => ({
       ready,
+      saving: savingCount > 0,
       loadError,
       today,
       completed,
@@ -316,6 +322,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     }),
     [
       ready,
+      savingCount,
       loadError,
       today,
       completed,

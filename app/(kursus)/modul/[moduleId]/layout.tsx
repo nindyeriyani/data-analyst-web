@@ -6,7 +6,7 @@ export default async function ModuleLayout({ children, params }: LayoutProps<"/m
   const { moduleId } = await params;
 
   return (
-    <div className="lg:grid lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-8">
+    <div className="mx-auto max-w-6xl lg:gridlg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-8">
       <aside>
         <ModuleSidebar activeModuleId={moduleId} />
         <MobileModuleMenu activeModuleId={moduleId} />
