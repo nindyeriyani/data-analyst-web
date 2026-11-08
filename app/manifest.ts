@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Kursus Data Analyst",
     short_name: "Kursus DA",
-    description: "Pelacak belajar 12 minggu menjadi data analyst.",
+    description: "Pelacak belajar menjadi data analyst, dengan jadwal yang Anda atur sendiri.",
     lang: "id",
     start_url: "/",
     scope: "/",

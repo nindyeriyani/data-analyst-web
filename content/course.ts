@@ -322,7 +322,7 @@ export const MODULES: Module[] = [
     phase: 2,
     title: "Statistik praktis",
     description:
-      "Minggu ringan di libur akhir tahun. Statistik yang paling sering dipakai analyst: ringkasan data, distribusi, korelasi, dan dasar uji hipotesis.",
+      "Modul yang lebih ringan. Statistik yang paling sering dipakai analyst: ringkasan data, distribusi, korelasi, dan dasar uji hipotesis.",
     objectives: [
       "Memilih ukuran pemusatan dan sebaran yang tepat (rata-rata, median, simpangan baku).",
       "Membaca bentuk distribusi dan mengenali outlier.",

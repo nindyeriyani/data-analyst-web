@@ -1,64 +1,36 @@
 // Aturan progres yang tidak bergantung pada tempat data disimpan.
-//
-// Penguncian modul: sebuah modul terkunci jika ada kuis di modul sebelumnya
-// yang belum lulus dengan nilai sempurna. Modul tanpa kuis tidak menambah syarat.
-// Dipasang di halaman item, modul, dashboard, dan jadwal pada tahap 8,
-// setelah status lulus kuis tersimpan di Supabase.
+// Semua modul terbuka: pengguna bebas belajar berurutan maupun tidak.
+// Tanggal (tenggat, minggu berjalan) dihitung dari jadwal milik pengguna (lib/schedule.ts).
 
 import {
   BADGE_ITEMS,
   COURSE_ITEMS,
-  MODULES,
   allItems,
   getItem,
   getModule,
-  itemsByWeek,
   sumMinutes,
   type Item,
   type Module,
 } from "@/content/course";
-import { COURSE_START, TOTAL_WEEKS, isOverdue, weekEnd, type DateString } from "@/lib/schedule";
+import { isOverdue, itemDueWeek, weekEnd, type DateString, type Schedule } from "@/lib/schedule";
 
 /** Jumlah soal per percobaan kuis. Nilai lulus adalah semua soal benar. */
 export const QUESTIONS_PER_ATTEMPT = 5;
-
-/**
- * Sakelar penguncian. false = semua modul terbuka dan tombol "Berikutnya" di halaman
- * kuis tidak dikunci (dipakai sementara untuk melihat seluruh isi kursus).
- * Ubah kembali ke true untuk mengaktifkan penguncian modul.
- */
-export const LOCKS_ENABLED = false;
-
-/** Kuis di semua modul sebelum moduleId, urut kursus. */
-export function quizzesBefore(moduleId: string): Item[] {
-  const index = MODULES.findIndex((m) => m.id === moduleId);
-  if (index <= 0) return [];
-  return MODULES.slice(0, index).flatMap((m) => m.items.filter((item) => item.type === "quiz"));
-}
-
-/** Kuis yang belum lulus dan membuat moduleId terkunci. Kosong berarti modul terbuka. */
-export function blockingQuizzes(moduleId: string, passedQuizIds: ReadonlySet<string>): Item[] {
-  return quizzesBefore(moduleId).filter((quiz) => !passedQuizIds.has(quiz.id));
-}
-
-export function isModuleLocked(moduleId: string, passedQuizIds: ReadonlySet<string>): boolean {
-  return blockingQuizzes(moduleId, passedQuizIds).length > 0;
-}
 
 // ---------------------------------------------------------------------------
 // Status item dan modul
 
 export type ItemStatus = "done" | "late" | "todo";
 
-/** Selesai, tertinggal (tenggat sebelum hari ini), atau belum. today null = belum diketahui. */
+/** Selesai, tertinggal (tenggat sebelum hari ini), atau belum. today/schedule null = belum diketahui. */
 export function itemStatus(
   item: Pick<Item, "id" | "week">,
   completed: ReadonlySet<string>,
   today: DateString | null,
+  schedule: Schedule | null,
 ): ItemStatus {
-  const done = completed.has(item.id);
-  if (done) return "done";
-  return today !== null && isOverdue(item, today, false) ? "late" : "todo";
+  if (completed.has(item.id)) return "done";
+  return today !== null && schedule !== null && isOverdue(schedule, item, today, false) ? "late" : "todo";
 }
 
 export function moduleProgress(mod: Module, completed: ReadonlySet<string>) {
@@ -79,10 +51,11 @@ export function moduleStatus(
   mod: Module,
   completed: ReadonlySet<string>,
   today: DateString | null,
+  schedule: Schedule | null,
 ): ModuleStatus {
   const { done, total } = moduleProgress(mod, completed);
   if (done === total) return "done";
-  if (mod.items.some((item) => itemStatus(item, completed, today) === "late")) return "late";
+  if (mod.items.some((item) => itemStatus(item, completed, today, schedule) === "late")) return "late";
   return done === 0 ? "not-started" : "in-progress";
 }
 
@@ -99,8 +72,13 @@ export function nextDueItem(completed: ReadonlySet<string>): Item | undefined {
   return nextItem(allItems(), completed);
 }
 
-export function lateItems(completed: ReadonlySet<string>, today: DateString | null): Item[] {
-  return COURSE_ITEMS.filter((item) => itemStatus(item, completed, today) === "late");
+export function lateItems(completed: ReadonlySet<string>, today: DateString | null, schedule: Schedule | null): Item[] {
+  return COURSE_ITEMS.filter((item) => itemStatus(item, completed, today, schedule) === "late");
+}
+
+/** Item yang tenggatnya jatuh di minggu kalender ke-week. */
+export function itemsDueInWeek(schedule: Schedule, week: number): Item[] {
+  return COURSE_ITEMS.filter((item) => itemDueWeek(schedule, item) === week);
 }
 
 export type CourseStatus =
@@ -108,17 +86,21 @@ export type CourseStatus =
   | { kind: "on-track" }
   | { kind: "late"; count: number };
 
-export function courseStatus(completed: ReadonlySet<string>, today: DateString | null): CourseStatus {
-  const late = lateItems(completed, today).length;
+export function courseStatus(
+  completed: ReadonlySet<string>,
+  today: DateString | null,
+  schedule: Schedule | null,
+): CourseStatus {
+  const late = lateItems(completed, today, schedule).length;
   if (late > 0) return { kind: "late", count: late };
   return completed.size === 0 ? { kind: "not-started" } : { kind: "on-track" };
 }
 
-/** Total menit dan menit selesai per minggu, untuk grafik 13 minggu. */
-export function weeklyMinutes(completed: ReadonlySet<string>) {
-  return Array.from({ length: TOTAL_WEEKS }, (_, i) => {
+/** Total menit dan menit selesai per minggu kalender, untuk grafik mingguan. */
+export function weeklyMinutes(completed: ReadonlySet<string>, schedule: Schedule) {
+  return Array.from({ length: schedule.totalWeeks }, (_, i) => {
     const week = i + 1;
-    const items = itemsByWeek(week);
+    const items = itemsDueInWeek(schedule, week);
     return {
       week,
       total: sumMinutes(items),
@@ -132,13 +114,13 @@ export function weeklyMinutes(completed: ReadonlySet<string>) {
 /** Tenggat terdekat (hari ini atau sesudahnya) yang masih punya item belum selesai. */
 export function nearestDeadline(
   completed: ReadonlySet<string>,
-  today: DateString | null,
+  today: DateString,
+  schedule: Schedule,
 ): { date: DateString; week: number; remaining: number } | null {
-  const reference = today ?? COURSE_START;
-  for (let week = 1; week <= TOTAL_WEEKS; week++) {
-    const date = weekEnd(week);
-    if (date < reference) continue;
-    const remaining = itemsByWeek(week).filter((item) => !completed.has(item.id)).length;
+  for (let week = 1; week <= schedule.totalWeeks; week++) {
+    const date = weekEnd(schedule, week);
+    if (date < today) continue;
+    const remaining = itemsDueInWeek(schedule, week).filter((item) => !completed.has(item.id)).length;
     if (remaining > 0) return { date, week, remaining };
   }
   return null;

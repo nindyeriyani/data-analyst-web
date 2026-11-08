@@ -22,5 +22,5 @@ Minggu depan Anda mulai belajar SQL. Banyak idenya sama dengan yang sudah Anda k
 | Pivot table | `GROUP BY` |
 | XLOOKUP | `JOIN` |
 
-> [!tip] Selesaikan kuis dulu
-> Modul SQL terbuka setelah kuis spreadsheet lulus dengan nilai 5/5. Kalau belum lulus, ulangi kuis. Setiap percobaan memakai soal yang berbeda.
+> [!tip] Selesaikan kuis spreadsheet
+> Kuis dianggap selesai setelah lulus dengan nilai 5/5. Kalau belum lulus, ulangi kuis; setiap percobaan memakai soal yang berbeda. Hasil kuis juga membantu Anda melihat bagian mana yang perlu diulang sebelum masuk SQL.

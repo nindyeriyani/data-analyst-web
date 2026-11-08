@@ -21,5 +21,5 @@ Modul berikutnya memakai Python dan pandas di Google Colab. Konsepnya akan teras
 | `JOIN` | `pd.merge(...)` |
 | `ORDER BY` | `df.sort_values(...)` |
 
-> [!tip] Kuis membuka modul berikutnya
-> Modul Python terbuka setelah kuis SQL dasar dan kuis SQL lanjutan sama-sama lulus dengan nilai 5/5.
+> [!tip] Cek pemahaman dengan kuis
+> Sebelum pindah ke Python, pastikan kuis SQL dasar dan kuis SQL lanjutan sudah lulus 5/5. Kalau masih ada yang salah, baca lagi penjelasan soalnya dan ulangi dengan soal baru.

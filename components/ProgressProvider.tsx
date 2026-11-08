@@ -17,9 +17,14 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
-import { getModule, type Item } from "@/content/course";
-import { LOCKS_ENABLED, blockingQuizzes } from "@/lib/progress-rules";
-import { todayString, type DateString } from "@/lib/schedule";
+import {
+  DEFAULT_TOTAL_WEEKS,
+  clampTotalWeeks,
+  mondayOf,
+  todayString,
+  type DateString,
+  type Schedule,
+} from "@/lib/schedule";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { DISPLAY_NAME } from "@/lib/user";
@@ -55,6 +60,11 @@ interface ProgressValue {
   displayName: string;
   email: string | null;
   setDisplayName: (name: string) => Promise<boolean>;
+  /** Jadwal yang berlaku. Null saat render di server (tanggal hari ini belum diketahui). */
+  schedule: Schedule | null;
+  /** True jika pengguna sudah mengatur jadwal sendiri; false berarti jadwal bawaan. */
+  scheduleIsCustom: boolean;
+  setSchedule: (start: DateString, totalWeeks: number) => Promise<boolean>;
 }
 
 const ProgressContext = createContext<ProgressValue | null>(null);
@@ -83,6 +93,9 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   const userIdRef = useRef<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [displayName, setDisplayNameState] = useState(DISPLAY_NAME);
+  // Pengaturan jadwal tersimpan (null = belum diatur, pakai bawaan).
+  const [savedStart, setSavedStart] = useState<DateString | null>(null);
+  const [savedWeeks, setSavedWeeks] = useState<number | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const pending = useRef(new Map<string, Pending>());
 
@@ -109,7 +122,8 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       }
       const [items, settings] = await Promise.all([
         supabase.from("item_state").select("item_id, completed_at, quiz, rubric, note, link"),
-        supabase.from("settings").select("display_name").maybeSingle(),
+        // select("*") agar tetap berjalan walaupun kolom jadwal belum ditambahkan (migrasi 0003).
+        supabase.from("settings").select("*").maybeSingle(),
       ]);
       if (cancelled) return;
       if (items.error || settings.error) {
@@ -130,6 +144,8 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       setUserId(userData.user.id);
       setEmail(userData.user.email ?? null);
       if (settings.data?.display_name) setDisplayNameState(settings.data.display_name);
+      if (typeof settings.data?.start_date === "string") setSavedStart(settings.data.start_date);
+      if (typeof settings.data?.target_weeks === "number") setSavedWeeks(settings.data.target_weeks);
       commitRows(loaded);
       setReady(true);
     })();
@@ -164,7 +180,8 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         const current = rowsRef.current[itemId] ?? EMPTY_ROW;
         const reverted: ItemRow = { ...current };
         for (const key of Object.keys(entry.patch) as (keyof ItemRow)[]) {
-          if (current[key] === entry.patch[key]) (reverted as unknown as Record<string, unknown>)[key] = entry.before[key];
+          if (current[key] === entry.patch[key])
+            (reverted as unknown as Record<string, unknown>)[key] = entry.before[key];
         }
         commitRows({ ...rowsRef.current, [itemId]: reverted });
         setToast(SAVE_ERROR);
@@ -238,6 +255,32 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     [userId, displayName],
   );
 
+  const setSchedule = useCallback(
+    async (start: DateString, totalWeeks: number) => {
+      if (!userId) return false;
+      const weeks = clampTotalWeeks(totalWeeks);
+      const previous = { start: savedStart, weeks: savedWeeks };
+      setSavedStart(start);
+      setSavedWeeks(weeks);
+      const { error } = await getSupabaseBrowserClient()
+        .from("settings")
+        .upsert({ user_id: userId, start_date: start, target_weeks: weeks, updated_at: new Date().toISOString() });
+      if (error) {
+        setSavedStart(previous.start);
+        setSavedWeeks(previous.weeks);
+        setToast(SAVE_ERROR);
+        return false;
+      }
+      return true;
+    },
+    [userId, savedStart, savedWeeks],
+  );
+
+  const schedule = useMemo<Schedule | null>(() => {
+    if (today === null) return null;
+    return { start: savedStart ?? mondayOf(today), totalWeeks: savedWeeks ?? DEFAULT_TOTAL_WEEKS };
+  }, [today, savedStart, savedWeeks]);
+
   const completedAt = useMemo(() => {
     const map: Record<string, string> = {};
     for (const [id, row] of Object.entries(rows)) if (row.completed_at) map[id] = row.completed_at;
@@ -259,8 +302,26 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       displayName,
       email,
       setDisplayName,
+      schedule,
+      scheduleIsCustom: savedStart !== null,
+      setSchedule,
     }),
-    [ready, loadError, today, completed, completedAt, setCompleted, rows, updateItem, displayName, email, setDisplayName],
+    [
+      ready,
+      loadError,
+      today,
+      completed,
+      completedAt,
+      setCompleted,
+      rows,
+      updateItem,
+      displayName,
+      email,
+      setDisplayName,
+      schedule,
+      savedStart,
+      setSchedule,
+    ],
   );
 
   return (
@@ -287,12 +348,4 @@ export function useProgress(): ProgressValue {
   const value = useContext(ProgressContext);
   if (!value) throw new Error("useProgress harus dipakai di dalam ProgressProvider");
   return value;
-}
-
-/** Status kunci sebuah modul. Selama progres dimuat, `ready` false dan `locked` belum pasti. */
-export function useModuleLock(moduleId: string | undefined): { ready: boolean; locked: boolean; blocking: Item[] } {
-  const { ready, completed } = useProgress();
-  if (!LOCKS_ENABLED || !moduleId || !getModule(moduleId)) return { ready, locked: false, blocking: [] };
-  const blocking = blockingQuizzes(moduleId, completed);
-  return { ready, locked: ready && blocking.length > 0, blocking };
 }

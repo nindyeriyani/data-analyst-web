@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     default: "Kursus Data Analyst",
     template: "%s · Kursus Data Analyst",
   },
-  description: "Pelacak belajar 12 minggu menjadi data analyst.",
+  description: "Pelacak belajar menjadi data analyst, dengan jadwal yang Anda atur sendiri.",
   robots: { index: false, follow: false },
   appleWebApp: { capable: true, title: "Kursus DA", statusBarStyle: "default" },
 };

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useProgress } from "@/components/ProgressProvider";
 import { COURSE_ITEMS } from "@/content/course";
 import { courseStatus, nearestDeadline } from "@/lib/progress-rules";
-import { COURSE_END, EXTRA_WEEK, daysUntil, formatLong, formatShort } from "@/lib/schedule";
+import { courseEndDate, daysUntil, formatLong, formatShort } from "@/lib/schedule";
 
 function Card({ label, children, footer }: { label: string; children: ReactNode; footer?: ReactNode }) {
   return (
@@ -41,13 +41,14 @@ function Ring({ percent }: { percent: number }) {
 }
 
 export default function StatCards() {
-  const { completed, today } = useProgress();
+  const { completed, today, schedule } = useProgress();
   const total = COURSE_ITEMS.length;
   const done = COURSE_ITEMS.filter((item) => completed.has(item.id)).length;
   const percent = Math.round((done / total) * 100);
-  const status = courseStatus(completed, today);
-  const deadline = nearestDeadline(completed, today);
-  const daysLeft = today === null ? null : daysUntil(COURSE_END, today);
+  const status = courseStatus(completed, today, schedule);
+  const deadline = today && schedule ? nearestDeadline(completed, today, schedule) : null;
+  const end = schedule ? courseEndDate(schedule) : null;
+  const daysLeft = today && end ? daysUntil(end, today) : null;
 
   return (
     <section aria-label="Ringkasan" className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
@@ -63,7 +64,13 @@ export default function StatCards() {
 
       <Card
         label="Status"
-        footer={status.kind === "late" ? "Kejar item yang paling lama dulu" : status.kind === "on-track" ? "Tidak ada item tertinggal" : "Belum ada item selesai"}
+        footer={
+          status.kind === "late"
+            ? "Kejar item yang paling lama dulu"
+            : status.kind === "on-track"
+              ? "Tidak ada item tertinggal"
+              : "Belum ada item selesai"
+        }
       >
         {status.kind === "late" ? (
           <p className="flex items-center gap-2 text-lg font-semibold sm:text-xl text-late">
@@ -78,7 +85,7 @@ export default function StatCards() {
         )}
       </Card>
 
-      <Card label="Hitung mundur" footer={`Menuju ${formatLong(COURSE_END)}`}>
+      <Card label="Hitung mundur" footer={end ? `Menuju ${formatLong(end)}` : undefined}>
         <p className="text-2xl font-semibold text-text">
           {daysLeft === null
             ? "–"
@@ -92,7 +99,7 @@ export default function StatCards() {
 
       <Card
         label="Tenggat terdekat"
-        footer={deadline ? `${deadline.remaining} item tersisa${deadline.week === EXTRA_WEEK ? " · minggu ekstra" : ` · minggu ${deadline.week}`}` : undefined}
+        footer={deadline ? `${deadline.remaining} item tersisa · minggu ${deadline.week}` : undefined}
       >
         <p className="text-2xl font-semibold text-text">
           {deadline ? <time dateTime={deadline.date}>{formatShort(deadline.date)}</time> : "Tidak ada"}

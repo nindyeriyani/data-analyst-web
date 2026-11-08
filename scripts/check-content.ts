@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { MODULES, SECTIONS, COURSE_ITEMS, BADGE_ITEMS, sumMinutes } from "../content/course.ts";
 import { GLOSSARY } from "../content/glossary.ts";
 import { RESOURCE_GROUPS } from "../content/resources.ts";
-import { TOTAL_WEEKS, formatHours, formatShort, formatWeekRange, weekEnd } from "../lib/schedule.ts";
+import { COURSE_WEEKS, formatHours } from "../lib/schedule.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const ITEMS_DIR = join(ROOT, "content", "items");
@@ -124,19 +124,11 @@ for (const group of RESOURCE_GROUPS) {
 
 // --- Ringkasan per minggu ------------------------------------------------------
 
-console.log("Ringkasan per minggu\n");
-console.log("Mg  Tanggal         Tenggat        Item  Waktu");
-for (let week = 1; week <= TOTAL_WEEKS; week++) {
+console.log("Ringkasan per minggu kursus (tanggal mengikuti jadwal pengguna)\n");
+console.log("Mg  Item  Waktu");
+for (let week = 1; week <= COURSE_WEEKS; week++) {
   const items = COURSE_ITEMS.filter((i) => i.week === week);
-  console.log(
-    [
-      String(week).padEnd(3),
-      formatWeekRange(week).padEnd(15),
-      formatShort(weekEnd(week)).padEnd(14),
-      String(items.length).padStart(4),
-      ` ${formatHours(sumMinutes(items))}`,
-    ].join(" "),
-  );
+  console.log([String(week).padEnd(3), String(items.length).padStart(4), ` ${formatHours(sumMinutes(items))}`].join(" "));
 }
 console.log(`\nTotal: ${COURSE_ITEMS.length} item, ${formatHours(sumMinutes(COURSE_ITEMS))}, ${MODULES.length} modul.`);
 

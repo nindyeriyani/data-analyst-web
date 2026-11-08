@@ -1,21 +1,23 @@
 ## Selamat datang
 
-Kursus ini membawa Anda dari dasar spreadsheet sampai portofolio dan lamaran kerja pertama dalam 12 minggu, ditambah satu minggu ekstra untuk serah terima magang. Semua alatnya gratis dan bisa dipakai di MacBook.
+Kursus ini membawa Anda dari dasar spreadsheet sampai portofolio dan lamaran kerja pertama. Rencana awalnya 12 minggu ditambah satu minggu ekstra untuk serah terima magang, tetapi Anda bebas mengatur tanggal mulai dan lama kursus di **Pengaturan**. Semua alatnya gratis dan bisa dipakai di MacBook.
 
-## Peta 13 minggu
+## Peta kursus
 
-| Fase | Modul | Minggu |
+| Fase | Modul | Porsi waktu (rencana 13 minggu) |
 |---|---|---|
-| Fondasi | Orientasi, spreadsheet, SQL, Python dan pandas | 1–6 |
-| Analisis dan visualisasi | Statistik praktis, visualisasi dan storytelling | 7–8 |
-| Portofolio dan karier | Proyek portofolio, portofolio online, siap kerja, serah terima | 9–13 |
+| Fondasi | Orientasi, spreadsheet, SQL, Python dan pandas | Minggu 1–6 |
+| Analisis dan visualisasi | Statistik praktis, visualisasi dan storytelling | Minggu 7–8 |
+| Portofolio dan karier | Proyek portofolio, portofolio online, siap kerja, serah terima | Minggu 9–13 |
+
+Materi sering menyebut "minggu 3" atau "minggu 9–10". Itu urutan dalam rencana 13 minggu. Kalau Anda memilih lama kursus yang berbeda, ikuti minggu dan tenggat yang tampil di aplikasi.
 
 ## Cara memakai aplikasi ini
 
 1. Buka **Dashboard** setiap kali mulai belajar, lalu tekan tombol **Lanjutkan**.
-2. Kerjakan item sesuai urutan bagian: **Mulai**, **Pelajari**, **Latihan**, lalu **Uji dan refleksi**.
+2. Urutan yang disarankan di setiap modul: **Mulai**, **Pelajari**, **Latihan**, lalu **Uji dan refleksi**. Semua modul terbuka, jadi Anda juga bebas melompat ke materi mana pun.
 3. Tandai item selesai setelah benar-benar dikerjakan, bukan sekadar dibaca.
-4. Setiap item punya tenggat hari Minggu di minggunya. Kalau tertinggal, kejar dulu item yang paling lama.
+4. Setiap item punya tenggat di hari terakhir minggunya, sesuai jadwal Anda. Kalau tertinggal, kejar dulu item yang paling lama, atau longgarkan jadwal di **Pengaturan**.
 
 > [!tip] Kebiasaan yang langsung terpakai
 > Membaca dokumentasi, membaca pesan error dengan teliti, dan mencoba lagi dengan perubahan kecil adalah kebiasaan yang dipakai data analyst setiap hari, baik di spreadsheet, SQL, maupun Python. Latih ketiganya sejak minggu pertama.

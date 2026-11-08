@@ -4,12 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, useRef, type MouseEvent } from "react";
 import ItemTypeIcon from "@/components/ItemTypeIcon";
-import { ItemStatusDot, LockIcon } from "@/components/ProgressBits";
-import { useModuleLock, useProgress } from "@/components/ProgressProvider";
+import { ItemStatusDot } from "@/components/ProgressBits";
+import { useProgress } from "@/components/ProgressProvider";
 import { MODULES, SECTIONS, itemsBySection, moduleNumber, type Module } from "@/content/course";
 import { moduleProgress } from "@/lib/progress-rules";
 import { PHASE_BG } from "@/components/phase-styles";
-
 
 function moduleShortLabel(mod: Module): string {
   const n = moduleNumber(mod);
@@ -18,16 +17,7 @@ function moduleShortLabel(mod: Module): string {
 
 function ModuleCount({ mod }: { mod: Module }) {
   const { completed } = useProgress();
-  const { locked } = useModuleLock(mod.id);
   const { done, total } = moduleProgress(mod, completed);
-  if (locked) {
-    return (
-      <span className="shrink-0 text-muted" title="Terkunci">
-        <LockIcon size={14} />
-        <span className="sr-only">Terkunci</span>
-      </span>
-    );
-  }
   return (
     <span className="shrink-0 text-xs tabular-nums text-muted">
       {done}/{total}
@@ -53,7 +43,9 @@ function SidebarTree({ pathname, activeModuleId }: { pathname: string | null; ac
                 <span aria-hidden="true" className={`h-8 w-1 shrink-0 rounded-full ${PHASE_BG[mod.phase]}`} />
                 <span className="min-w-0 flex-1">
                   <span className="block text-xs text-muted">{moduleShortLabel(mod)}</span>
-                  <span className={`block truncate text-sm ${isActiveModule ? "font-semibold text-text" : "text-text"}`}>
+                  <span
+                    className={`block truncate text-sm ${isActiveModule ? "font-semibold text-text" : "text-text"}`}
+                  >
                     {mod.title}
                   </span>
                 </span>
@@ -77,9 +69,7 @@ function SidebarTree({ pathname, activeModuleId }: { pathname: string | null; ac
                   href={moduleHref}
                   aria-current={pathname === moduleHref ? "page" : undefined}
                   className={`mt-1 block rounded-md px-2 py-1.5 text-sm ${
-                    pathname === moduleHref
-                      ? "bg-surface-2 font-semibold text-text"
-                      : "text-primary hover:bg-surface-2"
+                    pathname === moduleHref ? "bg-surface-2 font-semibold text-text" : "text-primary hover:bg-surface-2"
                   }`}
                 >
                   Ringkasan modul

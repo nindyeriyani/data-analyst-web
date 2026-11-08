@@ -10,7 +10,7 @@ Spreadsheet adalah alat data yang paling banyak dipakai di kantor mana pun, term
 | 2 | Rumus inti | Menjawab pertanyaan dengan IF, COUNTIFS, SUMIFS, XLOOKUP |
 | 3 | Pivot table dan grafik | Meringkas data dan memilih grafik yang tepat |
 | 4 | Lab pembersihan data | Merapikan dataset yang berantakan |
-| 5 | Kuis | Nilai 5/5 untuk membuka modul SQL |
+| 5 | Kuis | Nilai 5/5 untuk menyelesaikan kuis |
 | 6 | Tugas magang | Merapikan satu laporan rutin di kantor |
 | 7 | Proyek mini | Analisis kecil dengan pivot table untuk portofolio |
 

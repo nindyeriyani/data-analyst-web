@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { PHASE_BG } from "@/components/phase-styles";
-import { LockIcon } from "@/components/ProgressBits";
-import { useModuleLock, useProgress } from "@/components/ProgressProvider";
+import { useProgress } from "@/components/ProgressProvider";
 import { MODULES, PHASES, moduleMinutes, moduleNumber, type Module, type PhaseId } from "@/content/course";
 import { MODULE_STATUS_LABELS, moduleProgress, moduleStatus, type ModuleStatus } from "@/lib/progress-rules";
-import { formatHours, formatWeeksRange } from "@/lib/schedule";
+import { calendarWeekSpan, formatHours, formatSpanRange, type Schedule } from "@/lib/schedule";
 
 const STATUS_STYLES: Record<ModuleStatus, string> = {
   "not-started": "bg-surface-2 text-muted",
@@ -15,18 +14,18 @@ const STATUS_STYLES: Record<ModuleStatus, string> = {
   late: "bg-late/10 text-late",
 };
 
-function bandLabel(mod: Module): string {
+function bandLabel(mod: Module, schedule: Schedule | null): string {
   const n = moduleNumber(mod);
-  const [a, b] = mod.weeks;
-  const weeks = a === b ? `minggu ${a}` : `minggu ${a}–${b}`;
-  return n === null ? `Ekstra, ${weeks}` : `Modul ${n}, ${weeks}`;
+  const name = n === null ? "Ekstra" : `Modul ${n}`;
+  if (!schedule) return name;
+  const [a, b] = calendarWeekSpan(schedule, mod.weeks);
+  return `${name}, ${a === b ? `minggu ${a}` : `minggu ${a}–${b}`}`;
 }
 
 function ModuleCard({ mod }: { mod: Module }) {
-  const { completed, today } = useProgress();
+  const { completed, today, schedule } = useProgress();
   const { done, total } = moduleProgress(mod, completed);
-  const status = moduleStatus(mod, completed, today);
-  const { locked } = useModuleLock(mod.id);
+  const status = moduleStatus(mod, completed, today, schedule);
   const percent = Math.round((done / total) * 100);
 
   return (
@@ -36,7 +35,7 @@ function ModuleCard({ mod }: { mod: Module }) {
         className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-colors hover:border-primary"
       >
         <div className={`px-4 pb-3 pt-3 text-on-phase ${PHASE_BG[mod.phase]}`}>
-          <p className="text-sm font-medium">{bandLabel(mod)}</p>
+          <p className="text-sm font-medium">{bandLabel(mod, schedule)}</p>
           {/* Grafik mini: satu batang per item, terisi jika selesai */}
           <div aria-hidden="true" className="mt-3 flex h-6 items-end gap-[2px]">
             {mod.items.map((item) => (
@@ -51,7 +50,8 @@ function ModuleCard({ mod }: { mod: Module }) {
         <div className="flex flex-1 flex-col p-4">
           <h3 className="font-semibold leading-snug text-text group-hover:text-primary">{mod.title}</h3>
           <p className="mt-1 text-sm text-muted">
-            {total} item · {formatHours(moduleMinutes(mod))} · {formatWeeksRange(mod.weeks)}
+            {total} item · {formatHours(moduleMinutes(mod))}
+            {schedule && <> · {formatSpanRange(schedule, calendarWeekSpan(schedule, mod.weeks))}</>}
           </p>
 
           <div className="mt-auto pt-4">
@@ -64,22 +64,18 @@ function ModuleCard({ mod }: { mod: Module }) {
               aria-valuetext={`${done} dari ${total} item selesai`}
               className="h-1.5 overflow-hidden rounded-full bg-surface-2"
             >
-              <div className="h-full rounded-full bg-done transition-[width] duration-300" style={{ width: `${percent}%` }} />
+              <div
+                className="h-full rounded-full bg-done transition-[width] duration-300"
+                style={{ width: `${percent}%` }}
+              />
             </div>
             <div className="mt-2 flex items-center justify-between gap-2 text-sm">
               <span className="text-muted">
                 {done} dari {total} selesai
               </span>
-              {locked ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-xs font-semibold text-muted">
-                  <LockIcon size={12} />
-                  Terkunci
-                </span>
-              ) : (
-                <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${STATUS_STYLES[status]}`}>
-                  {MODULE_STATUS_LABELS[status]}
-                </span>
-              )}
+              <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${STATUS_STYLES[status]}`}>
+                {MODULE_STATUS_LABELS[status]}
+              </span>
             </div>
           </div>
         </div>

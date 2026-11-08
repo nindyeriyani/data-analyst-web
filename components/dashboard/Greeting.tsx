@@ -4,28 +4,30 @@ import Link from "next/link";
 import { useProgress } from "@/components/ProgressProvider";
 import { MODULES, getModuleOfItem, moduleNumber } from "@/content/course";
 import { nextDueItem } from "@/lib/progress-rules";
-import { COURSE_START, EXTRA_WEEK, currentWeek, daysUntil, formatLong } from "@/lib/schedule";
+import { calendarWeekSpan, currentWeek, daysUntil, formatLong, type DateString, type Schedule } from "@/lib/schedule";
 
-function subtitle(today: string | null): string {
-  if (today === null) return "Kursus 12 minggu, 9 November 2026 sampai 31 Januari 2027.";
+function subtitle(today: DateString | null, schedule: Schedule | null): string {
+  if (today === null || schedule === null) return "Kursus data analyst: 10 modul, belajar sesuai jadwal Anda sendiri.";
 
-  const week = currentWeek(today);
+  const week = currentWeek(schedule, today);
   if (week === 0) {
-    const days = daysUntil(COURSE_START, today);
+    const days = daysUntil(schedule.start, today);
     const when = days === 1 ? "besok" : `${days} hari lagi`;
-    return `Kursus dimulai ${formatLong(COURSE_START)}, ${when}.`;
+    return `Kursus dimulai ${formatLong(schedule.start)}, ${when}.`;
   }
-  if (week === EXTRA_WEEK) return "Minggu ekstra · Serah terima magang.";
-  if (week > EXTRA_WEEK) return "Kursus selesai. Selamat atas kerja kerasnya!";
+  if (week > schedule.totalWeeks) return "Jadwal kursus sudah selesai. Selamat atas kerja kerasnya!";
 
-  const mod = MODULES.find((m) => m.weeks[0] <= week && week <= m.weeks[1]);
+  const mod = MODULES.find((m) => {
+    const [first, last] = calendarWeekSpan(schedule, m.weeks);
+    return first <= week && week <= last;
+  });
   const n = mod ? moduleNumber(mod) : null;
   const moduleLabel = mod ? ` · ${n === null ? "" : `Modul ${n}: `}${mod.title}` : "";
-  return `Minggu ${week} dari 12${moduleLabel}.`;
+  return `Minggu ${week} dari ${schedule.totalWeeks}${moduleLabel}.`;
 }
 
 export default function Greeting() {
-  const { completed, today, displayName } = useProgress();
+  const { ready, completed, today, displayName, schedule, scheduleIsCustom } = useProgress();
   const next = nextDueItem(completed);
   const nextModule = next ? getModuleOfItem(next.id) : undefined;
 
@@ -34,7 +36,15 @@ export default function Greeting() {
       <h1 id="sapaan" className="text-2xl font-bold text-text sm:text-3xl">
         Halo, {displayName}
       </h1>
-      <p className="mt-2 text-muted">{subtitle(today)}</p>
+      <p className="mt-2 text-muted">{subtitle(today, schedule)}</p>
+      {ready && schedule && !scheduleIsCustom && (
+        <p className="mt-2 text-sm text-muted">
+          Jadwal memakai tanggal mulai {formatLong(schedule.start)} selama {schedule.totalWeeks} minggu.{" "}
+          <Link href="/pengaturan" className="font-medium text-primary hover:underline">
+            Atur jadwal
+          </Link>
+        </p>
+      )}
 
       <div className="mt-5 flex flex-wrap gap-3">
         {next && nextModule ? (

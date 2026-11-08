@@ -33,7 +33,9 @@ export default function Badges() {
             <span
               aria-hidden="true"
               className={`flex size-12 items-center justify-center rounded-full ${
-                badge.earned ? "bg-primary text-on-primary" : "border-2 border-dashed border-line bg-surface-2 text-muted"
+                badge.earned
+                  ? "bg-primary text-on-primary"
+                  : "border-2 border-dashed border-line bg-surface-2 text-muted"
               }`}
             >
               <svg

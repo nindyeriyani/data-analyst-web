@@ -211,7 +211,7 @@ function QuizBody({ itemId, pool, initial }: { itemId: string; pool: QuizQuestio
             <ul className="mt-3 space-y-1 text-sm leading-relaxed text-muted">
               <li>{attemptSize} soal diambil acak dari bank {pool.length} soal.</li>
               <li>Setiap soal hanya bisa dijawab sekali.</li>
-              <li>Nilai lulus {attemptSize}/{attemptSize}. Modul berikutnya terbuka setelah lulus.</li>
+              <li>Nilai lulus {attemptSize}/{attemptSize}. Kuis ditandai selesai setelah lulus.</li>
             </ul>
             <button
               type="button"
@@ -321,8 +321,8 @@ function QuizBody({ itemId, pool, initial }: { itemId: string; pool: QuizQuestio
           </p>
           <p className="mt-1 text-sm leading-relaxed text-text">
             {perfect
-              ? "Modul berikutnya terbuka. Anda tetap bisa berlatih lagi dengan soal lain."
-              : `Perlu ${total}/${total} untuk membuka modul berikutnya. Pelajari penjelasan di atas, lalu coba lagi dengan soal baru.`}
+              ? "Kuis ini sudah ditandai selesai. Anda tetap bisa berlatih lagi dengan soal lain."
+              : `Perlu ${total}/${total} agar kuis ini selesai. Pelajari penjelasan di atas, lalu coba lagi dengan soal baru.`}
           </p>
           <button
             type="button"

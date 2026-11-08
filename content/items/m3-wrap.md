@@ -18,5 +18,5 @@ Buka lagi refleksi minggu 1. Bandingkan dengan sekarang:
 - Berapa jam rata-rata per minggu yang benar-benar Anda pakai untuk belajar?
 - Apa satu perubahan cara belajar untuk fase berikutnya?
 
-> [!tip] Minggu ringan di depan
-> Minggu 7 (21–27 Desember) adalah minggu statistik yang lebih ringan karena libur akhir tahun. Pakai waktu luangnya untuk merapikan repositori GitHub: README yang jelas, notebook yang bisa dijalankan ulang, dan query dengan komentar.
+> [!tip] Modul ringan di depan
+> Modul berikutnya, statistik praktis, lebih ringan dan tanpa proyek. Pakai waktu luangnya untuk merapikan repositori GitHub: README yang jelas, notebook yang bisa dijalankan ulang, dan query dengan komentar.

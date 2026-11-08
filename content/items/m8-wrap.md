@@ -18,5 +18,5 @@ Dua belas minggu kursus inti selesai. Jawab pertanyaan berikut di kolom catatan.
 | Proyek kecil baru | Satu analisis kecil per bulan dengan data publik |
 | Jaringan | Satu unggahan LinkedIn per bulan tentang hal yang dipelajari |
 
-> [!tip] Satu minggu lagi
-> Minggu ekstra dipakai untuk serah terima magang: dokumentasi, presentasi hasil, dan refleksi akhir kursus. Menutup magang dengan baik meninggalkan kesan yang bertahan lama, dan pembimbing yang terkesan adalah referensi terbaik Anda.
+> [!tip] Satu modul lagi
+> Modul ekstra dipakai untuk serah terima magang: dokumentasi, presentasi hasil, dan refleksi akhir kursus. Menutup magang dengan baik meninggalkan kesan yang bertahan lama, dan pembimbing yang terkesan adalah referensi terbaik Anda.

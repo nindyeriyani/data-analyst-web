@@ -12,11 +12,11 @@ Minggu pertama sudah selesai. Luangkan 20 menit untuk menjawab pertanyaan di baw
 
 ## Tujuan pribadi
 
-Tulis tiga tujuan untuk 12 minggu ke depan. Buat spesifik dan bisa diperiksa di akhir kursus. Contoh:
+Tulis tiga tujuan untuk sisa kursus, sesuai jadwal yang Anda atur. Buat spesifik dan bisa diperiksa di akhir kursus. Contoh:
 
 - "Menyelesaikan tiga proyek portofolio dan memublikasikannya di GitHub dan Tableau Public."
 - "Bisa menulis query dengan JOIN dan GROUP BY tanpa melihat contoh."
-- "Mengirim minimal lima lamaran data analyst sebelum 9 Februari 2027."
+- "Mengirim minimal lima lamaran data analyst sebelum jadwal kursus selesai."
 
-> [!tip] Lihat lagi di minggu 12
+> [!tip] Lihat lagi di akhir kursus
 > Di refleksi akhir kursus, Anda akan diminta membaca ulang catatan ini. Menulis dengan jujur sekarang membuat perbandingan nanti lebih bermakna.

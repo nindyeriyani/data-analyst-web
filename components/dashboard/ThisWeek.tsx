@@ -4,18 +4,40 @@ import Link from "next/link";
 import ItemTypeIcon from "@/components/ItemTypeIcon";
 import { ItemCheckbox, ItemDueLabel } from "@/components/ProgressBits";
 import { useProgress } from "@/components/ProgressProvider";
-import { ITEM_TYPE_LABELS, getModuleOfItem, itemsByWeek } from "@/content/course";
-import { EXTRA_WEEK, currentWeek, displayWeek, formatDuration, formatWeekRange } from "@/lib/schedule";
+import { ITEM_TYPE_LABELS, getModuleOfItem, type Item } from "@/content/course";
+import { itemsDueInWeek } from "@/lib/progress-rules";
+import { currentWeek, displayWeek, formatDuration, formatWeekRange, type Schedule } from "@/lib/schedule";
+
+/** Minggu yang ditampilkan dan itemnya. Kalau minggu ini tanpa tenggat, ambil minggu berikutnya yang punya tenggat. */
+function weekToShow(schedule: Schedule, today: string): { week: number; items: Item[]; isNext: boolean } {
+  const week = displayWeek(schedule, today);
+  const items = itemsDueInWeek(schedule, week);
+  if (items.length > 0) return { week, items, isNext: false };
+  for (let next = week + 1; next <= schedule.totalWeeks; next++) {
+    const nextItems = itemsDueInWeek(schedule, next);
+    if (nextItems.length > 0) return { week: next, items: nextItems, isNext: true };
+  }
+  return { week, items, isNext: false };
+}
 
 export default function ThisWeek() {
-  const { completed, today } = useProgress();
-  const week = today === null ? 1 : displayWeek(today);
-  const beforeStart = today !== null && currentWeek(today) === 0;
-  const items = itemsByWeek(week);
-  const done = items.filter((item) => completed.has(item.id)).length;
+  const { completed, today, schedule } = useProgress();
 
-  const title = beforeStart ? "Minggu pertama" : "Minggu ini";
-  const weekLabel = week === EXTRA_WEEK ? "Minggu ekstra" : `Minggu ${week}`;
+  if (!today || !schedule) {
+    return (
+      <section aria-labelledby="minggu-ini" className="rounded-2xl border border-line bg-surface p-4 sm:p-6">
+        <h2 id="minggu-ini" className="font-semibold text-text">
+          Minggu ini
+        </h2>
+        <p className="mt-3 text-sm text-muted">Memuat…</p>
+      </section>
+    );
+  }
+
+  const beforeStart = currentWeek(schedule, today) === 0;
+  const { week, items, isNext } = weekToShow(schedule, today);
+  const done = items.filter((item) => completed.has(item.id)).length;
+  const title = beforeStart ? "Minggu pertama" : isNext ? "Tenggat berikutnya" : "Minggu ini";
 
   return (
     <section aria-labelledby="minggu-ini" className="rounded-2xl border border-line bg-surface p-4 sm:p-6">
@@ -24,9 +46,12 @@ export default function ThisWeek() {
           {title}
         </h2>
         <p className="text-sm text-muted">
-          {weekLabel} · {formatWeekRange(week)} · {done} dari {items.length} selesai
+          Minggu {week} · {formatWeekRange(schedule, week)} · {done} dari {items.length} selesai
         </p>
       </div>
+      {isNext && !beforeStart && (
+        <p className="mt-2 text-sm text-muted">Tidak ada tenggat minggu ini. Lanjutkan item berikut.</p>
+      )}
 
       <ul className="mt-4 divide-y divide-line">
         {items.map((item) => {

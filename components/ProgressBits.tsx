@@ -4,36 +4,23 @@
 // bilah progres modul, label tenggat, tombol lanjutkan, dan tombol tandai selesai.
 
 import Link from "next/link";
-import { useModuleLock, useProgress } from "@/components/ProgressProvider";
-import { getModule, getModuleOfItem, type Item } from "@/content/course";
+import { useProgress } from "@/components/ProgressProvider";
+import { getModule, type Item } from "@/content/course";
 import { itemStatus, moduleProgress, nextItem } from "@/lib/progress-rules";
-import { formatShort, itemDueDate } from "@/lib/schedule";
+import {
+  calendarWeekSpan,
+  formatShort,
+  formatSpanRange,
+  formatWeekLabel,
+  itemDueDate,
+  itemDueWeek,
+  weekEnd,
+} from "@/lib/schedule";
 
 type ItemRef = Pick<Item, "id" | "title" | "type" | "week">;
 
-function LockIcon({ size = 14 }: { size?: number }) {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      width={size}
-      height={size}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4" />
-    </svg>
-  );
-}
-
-export { LockIcon };
-
 export function ItemCheckbox({ item }: { item: ItemRef }) {
   const { ready, isCompleted, setCompleted } = useProgress();
-  const { locked } = useModuleLock(getModuleOfItem(item.id)?.id);
   const done = isCompleted(item.id);
   const isQuiz = item.type === "quiz";
 
@@ -43,16 +30,10 @@ export function ItemCheckbox({ item }: { item: ItemRef }) {
       <input
         type="checkbox"
         checked={done}
-        disabled={isQuiz || !ready || locked}
+        disabled={isQuiz || !ready}
         onChange={(e) => setCompleted(item.id, e.target.checked)}
-        aria-label={`${done ? "Selesai" : "Tandai selesai"}: ${item.title}${locked ? " (modul terkunci)" : ""}`}
-        title={
-          locked
-            ? "Modul ini masih terkunci"
-            : isQuiz
-              ? "Selesai otomatis saat kuis lulus dengan nilai sempurna"
-              : undefined
-        }
+        aria-label={`${done ? "Selesai" : "Tandai selesai"}: ${item.title}`}
+        title={isQuiz ? "Selesai otomatis saat kuis lulus dengan nilai sempurna" : undefined}
         className="size-5 shrink-0 cursor-pointer accent-[var(--done)] disabled:cursor-not-allowed"
       />
     </label>
@@ -60,18 +41,8 @@ export function ItemCheckbox({ item }: { item: ItemRef }) {
 }
 
 export function ItemStatusDot({ item }: { item: Pick<Item, "id" | "week"> }) {
-  const { completed, today } = useProgress();
-  const { locked } = useModuleLock(getModuleOfItem(item.id)?.id);
-  const status = itemStatus(item, completed, today);
-
-  if (locked) {
-    return (
-      <span className="flex size-4 shrink-0 items-center justify-center text-muted">
-        <LockIcon size={13} />
-        <span className="sr-only">Terkunci</span>
-      </span>
-    );
-  }
+  const { completed, today, schedule } = useProgress();
+  const status = itemStatus(item, completed, today, schedule);
 
   if (status === "done") {
     return (
@@ -96,9 +67,10 @@ export function ItemStatusDot({ item }: { item: Pick<Item, "id" | "week"> }) {
 }
 
 export function ItemDueLabel({ item }: { item: Pick<Item, "id" | "week"> }) {
-  const { completed, today } = useProgress();
-  const late = itemStatus(item, completed, today) === "late";
-  const due = itemDueDate(item);
+  const { completed, today, schedule } = useProgress();
+  if (!schedule) return <span className="text-muted">…</span>;
+  const late = itemStatus(item, completed, today, schedule) === "late";
+  const due = itemDueDate(schedule, item);
   return (
     <time dateTime={due} className={late ? "font-medium text-late" : "text-muted"}>
       {late ? `Tertinggal · ${formatShort(due)}` : formatShort(due)}
@@ -197,5 +169,42 @@ export function CompleteButton({ itemId }: { itemId: string }) {
         </>
       )}
     </div>
+  );
+}
+
+/** Tenggat dan minggu sebuah item, untuk kepala halaman item. */
+export function ItemDueInfo({ item }: { item: Pick<Item, "id" | "week"> }) {
+  const { schedule } = useProgress();
+  if (!schedule) {
+    return <span className="text-muted">Tenggat …</span>;
+  }
+  const due = itemDueDate(schedule, item);
+  return (
+    <>
+      <span className="text-muted">Tenggat</span>{" "}
+      <time dateTime={due} className="font-medium text-text">
+        {formatShort(due)}
+      </time>
+      <span className="text-muted"> · Minggu </span>
+      <span className="font-medium text-text">{itemDueWeek(schedule, item)}</span>
+    </>
+  );
+}
+
+/** "Minggu 3–4" sesuai jadwal pengguna. */
+export function ModuleWeekLabel({ weeks }: { weeks: [number, number] }) {
+  const { schedule } = useProgress();
+  return <>{schedule ? formatWeekLabel(calendarWeekSpan(schedule, weeks)) : "Minggu …"}</>;
+}
+
+/** "23 Nov–6 Des · tenggat Min, 6 Des" sesuai jadwal pengguna. */
+export function ModuleDates({ weeks }: { weeks: [number, number] }) {
+  const { schedule } = useProgress();
+  if (!schedule) return <>…</>;
+  const span = calendarWeekSpan(schedule, weeks);
+  return (
+    <>
+      {formatSpanRange(schedule, span)} · tenggat {formatShort(weekEnd(schedule, span[1]))}
+    </>
   );
 }

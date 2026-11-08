@@ -12,13 +12,18 @@ import type { Item } from "@/content/course";
 
 export type DateString = string;
 
-export const COURSE_START: DateString = "2026-11-09";
-/** Akhir kursus utama (akhir minggu 12), target hitung mundur di dashboard. */
-export const COURSE_END: DateString = "2027-01-31";
-/** Minggu 13 adalah minggu ekstra dengan tenggat khusus. */
-export const EXTRA_WEEK = 13;
-export const EXTRA_WEEK_END: DateString = "2027-02-09";
-export const TOTAL_WEEKS = 13;
+/** Banyak minggu dalam rencana kursus di content/course.ts (12 minggu + 1 minggu ekstra). */
+export const COURSE_WEEKS = 13;
+/** Pilihan lama kursus yang bisa diatur pengguna, dalam minggu. */
+export const DEFAULT_TOTAL_WEEKS = 13;
+export const MIN_TOTAL_WEEKS = 8;
+export const MAX_TOTAL_WEEKS = 26;
+
+/** Jadwal milik pengguna: tanggal mulai dan lama kursus. */
+export interface Schedule {
+  start: DateString;
+  totalWeeks: number;
+}
 
 const DAYS_SHORT = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
 const DAYS_LONG = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -64,43 +69,83 @@ export function daysBetween(from: DateString, to: DateString): number {
 }
 
 // ---------------------------------------------------------------------------
-// Minggu dan tenggat
+// Jadwal pengguna
+//
+// Pengguna memilih tanggal mulai dan lama kursus (N minggu). Minggu kalender ke-k
+// dimulai start + 7(k−1) hari dan berakhir start + 7k − 1 hari. Minggu kursus w
+// (1–13, dari course.ts) dipetakan ke minggu kalender round(w × N / 13), sehingga
+// rencana 13 minggu diregangkan atau dipadatkan secara merata.
 
-/** Senin awal minggu ke-n. */
-export function weekStart(week: number): DateString {
-  return addDays(COURSE_START, 7 * (week - 1));
+/** Senin di minggu yang sama dengan tanggal ini. */
+export function mondayOf(value: DateString): DateString {
+  const day = parseDate(value).getDay(); // 0 = Minggu
+  return addDays(value, day === 0 ? -6 : 1 - day);
 }
 
-/** Hari terakhir minggu ke-n: hari Minggu, kecuali minggu 13 yang berakhir 9 Februari 2027. */
-export function weekEnd(week: number): DateString {
-  if (week === EXTRA_WEEK) return EXTRA_WEEK_END;
-  return addDays(COURSE_START, 7 * week - 1);
+/** Jadwal bawaan sebelum pengguna mengatur sendiri: mulai Senin minggu ini, 13 minggu. */
+export function defaultSchedule(today: DateString): Schedule {
+  return { start: mondayOf(today), totalWeeks: DEFAULT_TOTAL_WEEKS };
 }
 
-export function itemDueDate(item: Pick<Item, "week">): DateString {
-  return weekEnd(item.week);
+export function clampTotalWeeks(weeks: number): number {
+  if (!Number.isFinite(weeks)) return DEFAULT_TOTAL_WEEKS;
+  return Math.min(MAX_TOTAL_WEEKS, Math.max(MIN_TOTAL_WEEKS, Math.round(weeks)));
+}
+
+/** Minggu kalender tempat tenggat minggu kursus w jatuh. */
+export function calendarWeekOf(schedule: Schedule, courseWeek: number): number {
+  return Math.max(1, Math.round((courseWeek * schedule.totalWeeks) / COURSE_WEEKS));
+}
+
+/** Rentang minggu kalender untuk rentang minggu kursus [a, b], misalnya minggu sebuah modul. */
+export function calendarWeekSpan(schedule: Schedule, [first, last]: [number, number]): [number, number] {
+  const end = calendarWeekOf(schedule, last);
+  const startOfFirst = first <= 1 ? 1 : calendarWeekOf(schedule, first - 1) + 1;
+  return [Math.min(startOfFirst, calendarWeekOf(schedule, first)), end];
+}
+
+/** Hari pertama minggu kalender ke-k. */
+export function weekStart(schedule: Schedule, week: number): DateString {
+  return addDays(schedule.start, 7 * (week - 1));
+}
+
+/** Hari terakhir minggu kalender ke-k. */
+export function weekEnd(schedule: Schedule, week: number): DateString {
+  return addDays(schedule.start, 7 * week - 1);
+}
+
+/** Minggu kalender tenggat sebuah item. */
+export function itemDueWeek(schedule: Schedule, item: Pick<Item, "week">): number {
+  return calendarWeekOf(schedule, item.week);
+}
+
+export function itemDueDate(schedule: Schedule, item: Pick<Item, "week">): DateString {
+  return weekEnd(schedule, itemDueWeek(schedule, item));
+}
+
+/** Hari terakhir kursus, target hitung mundur di dashboard. */
+export function courseEndDate(schedule: Schedule): DateString {
+  return weekEnd(schedule, schedule.totalWeeks);
 }
 
 /**
- * Minggu yang sedang berjalan.
- * 0 = kursus belum mulai, 1–13 = minggu kursus, 14 = kursus sudah selesai.
+ * Minggu kalender yang sedang berjalan.
+ * 0 = belum mulai, 1–N = minggu kursus, N + 1 = kursus sudah selesai.
  */
-export function currentWeek(today: DateString): number {
-  if (today < COURSE_START) return 0;
-  for (let week = 1; week <= TOTAL_WEEKS; week++) {
-    if (today <= weekEnd(week)) return week;
-  }
-  return TOTAL_WEEKS + 1;
+export function currentWeek(schedule: Schedule, today: DateString): number {
+  if (today < schedule.start) return 0;
+  const week = Math.floor(daysBetween(schedule.start, today) / 7) + 1;
+  return Math.min(week, schedule.totalWeeks + 1);
 }
 
-/** Minggu yang ditampilkan di bagian "Minggu ini": minggu 1 sebelum kursus mulai. */
-export function displayWeek(today: DateString): number {
-  return Math.min(Math.max(currentWeek(today), 1), TOTAL_WEEKS);
+/** Minggu yang ditampilkan di bagian "Minggu ini": minggu 1 sebelum mulai, minggu terakhir sesudah selesai. */
+export function displayWeek(schedule: Schedule, today: DateString): number {
+  return Math.min(Math.max(currentWeek(schedule, today), 1), schedule.totalWeeks);
 }
 
 /** Item tertinggal: belum selesai dan tenggatnya sebelum hari ini. */
-export function isOverdue(item: Pick<Item, "week">, today: DateString, completed: boolean): boolean {
-  return !completed && itemDueDate(item) < today;
+export function isOverdue(schedule: Schedule, item: Pick<Item, "week">, today: DateString, completed: boolean): boolean {
+  return !completed && itemDueDate(schedule, item) < today;
 }
 
 export function daysUntil(target: DateString, today: DateString): number {
@@ -138,14 +183,19 @@ export function formatRange(start: DateString, end: DateString): string {
   return `${formatDayMonth(start)}–${formatDayMonth(end)}`;
 }
 
-/** Rentang tanggal satu minggu kursus, misalnya "9–15 Nov". */
-export function formatWeekRange(week: number): string {
-  return formatRange(weekStart(week), weekEnd(week));
+/** Rentang tanggal satu minggu kalender, misalnya "9–15 Nov". */
+export function formatWeekRange(schedule: Schedule, week: number): string {
+  return formatRange(weekStart(schedule, week), weekEnd(schedule, week));
 }
 
-/** Rentang tanggal beberapa minggu, misalnya modul m2: "23 Nov–6 Des". */
-export function formatWeeksRange(weeks: [number, number]): string {
-  return formatRange(weekStart(weeks[0]), weekEnd(weeks[1]));
+/** Rentang tanggal beberapa minggu kalender, misalnya "23 Nov–6 Des". */
+export function formatSpanRange(schedule: Schedule, [first, last]: [number, number]): string {
+  return formatRange(weekStart(schedule, first), weekEnd(schedule, last));
+}
+
+/** "Minggu 3" atau "Minggu 3–4". */
+export function formatWeekLabel([first, last]: [number, number]): string {
+  return first === last ? `Minggu ${first}` : `Minggu ${first}–${last}`;
 }
 
 /** "≈ 9,5 jam" dari jumlah menit. */

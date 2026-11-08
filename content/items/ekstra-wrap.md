@@ -1,6 +1,6 @@
 ## Refleksi akhir kursus
 
-Tiga belas minggu selesai. Luangkan 30 menit untuk menutup perjalanan ini dengan jujur.
+Kursus selesai. Luangkan 30 menit untuk menutup perjalanan ini dengan jujur.
 
 ## Lihat kembali
 
@@ -22,7 +22,7 @@ Tulis rencana empat minggu ke depan:
 
 ## Pesan untuk diri sendiri
 
-Tulis satu paragraf untuk dibaca lagi tiga bulan dari sekarang: apa yang Anda harapkan sudah terjadi, dan apa yang ingin Anda ingat dari 13 minggu ini.
+Tulis satu paragraf untuk dibaca lagi tiga bulan dari sekarang: apa yang Anda harapkan sudah terjadi, dan apa yang ingin Anda ingat dari perjalanan kursus ini.
 
 > [!tip] Tetap pakai aplikasi ini
 > Progres, catatan, dan tautan hasil kerja Anda tetap tersimpan. Buka lagi kapan pun untuk mengulang materi sebelum wawancara, atau melihat kembali seberapa jauh Anda sudah berkembang.

@@ -7,9 +7,9 @@ Data analyst jarang menghitung rumus statistik dengan tangan. Yang dibutuhkan ad
 3. **Korelasi**: dua hal yang bergerak bersama, dan kenapa itu belum tentu sebab.
 4. **Uji hipotesis dan A/B test**: apakah sebuah perbedaan nyata atau hanya kebetulan.
 
-## Minggu ringan
+## Modul ringan
 
-Minggu ini bertepatan dengan libur akhir tahun, jadi bebannya sekitar setengah minggu biasa dan tidak ada proyek. Semua contoh bisa dijalankan di Colab dengan pandas, dan rumusnya cukup dipahami idenya.
+Modul ini sengaja dibuat ringan, sekitar setengah beban minggu biasa dan tanpa proyek. Cocok untuk minggu yang sibuk atau masa libur. Semua contoh bisa dijalankan di Colab dengan pandas, dan rumusnya cukup dipahami idenya.
 
 | Urutan | Item | Perkiraan |
 |---|---|---|

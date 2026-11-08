@@ -27,4 +27,4 @@ Prosesnya berbeda antarperusahaan, tetapi biasanya berisi sebagian dari tahap be
 5. Kirim lamaran pertama.
 
 > [!warning] Jadwal magang tetap prioritas
-> Magang berlangsung sampai 9 Februari 2027. Jadwalkan tes dan wawancara di luar jam magang kalau memungkinkan, dan beri tahu pembimbing jika perlu izin. Minggu ekstra setelah ini dipakai untuk serah terima magang.
+> Selama magang masih berjalan, jadwalkan tes dan wawancara di luar jam magang kalau memungkinkan, dan beri tahu pembimbing jika perlu izin. Modul ekstra setelah ini dipakai untuk serah terima magang.

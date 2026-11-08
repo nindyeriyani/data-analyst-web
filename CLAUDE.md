@@ -4,14 +4,14 @@ File ini adalah panduan proyek untuk Claude Code. Baca seluruhnya sebelum menger
 
 ## Ringkasan proyek
 
-Aplikasi web pribadi untuk belajar menjadi data analyst dalam 12 minggu (9 November 2026 sampai 31 Januari 2027, ditambah minggu ekstra sampai 9 Februari 2027). Hanya dipakai oleh satu orang, yaitu pemilik repositori ini.
+Aplikasi web pribadi untuk belajar menjadi data analyst. Rencana awalnya 12 minggu ditambah satu minggu ekstra, tetapi pengguna mengatur sendiri tanggal mulai dan lama kursus (8–26 minggu) di halaman Pengaturan. Semua modul terbuka: materi boleh dipelajari berurutan maupun tidak. Hanya dipakai oleh satu orang, yaitu pemilik repositori ini.
 
 Aplikasi ini adalah pelacak belajar sekaligus wadah materi: dashboard progres, modul dengan materi bacaan, lab, kuis, proyek dengan rubrik, jadwal mingguan, glosarium, dan daftar sumber gratis. Progres disimpan di Supabase agar sama di MacBook dan HP.
 
 ### Tentang pelajar (konteks untuk materi dan contoh)
 
 - Latar belakang front-end (HTML, CSS, JavaScript), hanya sebagai konteks dan bukan bahan perumpamaan (lihat aturan materi di bawah). Pernah belajar SQL dasar. Pernah memakai Python, tapi sebagian besar dibantu AI.
-- Sedang magang sebagai data analyst di instansi pemerintahan sampai 9 Februari 2027. Di sana tidak ada orang teknis maupun IT.
+- Sedang magang sebagai data analyst di instansi pemerintahan. Di sana tidak ada orang teknis maupun IT.
 - Memakai MacBook, sehingga Power BI Desktop tidak dipakai. Alat dashboard: Tableau Public dan Looker Studio.
 - Fokus Python (bukan R). Seluruh jalur belajar gratis.
 - Target akhir: berkarier sebagai data analyst.
@@ -58,7 +58,7 @@ app/
     jadwal/page.tsx
     glosarium/page.tsx
     sumber/page.tsx
-    pengaturan/page.tsx   # nama panggilan dan tombol keluar
+    pengaturan/page.tsx   # nama panggilan, jadwal belajar (tanggal mulai dan lama kursus), tombol keluar
     modul/[moduleId]/layout.tsx       # sidebar modul
     modul/[moduleId]/page.tsx
     modul/[moduleId]/[itemId]/page.tsx
@@ -96,7 +96,7 @@ export interface Item {
   type: ItemType;
   title: string;
   minutes: number;     // estimasi waktu
-  week: number;        // minggu kursus (1–13), menentukan tenggat
+  week: number;        // minggu dalam rencana 13 minggu (1–13); dipetakan ke minggu kalender sesuai jadwal pengguna
   section: Section;
   url?: string;        // untuk type "course" atau sumber luar
   note?: string;       // keterangan singkat untuk item tanpa file materi
@@ -142,26 +142,26 @@ Isi materi item ada di `content/items/<itemId>.md`. Kalau file tidak ada, halama
 - Setiap file adalah bank soal berisi 15 soal (`npm run check:content` memberi peringatan jika kurang). Setiap percobaan memakai 5 soal (`QUESTIONS_PER_ATTEMPT` di `lib/progress-rules.ts`).
 - `answer` adalah indeks pilihan dalam urutan di file. Urutan tampil diacak, jadi jangan menulis pilihan seperti "Semua jawaban di atas".
 
-### Penguncian modul
+### Urutan bebas
 
-Sebuah modul terkunci jika ada kuis di modul sebelumnya yang belum lulus dengan nilai sempurna. Modul tanpa kuis tidak menambah syarat. Aturannya ada di `lib/progress-rules.ts` (`isModuleLocked`, `blockingQuizzes`) dan dipasang di halaman item, modul, dashboard, dan jadwal pada tahap 8, setelah status lulus tersimpan. Item di modul yang terkunci menampilkan pesan "Modul ini terbuka setelah {kuis} lulus".
+Semua modul dan item selalu terbuka. Tidak ada penguncian: pengguna boleh belajar berurutan maupun melompat ke materi mana pun. Kuis tetap memakai nilai lulus 5/5 untuk menandai item kuis selesai, tetapi tidak membuka atau mengunci apa pun.
 
 ## Rencana kursus
 
-Mulai Senin, 9 November 2026. Setiap minggu berakhir hari Minggu. Tenggat item = hari Minggu di minggu `week` item tersebut. Minggu 13 adalah minggu ekstra dengan tenggat khusus Selasa, 9 Februari 2027.
+Rencana dasarnya 13 minggu (kolom "Minggu" di bawah). Tanggal sebenarnya mengikuti jadwal pengguna: tanggal mulai dan lama kursus yang diatur di Pengaturan. Lihat "Logika tanggal".
 
-| Modul | Judul | Minggu | Tanggal | Fase |
-|---|---|---|---|---|
-| m0 | Orientasi dan persiapan | 1 | 9–15 Nov | 1 |
-| m1 | Spreadsheet untuk analisis | 2 | 16–22 Nov | 1 |
-| m2 | SQL untuk analisis | 3–4 | 23 Nov–6 Des | 1 |
-| m3 | Python dan pandas | 5–6 | 7–20 Des | 1 |
-| m4 | Statistik praktis (minggu ringan, libur akhir tahun) | 7 | 21–27 Des | 2 |
-| m5 | Visualisasi dan storytelling | 8 | 28 Des–3 Jan | 2 |
-| m6 | Proyek portofolio | 9–10 | 4–17 Jan | 3 |
-| m7 | Portofolio online, CV, dan LinkedIn | 11 | 18–24 Jan | 3 |
-| m8 | Siap kerja | 12 | 25–31 Jan | 3 |
-| ekstra | Serah terima magang | 13 | 1–9 Feb | 3 |
+| Modul | Judul | Minggu (rencana 13 minggu) | Fase |
+|---|---|---|---|
+| m0 | Orientasi dan persiapan | 1 | 1 |
+| m1 | Spreadsheet untuk analisis | 2 | 1 |
+| m2 | SQL untuk analisis | 3–4 | 1 |
+| m3 | Python dan pandas | 5–6 | 1 |
+| m4 | Statistik praktis (modul ringan) | 7 | 2 |
+| m5 | Visualisasi dan storytelling | 8 | 2 |
+| m6 | Proyek portofolio | 9–10 | 3 |
+| m7 | Portofolio online, CV, dan LinkedIn | 11 | 3 |
+| m8 | Siap kerja | 12 | 3 |
+| ekstra | Serah terima magang | 13 | 3 |
 
 Fase: 1 = Fondasi, 2 = Analisis dan visualisasi, 3 = Portofolio dan karier.
 
@@ -177,10 +177,10 @@ Sumber belajar utama (semua gratis): Kaggle Learn, SQLBolt, BigQuery sandbox, Go
 Logo dan judul “Kursus Data Analyst”, navigasi Dashboard, Jadwal, Glosarium, Sumber, lalu inisial nama pengguna. Di layar kecil, navigasi pindah ke bar bawah.
 
 ### Dashboard (`/`)
-1. Sapaan “Halo, {nama}” dengan tanggal mulai atau minggu berjalan, tombol “Lanjutkan: {item berikutnya}” (item pertama yang belum selesai, urut tenggat), dan tombol “Lihat jadwal”.
-2. Grafik batang 13 minggu: tinggi batang = total menit item minggu itu, bagian terisi = menit item yang selesai. Minggu berjalan diberi penanda.
-3. Empat kartu angka: progres (x dari total item, dengan cincin persen), status (“Sesuai jadwal”, “Tertinggal n item”, atau “Belum mulai”), hitung mundur hari ke 31 Januari 2027, dan tenggat terdekat.
-4. “Minggu ini”: item yang jatuh tempo minggu berjalan, bisa dicentang langsung. Sebelum kursus mulai, tampilkan minggu 1.
+1. Sapaan “Halo, {nama}” dengan tanggal mulai atau minggu berjalan (dan tautan “Atur jadwal” selama jadwal masih bawaan), tombol “Lanjutkan: {item berikutnya}” (item pertama yang belum selesai, urut tenggat), dan tombol “Lihat jadwal”.
+2. Grafik batang per minggu kalender (sebanyak lama kursus): tinggi batang = total menit item minggu itu, bagian terisi = menit item yang selesai. Minggu berjalan diberi penanda.
+3. Empat kartu angka: progres (x dari total item, dengan cincin persen), status (“Sesuai jadwal”, “Tertinggal n item”, atau “Belum mulai”), hitung mundur hari ke akhir jadwal, dan tenggat terdekat.
+4. “Minggu ini”: item yang jatuh tempo minggu berjalan, bisa dicentang langsung. Sebelum kursus mulai, tampilkan minggu 1. Kalau minggu ini tanpa tenggat (jadwal yang diregangkan), tampilkan tenggat berikutnya.
 5. Badge pencapaian (6): Modul pertama (m0 selesai), SQL tuntas (proyek m2), Python tuntas (proyek m3), Proyek portofolio pertama (proyek pertama m6), Portofolio online (proyek m7), Lamaran pertama (item lamaran di m8). Badge yang belum diraih tampil abu-abu.
 6. “Baru selesai”: 4 item terakhir yang diselesaikan beserta tanggalnya.
 7. Kartu semua modul, dikelompokkan per fase. Setiap kartu: pita warna fase berisi label “Modul n, minggu a–b” dan grafik batang mini (satu batang per item, terisi jika selesai), judul, jumlah item, estimasi jam, rentang tanggal, bilah progres, dan status (Belum mulai, Berjalan, Selesai, Tertinggal).
@@ -191,14 +191,14 @@ Sidebar kiri berisi daftar semua modul yang bisa dibuka-tutup (modul aktif terbu
 ### Halaman item (`/modul/[moduleId]/[itemId]`)
 Breadcrumb, judul, tipe, durasi, tenggat, isi materi, lalu:
 - `course`: kartu tautan keluar dengan `note`.
-- `quiz`: kartu pembuka dengan tombol "Mulai kuis". Setiap percobaan mengambil 5 soal acak dari bank soal (soal yang belum pernah muncul diutamakan), dengan urutan pilihan diacak. Soal satu per kartu dan hanya bisa dijawab sekali: setelah memilih, kartu terkunci; jawaban salah ditandai merah, jawaban benar ditandai hijau, lalu penjelasan muncul. Nilai lulus 5/5. Jika belum sempurna, tampil nilai dan tombol "Ulangi dengan soal baru". Item otomatis selesai saat kuis lulus. Tombol "Berikutnya" di halaman kuis terkunci sampai lulus.
+- `quiz`: kartu pembuka dengan tombol "Mulai kuis". Setiap percobaan mengambil 5 soal acak dari bank soal (soal yang belum pernah muncul diutamakan), dengan urutan pilihan diacak. Soal satu per kartu dan hanya bisa dijawab sekali: setelah memilih, kartu terkunci; jawaban salah ditandai merah, jawaban benar ditandai hijau, lalu penjelasan muncul. Nilai lulus 5/5. Jika belum sempurna, tampil nilai dan tombol "Ulangi dengan soal baru". Item otomatis selesai saat kuis lulus.
 - `project`: rubrik berupa kotak centang yang tersimpan, kolom “Tautan hasil kerja” yang tersimpan, dan tombol tandai selesai.
 - `wrap`: pertanyaan refleksi (dari markdown) dan kolom catatan yang tersimpan otomatis.
 - Semua tipe lain: tombol “Tandai selesai” atau “Batalkan selesai”.
 Di bawah: navigasi ke item sebelumnya dan berikutnya.
 
 ### Jadwal (`/jadwal`)
-Daftar minggu 1–13: nomor minggu, rentang tanggal, modul, total jam, dan item yang jatuh tempo (bisa dicentang). Minggu berjalan disorot dan otomatis di-scroll ke tampilan.
+Daftar minggu kalender 1 sampai lama kursus: nomor minggu, rentang tanggal, modul, total jam, dan item yang jatuh tempo (bisa dicentang). Minggu tanpa tenggat diberi keterangan. Minggu berjalan disorot dan otomatis di-scroll ke tampilan.
 
 ### Glosarium (`/glosarium`)
 Sekitar 30 istilah dengan definisi singkat dalam Bahasa Indonesia, dengan kolom pencarian yang memfilter langsung.
@@ -228,6 +228,8 @@ create table public.item_state (
 create table public.settings (
   user_id uuid primary key default auth.uid() references auth.users(id) on delete cascade,
   display_name text,
+  start_date date,                                   -- jadwal: tanggal mulai (0003); kosong = bawaan
+  target_weeks smallint check (target_weeks between 8 and 26),  -- jadwal: lama kursus (0003)
   updated_at timestamptz not null default now()
 );
 
@@ -241,7 +243,7 @@ create policy "own settings" on public.settings
   for all using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
 ```
 
-Migrasi: `0001_init.sql` (skema awal), `0002_rls_select_uid.sql` (policy memakai `(select auth.uid())` untuk performa). Setiap perubahan skema berikutnya dibuat sebagai file migrasi baru dengan nomor berurutan.
+Migrasi: `0001_init.sql` (skema awal), `0002_rls_select_uid.sql` (policy memakai `(select auth.uid())` untuk performa), `0003_jadwal_pengguna.sql` (kolom `start_date` dan `target_weeks` di `settings`). Setiap perubahan skema berikutnya dibuat sebagai file migrasi baru dengan nomor berurutan.
 
 ### Akses satu pengguna
 
@@ -260,8 +262,10 @@ Migrasi: `0001_init.sql` (skema awal), `0002_rls_select_uid.sql` (policy memakai
 
 ## Logika tanggal (`lib/schedule.ts`)
 
-- `COURSE_START = 2026-11-09`. Minggu n dimulai `start + 7(n-1)` hari dan berakhir hari Minggu `start + 7n - 1`.
-- Minggu 13 berakhir 2027-02-09.
+- Jadwal pengguna = `{ start, totalWeeks }` dari `settings.start_date` dan `settings.target_weeks`. Kalau belum diatur: mulai Senin minggu berjalan, 13 minggu.
+- Minggu kalender k dimulai `start + 7(k-1)` hari dan berakhir `start + 7k - 1`.
+- Minggu rencana w (1–13, dari `course.ts`) dipetakan ke minggu kalender `max(1, round(w × totalWeeks / 13))`. Tenggat item = hari terakhir minggu kalender itu.
+- Tanggal hanya dihitung di browser (Client Component), karena bergantung pada jadwal pengguna dan zona waktu perangkat.
 - Bandingkan tanggal saja (tanpa jam), dalam zona waktu lokal perangkat.
 - Status “tertinggal” = ada item belum selesai dengan tenggat sebelum hari ini.
 - Format tanggal Indonesia, misalnya “Min, 15 Nov” atau “Minggu, 15 November 2026”.
