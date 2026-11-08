@@ -5,7 +5,7 @@
 // kuis lulus jika semua soal dalam satu percobaan dijawab benar.
 
 import { useRef, useState } from "react";
-import { useQuizGate } from "@/components/QuizGate";
+import { useProgress } from "@/components/ProgressProvider";
 import type { QuizQuestion } from "@/lib/content";
 import { QUESTIONS_PER_ATTEMPT } from "@/lib/progress-rules";
 
@@ -76,10 +76,10 @@ const BADGE_STYLES: Record<OptionState, string> = {
   locked: "bg-surface-2 text-muted",
 };
 
-export default function Quiz({ questions: pool }: { questions: QuizQuestion[] }) {
-  const gate = useQuizGate();
+export default function Quiz({ itemId, questions: pool }: { itemId: string; questions: QuizQuestion[] }) {
+  const { isCompleted, setCompleted } = useProgress();
+  const passed = isCompleted(itemId);
   const [state, setState] = useState<QuizState>(EMPTY_STATE);
-  const [passed, setPassed] = useState(false);
   const [announcement, setAnnouncement] = useState("");
   const headingRef = useRef<HTMLHeadingElement>(null);
 
@@ -91,45 +91,52 @@ export default function Quiz({ questions: pool }: { questions: QuizQuestion[] })
   const perfect = finished && correct === total;
   const attemptSize = Math.min(QUESTIONS_PER_ATTEMPT, pool.length);
 
+  // Status terbaru, dibaca oleh handler. Beberapa klik dalam satu render
+  // (misalnya ketukan cepat) tidak boleh saling menimpa.
+  const latest = useRef<QuizState>(state);
+
   // Satu-satunya tempat status kuis berubah. Di tahap 8, perubahan ini di-upsert
   // ke item_state.quiz, dan item ditandai selesai saat kuis lulus.
   function updateState(next: QuizState) {
+    latest.current = next;
     setState(next);
   }
 
+  // Kuis yang lulus otomatis menandai item selesai.
   function markPassed() {
-    setPassed(true);
-    gate?.setPassed(true);
+    setCompleted(itemId, true);
   }
 
   function start() {
-    updateState(newAttempt(pool, state));
+    updateState(newAttempt(pool, latest.current));
     setAnnouncement(`Percobaan baru dimulai dengan ${attemptSize} soal.`);
     headingRef.current?.focus();
     headingRef.current?.scrollIntoView({ block: "start" });
   }
 
   function choose(questionIndex: number, optionIndex: number) {
-    if (state.answers[questionIndex] !== undefined) return;
+    const current = latest.current;
+    if (current.answers[questionIndex] !== undefined) return;
 
-    const answers: QuizState["answers"] = { ...state.answers, [questionIndex]: optionIndex };
-    updateState({ ...state, answers });
+    const answers: QuizState["answers"] = { ...current.answers, [questionIndex]: optionIndex };
+    updateState({ ...current, answers });
 
     const question = pool[questionIndex];
-    const position = state.questions.indexOf(questionIndex) + 1;
+    const count = current.questions.length;
+    const position = current.questions.indexOf(questionIndex) + 1;
     const isRight = optionIndex === question.answer;
     let message = isRight
       ? `Soal ${position} benar.`
       : `Soal ${position} salah. Jawaban yang benar: ${question.options[question.answer]}.`;
 
-    const doneCount = state.questions.filter((q) => answers[q] !== undefined).length;
-    if (doneCount === total) {
-      const score = state.questions.filter((q) => answers[q] === pool[q].answer).length;
-      if (score === total) {
+    const doneCount = current.questions.filter((q) => answers[q] !== undefined).length;
+    if (doneCount === count) {
+      const score = current.questions.filter((q) => answers[q] === pool[q].answer).length;
+      if (score === count) {
         markPassed();
-        message += ` Percobaan selesai. Nilai ${score} dari ${total}. Kuis lulus.`;
+        message += ` Percobaan selesai. Nilai ${score} dari ${count}. Kuis lulus.`;
       } else {
-        message += ` Percobaan selesai. Nilai ${score} dari ${total}. Perlu nilai sempurna untuk lulus.`;
+        message += ` Percobaan selesai. Nilai ${score} dari ${count}. Perlu nilai sempurna untuk lulus.`;
       }
     }
     setAnnouncement(message);

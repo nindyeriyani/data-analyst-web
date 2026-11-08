@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GatedLink } from "@/components/QuizGate";
+import { GatedLink } from "@/components/GatedLink";
 import { adjacentItems, getModuleOfItem, type Item } from "@/content/course";
 
 function itemHref(item: Item): string {
@@ -20,6 +20,7 @@ function PagerContent({ item, direction }: { item: Item; direction: "prev" | "ne
 }
 
 export default function ItemPager({ itemId, gated = false }: { itemId: string; gated?: boolean }) {
+  // gated: halaman kuis, "Berikutnya" terkunci sampai item ini (kuis) selesai.
   const { prev, next } = adjacentItems(itemId);
   if (!prev && !next) return null;
 
@@ -37,6 +38,7 @@ export default function ItemPager({ itemId, gated = false }: { itemId: string; g
 
       {next && gated && (
         <GatedLink
+          requiresItemId={itemId}
           href={itemHref(next)}
           rel="next"
           className={nextClass}

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import BottomNav from "@/components/BottomNav";
 import Header from "@/components/Header";
+import { ProgressProvider } from "@/components/ProgressProvider";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -37,11 +38,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${jakarta.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-bg font-sans text-text">
-        <Header />
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-24 sm:px-6 md:pb-10">
-          {children}
-        </main>
-        <BottomNav />
+        <ProgressProvider>
+          <Header />
+          <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-24 sm:px-6 md:pb-10">
+            {children}
+          </main>
+          <BottomNav />
+        </ProgressProvider>
       </body>
     </html>
   );

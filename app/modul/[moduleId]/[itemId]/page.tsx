@@ -5,8 +5,8 @@ import ExternalLinkCard from "@/components/ExternalLinkCard";
 import ItemPager from "@/components/ItemPager";
 import ItemTypeIcon from "@/components/ItemTypeIcon";
 import Markdown from "@/components/Markdown";
+import { CompleteButton } from "@/components/ProgressBits";
 import Quiz from "@/components/Quiz";
-import { QuizGateProvider } from "@/components/QuizGate";
 import {
   ITEM_TYPE_LABELS,
   MODULES,
@@ -59,7 +59,7 @@ export default async function ItemPage({ params }: Props) {
   // Untuk item dengan tautan, note tampil di kartu tautan, bukan di atas.
   const showNoteAsBody = !markdown && !item.url && item.note;
 
-  const content = (
+  return (
     <article className="mx-auto max-w-3xl">
       <nav aria-label="Breadcrumb" className="mb-5 text-sm text-muted">
         <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -123,7 +123,7 @@ export default async function ItemPage({ params }: Props) {
 
       {item.url && <ExternalLinkCard url={item.url} note={item.note} type={item.type} />}
 
-      {quiz && <Quiz questions={quiz} />}
+      {quiz && <Quiz itemId={item.id} questions={quiz} />}
 
       {item.type === "quiz" && !quiz && (
         <p className="my-8 rounded-xl border border-dashed border-line px-4 py-3 text-sm text-muted">
@@ -150,10 +150,9 @@ export default async function ItemPage({ params }: Props) {
         </section>
       )}
 
+      {item.type !== "quiz" && <CompleteButton itemId={item.id} />}
+
       <ItemPager itemId={item.id} gated={Boolean(quiz)} />
     </article>
   );
-
-  // Di halaman kuis, tombol "Berikutnya" terkunci sampai kuis lulus.
-  return quiz ? <QuizGateProvider>{content}</QuizGateProvider> : content;
 }

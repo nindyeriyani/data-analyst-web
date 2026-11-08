@@ -294,7 +294,7 @@ Centang setiap tahap yang selesai.
 - [x] 2. Model konten: `course.ts` dengan semua modul dan item, `lib/schedule.ts`, beberapa file materi dan kuis contoh.
 - [x] 3. Halaman item: render markdown, callout, tombol salin data csv, kartu tautan keluar.
 - [x] 4. Komponen kuis.
-- [ ] 5. Halaman modul dengan sidebar.
+- [x] 5. Halaman modul dengan sidebar.
 - [ ] 6. Dashboard lengkap.
 - [ ] 7. Jadwal, glosarium, sumber.
 - [ ] 8. Supabase: migrasi, auth magic link, middleware, sinkronisasi progres, rubrik, catatan, tautan, nama pengguna.
