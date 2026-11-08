@@ -283,7 +283,7 @@ create policy "own settings" on public.settings
 
 Centang setiap tahap yang selesai.
 
-- [ ] 1. Inisialisasi Next.js + TypeScript + Tailwind, font, CSS variables dan dark mode, header, deploy pertama ke Vercel.
+- [x] 1. Inisialisasi Next.js + TypeScript + Tailwind, font, CSS variables dan dark mode, header, deploy pertama ke Vercel.
 - [ ] 2. Model konten: `course.ts` dengan semua modul dan item, `lib/schedule.ts`, beberapa file materi dan kuis contoh.
 - [ ] 3. Halaman item: render markdown, callout, tombol salin data csv, kartu tautan keluar.
 - [ ] 4. Komponen kuis.
