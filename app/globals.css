@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/*
+ * Semua warna didefinisikan sebagai CSS variables agar mudah berganti
+ * antara mode terang dan gelap. Tailwind memakainya lewat @theme di bawah,
+ * misalnya bg-surface, text-muted, border-line, bg-phase-2.
+ */
+:root {
+  color-scheme: light dark;
+
+  --bg: #f3f6f6;
+  --surface: #ffffff;
+  --surface-2: #e9eff0;
+  --text: #12282c;
+  --text-muted: #566a6e;
+  --line: #dae3e4;
+
+  --primary: #0d6b62;
+  --primary-hover: #0a5750;
+  --on-primary: #ffffff;
+
+  --phase-1: #0e7c72;
+  --phase-2: #4a43c6;
+  --phase-3: #ad540f;
+  --on-phase: #ffffff;
+
+  --done: #157a3a;
+  --late: #b42318;
+
+  --focus: #0d6b62;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d181a;
+    --surface: #142225;
+    --surface-2: #1b2c30;
+    --text: #e3eced;
+    --text-muted: #9cb0b3;
+    --line: #2a3d41;
+
+    --primary: #3cb8a9;
+    --primary-hover: #5cc9bb;
+    --on-primary: #06201d;
+
+    --phase-1: #0b6a61;
+    --phase-2: #4740b8;
+    --phase-3: #9a4a0c;
+    --on-phase: #ffffff;
+
+    --done: #4cc477;
+    --late: #f2766b;
+
+    --focus: #5cc9bb;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-line: var(--line);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+
+  --color-phase-1: var(--phase-1);
+  --color-phase-2: var(--phase-2);
+  --color-phase-3: var(--phase-3);
+  --color-on-phase: var(--on-phase);
+
+  --color-done: var(--done);
+  --color-late: var(--late);
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Fokus keyboard selalu terlihat. */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

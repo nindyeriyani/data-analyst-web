@@ -1,0 +1,295 @@
+# CLAUDE.md — Kursus Data Analyst
+
+File ini adalah panduan proyek untuk Claude Code. Baca seluruhnya sebelum mengerjakan apa pun.
+
+## Ringkasan proyek
+
+Aplikasi web pribadi untuk belajar menjadi data analyst dalam 12 minggu (9 November 2026 sampai 31 Januari 2027, ditambah minggu ekstra sampai 9 Februari 2027). Hanya dipakai oleh satu orang, yaitu pemilik repositori ini.
+
+Aplikasi ini adalah pelacak belajar sekaligus wadah materi: dashboard progres, modul dengan materi bacaan, lab, kuis, proyek dengan rubrik, jadwal mingguan, glosarium, dan daftar sumber gratis. Progres disimpan di Supabase agar sama di MacBook dan HP.
+
+### Tentang pelajar (konteks untuk materi dan contoh)
+
+- Latar belakang front-end (HTML, CSS, JavaScript). Pernah belajar SQL dasar. Pernah memakai Python, tapi sebagian besar dibantu AI.
+- Sedang magang sebagai data analyst di instansi pemerintahan sampai 9 Februari 2027. Di sana tidak ada orang teknis maupun IT.
+- Memakai MacBook, sehingga Power BI Desktop tidak dipakai. Alat dashboard: Tableau Public dan Looker Studio.
+- Fokus Python (bukan R). Seluruh jalur belajar gratis.
+- Target akhir: berkarier sebagai data analyst.
+
+## Stack
+
+- **Next.js** (App Router, TypeScript strict mode), versi stabil terbaru saat setup.
+- **Tailwind CSS** untuk styling.
+- **Supabase**: Auth (magic link email), Postgres, Row Level Security. Pakai `@supabase/supabase-js` dan `@supabase/ssr`.
+- **Markdown** untuk materi: `react-markdown` + `remark-gfm` + `rehype-raw` (konten berasal dari repo sendiri sehingga HTML dianggap tepercaya).
+- **Deploy**: GitHub ke Vercel, otomatis setiap push ke `main`.
+- Font: Plus Jakarta Sans (teks) dan JetBrains Mono (kode), lewat `next/font/google`.
+
+Jangan menambah dependensi lain tanpa bertanya dulu. Utamakan solusi sederhana.
+
+## Perintah
+
+```bash
+npm run dev      # server lokal di http://localhost:3000
+npm run lint     # wajib lolos sebelum commit
+npm run build    # wajib lolos sebelum commit
+```
+
+## Variabel lingkungan
+
+Simpan di `.env.local` (jangan pernah di-commit) dan di pengaturan Environment Variables Vercel.
+
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=   # kunci publishable/anon dari dashboard Supabase
+ALLOWED_EMAIL=                          # satu-satunya email yang boleh masuk
+```
+
+Jangan pernah memakai service role key atau secret key di kode aplikasi.
+
+## Struktur folder
+
+```
+app/
+  layout.tsx              # font, header, tema
+  page.tsx                # Dashboard
+  jadwal/page.tsx
+  glosarium/page.tsx
+  sumber/page.tsx
+  modul/[moduleId]/page.tsx
+  modul/[moduleId]/[itemId]/page.tsx
+  login/page.tsx
+  auth/callback/route.ts  # tukar kode magic link menjadi sesi
+components/               # komponen UI
+content/
+  course.ts               # struktur kursus: fase, modul, item (satu sumber kebenaran)
+  items/<itemId>.md       # isi materi per item
+  quizzes/<itemId>.json   # soal kuis per item
+  glossary.ts
+  resources.ts
+lib/
+  schedule.ts             # logika tanggal dan tenggat
+  progress.ts             # baca/tulis progres ke Supabase
+  supabase/               # client untuk browser dan server
+middleware.ts             # proteksi semua halaman kecuali /login dan /auth/*
+supabase/migrations/      # file SQL skema
+```
+
+## Model konten
+
+### `content/course.ts`
+
+```ts
+export type ItemType =
+  | "intro" | "reading" | "course" | "lab" | "quiz"
+  | "project" | "magang" | "wrap";
+
+export type Section = "mulai" | "pelajari" | "latihan" | "uji";
+
+export interface Item {
+  id: string;          // unik global, format "<moduleId>-<slug>", contoh "m2-join"
+  type: ItemType;
+  title: string;
+  minutes: number;     // estimasi waktu
+  week: number;        // minggu kursus (1–13), menentukan tenggat
+  section: Section;
+  url?: string;        // untuk type "course" atau sumber luar
+  note?: string;       // keterangan singkat untuk item tanpa file materi
+  rubric?: string[];   // untuk type "project"
+}
+
+export interface Module {
+  id: string;          // "m0" sampai "m8", dan "ekstra"
+  phase: 1 | 2 | 3;
+  title: string;
+  description: string;
+  objectives: string[];
+  weeks: [number, number];
+  items: Item[];
+}
+```
+
+Isi materi item ada di `content/items/<itemId>.md`. Kalau file tidak ada, halaman item menampilkan `note` dan tombol ke `url`.
+
+### Format Markdown materi
+
+- Markdown biasa plus tabel GFM dan blok kode.
+- Callout memakai sintaks gaya GitHub alert:
+  - `> [!fe] Judul` untuk kotak “Keunggulan front-end Anda” (warna oranye).
+  - `> [!tip] Judul` untuk tips (warna biru).
+  - `> [!warning] Judul` untuk peringatan (warna merah muda).
+- Kunci jawaban yang disembunyikan memakai `<details><summary>Cek jawaban</summary>…</details>`.
+- Dataset kecil untuk lab ditulis dalam blok kode ```csv. Tampilkan tombol “Salin data” di atas setiap blok csv.
+
+### `content/quizzes/<itemId>.json`
+
+```json
+[
+  {
+    "question": "Filter hasil agregasi ditulis di…",
+    "options": ["WHERE", "HAVING", "ORDER BY", "FROM"],
+    "answer": 1,
+    "explanation": "HAVING memfilter setelah GROUP BY."
+  }
+]
+```
+
+## Rencana kursus
+
+Mulai Senin, 9 November 2026. Setiap minggu berakhir hari Minggu. Tenggat item = hari Minggu di minggu `week` item tersebut. Minggu 13 adalah minggu ekstra dengan tenggat khusus Selasa, 9 Februari 2027.
+
+| Modul | Judul | Minggu | Tanggal | Fase |
+|---|---|---|---|---|
+| m0 | Orientasi dan persiapan | 1 | 9–15 Nov | 1 |
+| m1 | Spreadsheet untuk analisis | 2 | 16–22 Nov | 1 |
+| m2 | SQL untuk analisis | 3–4 | 23 Nov–6 Des | 1 |
+| m3 | Python dan pandas | 5–6 | 7–20 Des | 1 |
+| m4 | Statistik praktis (minggu ringan, libur akhir tahun) | 7 | 21–27 Des | 2 |
+| m5 | Visualisasi dan storytelling | 8 | 28 Des–3 Jan | 2 |
+| m6 | Proyek portofolio | 9–10 | 4–17 Jan | 3 |
+| m7 | Portofolio online, CV, dan LinkedIn | 11 | 18–24 Jan | 3 |
+| m8 | Siap kerja | 12 | 25–31 Jan | 3 |
+| ekstra | Serah terima magang | 13 | 1–9 Feb | 3 |
+
+Fase: 1 = Fondasi, 2 = Analisis dan visualisasi, 3 = Portofolio dan karier.
+
+Setiap modul punya urutan bagian: Mulai (pengantar), Pelajari (bacaan dan kursus luar), Latihan (lab, kuis, tugas magang), Uji dan refleksi (proyek, penutup). Item bertipe `magang` adalah tugas mingguan di tempat magang.
+
+Proyek portofolio: (1) analisis e-commerce dataset theLook di BigQuery dengan segmentasi RFM dan retensi kohort, dashboard di Tableau Public; (2) dashboard indikator daerah dari data terbuka BPS atau Satu Data Indonesia; (3) studi kasus proyek magang, tanpa menampilkan data internal.
+
+Sumber belajar utama (semua gratis): Kaggle Learn, SQLBolt, BigQuery sandbox, Google Colab, freeCodeCamp, Khan Academy, Tableau Public, Looker Studio, DataLemur, BPS, Satu Data Indonesia.
+
+## Halaman dan fitur
+
+### Header (semua halaman)
+Logo dan judul “Kursus Data Analyst”, navigasi Dashboard, Jadwal, Glosarium, Sumber, lalu inisial nama pengguna. Di layar kecil, navigasi pindah ke bar bawah.
+
+### Dashboard (`/`)
+1. Sapaan “Halo, {nama}” dengan tanggal mulai atau minggu berjalan, tombol “Lanjutkan: {item berikutnya}” (item pertama yang belum selesai, urut tenggat), dan tombol “Lihat jadwal”.
+2. Grafik batang 13 minggu: tinggi batang = total menit item minggu itu, bagian terisi = menit item yang selesai. Minggu berjalan diberi penanda.
+3. Empat kartu angka: progres (x dari total item, dengan cincin persen), status (“Sesuai jadwal”, “Tertinggal n item”, atau “Belum mulai”), hitung mundur hari ke 31 Januari 2027, dan tenggat terdekat.
+4. “Minggu ini”: item yang jatuh tempo minggu berjalan, bisa dicentang langsung. Sebelum kursus mulai, tampilkan minggu 1.
+5. Badge pencapaian (6): Modul pertama (m0 selesai), SQL tuntas (proyek m2), Python tuntas (proyek m3), Proyek portofolio pertama (proyek pertama m6), Portofolio online (proyek m7), Lamaran pertama (item lamaran di m8). Badge yang belum diraih tampil abu-abu.
+6. “Baru selesai”: 4 item terakhir yang diselesaikan beserta tanggalnya.
+7. Kartu semua modul, dikelompokkan per fase. Setiap kartu: pita warna fase berisi label “Modul n, minggu a–b” dan grafik batang mini (satu batang per item, terisi jika selesai), judul, jumlah item, estimasi jam, rentang tanggal, bilah progres, dan status (Belum mulai, Berjalan, Selesai, Tertinggal).
+
+### Halaman modul (`/modul/[moduleId]`)
+Sidebar kiri berisi daftar semua modul yang bisa dibuka-tutup (modul aktif terbuka), dengan item per bagian dan bulatan status. Konten utama: kepala modul berwarna fase (label fase dan minggu, judul, deskripsi, bilah progres, ringkasan “x dari y selesai, ≈ jam, tenggat”), tombol mulai atau lanjutkan, kotak tujuan belajar, lalu daftar item per bagian dengan kotak centang, ikon tipe, judul, tipe dan durasi, serta tenggat. Di layar kecil, sidebar menjadi menu yang bisa dibuka.
+
+### Halaman item (`/modul/[moduleId]/[itemId]`)
+Breadcrumb, judul, tipe, durasi, tenggat, isi materi, lalu:
+- `course`: kartu tautan keluar dengan `note`.
+- `quiz`: soal satu per kartu. Jawaban salah ditandai merah dan bisa dicoba lagi, jawaban benar hijau dengan penjelasan. Item otomatis selesai saat semua soal dijawab benar.
+- `project`: rubrik berupa kotak centang yang tersimpan, kolom “Tautan hasil kerja” yang tersimpan, dan tombol tandai selesai.
+- `wrap`: pertanyaan refleksi (dari markdown) dan kolom catatan yang tersimpan otomatis.
+- Semua tipe lain: tombol “Tandai selesai” atau “Batalkan selesai”.
+Di bawah: navigasi ke item sebelumnya dan berikutnya.
+
+### Jadwal (`/jadwal`)
+Daftar minggu 1–13: nomor minggu, rentang tanggal, modul, total jam, dan item yang jatuh tempo (bisa dicentang). Minggu berjalan disorot dan otomatis di-scroll ke tampilan.
+
+### Glosarium (`/glosarium`)
+Sekitar 30 istilah dengan definisi singkat dalam Bahasa Indonesia, dengan kolom pencarian yang memfilter langsung.
+
+### Sumber (`/sumber`)
+Tautan gratis dikelompokkan: Kursus, Latihan SQL, Python, Statistik, Visualisasi, Sumber data, Karier.
+
+## Supabase
+
+### Skema
+
+Buat sebagai file di `supabase/migrations/`. Pemilik repo menjalankannya sendiri di SQL Editor Supabase.
+
+```sql
+create table public.item_state (
+  user_id uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  item_id text not null,
+  completed_at timestamptz,
+  quiz jsonb not null default '{}'::jsonb,     -- { "0": 2, "1": 0 } indeks soal -> indeks jawaban
+  rubric jsonb not null default '{}'::jsonb,   -- { "0": true, "3": true }
+  note text,
+  link text,
+  updated_at timestamptz not null default now(),
+  primary key (user_id, item_id)
+);
+
+create table public.settings (
+  user_id uuid primary key default auth.uid() references auth.users(id) on delete cascade,
+  display_name text,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.item_state enable row level security;
+alter table public.settings enable row level security;
+
+create policy "own item_state" on public.item_state
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+create policy "own settings" on public.settings
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+```
+
+### Akses satu pengguna
+
+- Login dengan magic link email di `/login`.
+- `middleware.ts` mengarahkan pengguna yang belum login ke `/login`, dan menolak sesi dengan email selain `ALLOWED_EMAIL`.
+- Setelah akun pemilik dibuat, matikan pendaftaran baru di dashboard Supabase (Authentication, pengaturan sign-up).
+- Daftarkan `http://localhost:3000/auth/callback` dan domain Vercel `/auth/callback` sebagai Redirect URL di Supabase.
+
+### Pola sinkronisasi
+
+- Saat halaman dimuat, ambil semua baris `item_state` milik pengguna sekali, simpan di context React.
+- Perubahan (centang, jawaban kuis, rubrik, catatan, tautan) langsung tampil di UI (optimistic), lalu di-upsert ke Supabase.
+- Catatan disimpan dengan debounce sekitar 800 ms.
+- Jika penyimpanan gagal, tampilkan pesan kecil yang jelas, misalnya “Gagal menyimpan. Periksa koneksi lalu coba lagi.”, dan kembalikan status UI.
+
+## Logika tanggal (`lib/schedule.ts`)
+
+- `COURSE_START = 2026-11-09`. Minggu n dimulai `start + 7(n-1)` hari dan berakhir hari Minggu `start + 7n - 1`.
+- Minggu 13 berakhir 2027-02-09.
+- Bandingkan tanggal saja (tanpa jam), dalam zona waktu lokal perangkat.
+- Status “tertinggal” = ada item belum selesai dengan tenggat sebelum hari ini.
+- Format tanggal Indonesia, misalnya “Min, 15 Nov” atau “Minggu, 15 November 2026”.
+
+## Desain
+
+- Bersih, mudah dibaca, nyaman untuk sesi belajar panjang. Layout dan pola mengikuti aplikasi kursus Katie (dashboard, kartu modul berwarna per fase, sidebar modul).
+- Warna (light mode):
+  - Latar `#F3F6F6`, permukaan `#FFFFFF`, teks `#12282C`, teks sekunder `#566A6E`, garis `#DAE3E4`.
+  - Aksi utama `#0D6B62`.
+  - Fase 1 `#0E7C72` (hijau toska), fase 2 `#4A43C6` (ungu), fase 3 `#AD540F` (oranye).
+  - Selesai `#157A3A`, tertinggal `#B42318`.
+- Dark mode mengikuti pengaturan perangkat (`prefers-color-scheme`), definisikan semua warna sebagai CSS variables yang dipakai lewat Tailwind.
+- Responsif sampai layar HP. Fokus keyboard terlihat. Hormati `prefers-reduced-motion`.
+- Teks antarmuka memakai huruf kapital di awal kalimat saja (sentence case), tanpa label huruf kapital semua.
+
+## Aturan kerja untuk Claude Code
+
+- Teks antarmuka dan materi dalam Bahasa Indonesia. Nama variabel, fungsi, dan file dalam bahasa Inggris.
+- Kerjakan satu tahap per sesi. Jelaskan rencana dulu sebelum menulis kode, lalu tunggu persetujuan.
+- Server Component sebagai default; Client Component hanya untuk bagian interaktif.
+- Jangan mengubah skema database tanpa bertanya. Setiap perubahan skema dibuat sebagai file migrasi baru.
+- Jangan pernah commit `.env.local` atau kunci apa pun.
+- Pastikan `npm run lint` dan `npm run build` lolos sebelum menyarankan commit.
+- Setelah setiap tahap, ringkas apa yang berubah dan cara mengujinya di browser, dalam Bahasa Indonesia.
+
+## Di luar cakupan
+
+- Tutor AI di dalam aplikasi (butuh API berbayar). Pemilik bertanya ke Claude di luar aplikasi.
+- Multi-pengguna, fitur berbagi, analitik, notifikasi.
+- Unggah atau menyimpan data dari tempat magang. Data internal instansi tidak boleh masuk ke repo maupun Supabase ini.
+
+## Tahapan pembangunan
+
+Centang setiap tahap yang selesai.
+
+- [ ] 1. Inisialisasi Next.js + TypeScript + Tailwind, font, CSS variables dan dark mode, header, deploy pertama ke Vercel.
+- [ ] 2. Model konten: `course.ts` dengan semua modul dan item, `lib/schedule.ts`, beberapa file materi dan kuis contoh.
+- [ ] 3. Halaman item: render markdown, callout, tombol salin data csv, kartu tautan keluar.
+- [ ] 4. Komponen kuis.
+- [ ] 5. Halaman modul dengan sidebar.
+- [ ] 6. Dashboard lengkap.
+- [ ] 7. Jadwal, glosarium, sumber.
+- [ ] 8. Supabase: migrasi, auth magic link, middleware, sinkronisasi progres, rubrik, catatan, tautan, nama pengguna.
+- [ ] 9. Rapikan tampilan di HP dan dark mode, uji alur lengkap, deploy produksi.
+- [ ] 10. Lengkapi seluruh isi materi dan kuis per modul.
