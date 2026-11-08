@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:content": "node --experimental-strip-types --no-warnings=ExperimentalWarning scripts/check-content.ts"
   },
   "dependencies": {
     "next": "16.4.5",

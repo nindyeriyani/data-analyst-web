@@ -1,0 +1,52 @@
+[
+  {
+    "question": "Filter hasil agregasi ditulis di…",
+    "options": ["WHERE", "HAVING", "ORDER BY", "FROM"],
+    "answer": 1,
+    "explanation": "HAVING memfilter setelah GROUP BY. WHERE memfilter baris sebelum dikelompokkan."
+  },
+  {
+    "question": "Query mana yang mengambil 10 pesanan dengan nilai terbesar?",
+    "options": [
+      "SELECT * FROM orders LIMIT 10 ORDER BY amount DESC;",
+      "SELECT * FROM orders ORDER BY amount DESC LIMIT 10;",
+      "SELECT TOP amount FROM orders 10;",
+      "SELECT * FROM orders WHERE amount = MAX LIMIT 10;"
+    ],
+    "answer": 1,
+    "explanation": "ORDER BY ditulis sebelum LIMIT. Urutkan dari terbesar dengan DESC, lalu batasi 10 baris."
+  },
+  {
+    "question": "Apa hasil COUNT(*) dibandingkan COUNT(kolom)?",
+    "options": [
+      "Selalu sama",
+      "COUNT(*) menghitung semua baris, COUNT(kolom) melewatkan nilai NULL",
+      "COUNT(kolom) menghitung semua baris, COUNT(*) melewatkan nilai NULL",
+      "COUNT(*) hanya menghitung nilai unik"
+    ],
+    "answer": 1,
+    "explanation": "COUNT(*) menghitung baris. COUNT(kolom) hanya menghitung baris yang kolomnya tidak NULL."
+  },
+  {
+    "question": "Untuk menemukan pelanggan dari Bandung atau Medan, kondisi yang paling ringkas adalah…",
+    "options": [
+      "WHERE city = 'Bandung', 'Medan'",
+      "WHERE city IN ('Bandung', 'Medan')",
+      "WHERE city LIKE 'Bandung' AND 'Medan'",
+      "WHERE city BETWEEN 'Bandung' AND 'Medan'"
+    ],
+    "answer": 1,
+    "explanation": "IN memeriksa apakah nilai ada di dalam daftar. BETWEEN untuk rentang, bukan daftar."
+  },
+  {
+    "question": "Kolom apa saja yang boleh muncul di SELECT pada query dengan GROUP BY city?",
+    "options": [
+      "Kolom apa pun dari tabel",
+      "Hanya city dan hasil fungsi agregat",
+      "Hanya fungsi agregat",
+      "Hanya kolom yang bertipe angka"
+    ],
+    "answer": 1,
+    "explanation": "Setelah dikelompokkan, setiap baris mewakili satu city. Kolom lain harus diringkas dengan fungsi agregat seperti SUM atau COUNT."
+  }
+]

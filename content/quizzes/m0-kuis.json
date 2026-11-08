@@ -1,0 +1,52 @@
+[
+  {
+    "question": "Langkah pertama dalam alur analisis data adalah…",
+    "options": [
+      "Membuat dashboard",
+      "Merumuskan pertanyaan yang ingin dijawab",
+      "Membersihkan data",
+      "Menulis query SQL"
+    ],
+    "answer": 1,
+    "explanation": "Analisis dimulai dari pertanyaan. Tanpa pertanyaan yang jelas, data yang dikumpulkan dan dibersihkan bisa tidak menjawab kebutuhan."
+  },
+  {
+    "question": "Tugas mana yang paling khas untuk data analyst dibandingkan data engineer?",
+    "options": [
+      "Membangun pipeline data otomatis",
+      "Mengelola server database",
+      "Menjawab pertanyaan bisnis dan menyampaikan temuan",
+      "Melatih model machine learning untuk produksi"
+    ],
+    "answer": 2,
+    "explanation": "Data analyst berfokus mengubah data menjadi jawaban dan rekomendasi. Membangun pipeline biasanya tugas data engineer."
+  },
+  {
+    "question": "Alat mana yang dipakai di kursus ini untuk menjalankan SQL pada dataset besar secara gratis?",
+    "options": ["Power BI Desktop", "BigQuery sandbox", "Microsoft Access", "Tableau Public"],
+    "answer": 1,
+    "explanation": "BigQuery sandbox gratis tanpa kartu kredit dan menyediakan dataset publik seperti theLook."
+  },
+  {
+    "question": "Cara terbaik memakai AI saat belajar adalah…",
+    "options": [
+      "Meminta jawaban lengkap lalu menyalinnya",
+      "Tidak memakai AI sama sekali",
+      "Mencoba dulu sendiri, lalu meminta penjelasan atas bagian yang belum dipahami",
+      "Memakai AI hanya untuk menulis laporan akhir"
+    ],
+    "answer": 2,
+    "explanation": "Mencoba sendiri membangun pemahaman. AI paling berguna untuk menjelaskan kesalahan dan konsep, bukan menggantikan latihan."
+  },
+  {
+    "question": "Apa yang boleh dimasukkan ke portofolio dari pekerjaan magang?",
+    "options": [
+      "Salinan data asli instansi",
+      "Tangkapan layar laporan internal lengkap",
+      "Studi kasus berisi masalah, pendekatan, dan hasil dengan angka yang disamarkan",
+      "Nama dan data pribadi pegawai"
+    ],
+    "answer": 2,
+    "explanation": "Portofolio cukup menceritakan masalah, proses, dan dampak. Data internal dan informasi pribadi tidak boleh keluar dari instansi."
+  }
+]
