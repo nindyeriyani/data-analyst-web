@@ -2,25 +2,52 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Suspense, useRef, type MouseEvent } from "react";
-import ItemTypeIcon from "@/components/ItemTypeIcon";
+import { Suspense, useEffect, useRef, type MouseEvent } from "react";
 import { ItemStatusDot } from "@/components/ProgressBits";
 import { useProgress } from "@/components/ProgressProvider";
-import { MODULES, SECTIONS, itemsBySection, moduleNumber, type Module } from "@/content/course";
+import {
+  ITEM_TYPE_LABELS,
+  MODULES,
+  SECTIONS,
+  itemsBySection,
+  moduleNumber,
+  type Item,
+  type Module,
+} from "@/content/course";
 import { moduleProgress } from "@/lib/progress-rules";
-import { PHASE_BG } from "@/components/phase-styles";
+import { calendarWeekSpan, formatDayMonth, formatDuration, formatSpanRange, itemDueDate } from "@/lib/schedule";
 
-function moduleShortLabel(mod: Module): string {
+function moduleLabel(mod: Module): string {
   const n = moduleNumber(mod);
-  return n === null ? "Ekstra" : `Modul ${n}`;
+  return n === null ? `Ekstra · ${mod.title}` : `Modul ${n} · ${mod.title}`;
 }
 
-function ModuleCount({ mod }: { mod: Module }) {
-  const { completed } = useProgress();
+/** "Minggu 3–4 · 23 Nov–6 Des · 2/11" */
+function ModuleMeta({ mod }: { mod: Module }) {
+  const { completed, schedule } = useProgress();
   const { done, total } = moduleProgress(mod, completed);
+  let dates = "";
+  if (schedule) {
+    const [a, b] = calendarWeekSpan(schedule, mod.weeks);
+    dates = `${a === b ? `Minggu ${a}` : `Minggu ${a}–${b}`} · ${formatSpanRange(schedule, [a, b])} · `;
+  }
   return (
-    <span className="shrink-0 text-xs tabular-nums text-muted">
-      {done}/{total}
+    <span className="mt-1 block text-xs text-muted">
+      {dates}
+      <span className="tabular-nums">
+        {done}/{total}
+      </span>
+    </span>
+  );
+}
+
+/** "Bacaan · 15 menit · tenggat 17 Jan" */
+function ItemMeta({ item }: { item: Item }) {
+  const { schedule } = useProgress();
+  return (
+    <span className="mt-0.5 block text-xs font-normal text-muted">
+      {ITEM_TYPE_LABELS[item.type]} · {formatDuration(item.minutes)}
+      {schedule && <> · tenggat {formatDayMonth(itemDueDate(schedule, item))}</>}
     </span>
   );
 }
@@ -31,45 +58,43 @@ function ModuleCount({ mod }: { mod: Module }) {
  */
 function SidebarTree({ pathname, activeModuleId }: { pathname: string | null; activeModuleId: string }) {
   return (
-    <ul className="space-y-1">
+    <ul>
       {MODULES.map((mod) => {
         const isActiveModule = mod.id === activeModuleId;
         const moduleHref = `/modul/${mod.id}`;
 
         return (
-          <li key={mod.id}>
+          <li key={mod.id} className="border-b border-line">
             <details open={isActiveModule} className="group/mod">
-              <summary className="flex cursor-pointer list-none items-center gap-2 rounded-lg px-2 py-2 hover:bg-surface-2 [&::-webkit-details-marker]:hidden">
-                <span aria-hidden="true" className={`h-8 w-1 shrink-0 rounded-full ${PHASE_BG[mod.phase]}`} />
+              <summary className="flex cursor-pointer list-none items-start gap-3 px-5 py-4 hover:bg-surface-2/60 [&::-webkit-details-marker]:hidden">
                 <span className="min-w-0 flex-1">
-                  <span className="block text-xs text-muted">{moduleShortLabel(mod)}</span>
-                  <span
-                    className={`block truncate text-sm ${isActiveModule ? "font-semibold text-text" : "text-text"}`}
-                  >
-                    {mod.title}
-                  </span>
+                  <span className="block font-bold leading-snug text-text">{moduleLabel(mod)}</span>
+                  <ModuleMeta mod={mod} />
                 </span>
-                <ModuleCount mod={mod} />
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 24"
-                  width="16"
-                  height="16"
+                  width="18"
+                  height="18"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
-                  className="shrink-0 text-muted transition-transform group-open/mod:rotate-90"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mt-0.5 shrink-0 text-muted transition-transform group-open/mod:rotate-180"
                 >
-                  <path d="M9 6l6 6-6 6" />
+                  <path d="M6 9l6 6 6-6" />
                 </svg>
               </summary>
 
-              <div className="mb-2 ml-3 border-l border-line pl-3">
+              <div className="pb-3">
                 <Link
                   href={moduleHref}
                   aria-current={pathname === moduleHref ? "page" : undefined}
-                  className={`mt-1 block rounded-md px-2 py-1.5 text-sm ${
-                    pathname === moduleHref ? "bg-surface-2 font-semibold text-text" : "text-primary hover:bg-surface-2"
+                  className={`block border-l-4 px-7 py-2 text-sm font-semibold ${
+                    pathname === moduleHref
+                      ? "border-primary bg-primary-soft text-text"
+                      : "border-transparent text-primary hover:bg-surface-2/60"
                   }`}
                 >
                   Ringkasan modul
@@ -79,8 +104,8 @@ function SidebarTree({ pathname, activeModuleId }: { pathname: string | null; ac
                   const items = itemsBySection(mod, section.id);
                   if (items.length === 0) return null;
                   return (
-                    <div key={section.id} className="mt-2">
-                      <p className="px-2 py-1 text-xs font-medium text-muted">{section.label}</p>
+                    <div key={section.id} className="mt-3">
+                      <p className="px-8 py-1 text-xs font-bold tracking-wide text-muted">{section.label}</p>
                       <ul>
                         {items.map((item) => {
                           const href = `${moduleHref}/${item.id}`;
@@ -90,16 +115,18 @@ function SidebarTree({ pathname, activeModuleId }: { pathname: string | null; ac
                               <Link
                                 href={href}
                                 aria-current={active ? "page" : undefined}
-                                className={`flex items-start gap-2 rounded-md px-2 py-1.5 text-sm leading-snug ${
-                                  active ? "bg-surface-2 font-semibold text-text" : "text-text hover:bg-surface-2"
+                                className={`flex items-start gap-3 border-l-4 py-2.5 pl-7 pr-5 text-sm leading-snug ${
+                                  active
+                                    ? "border-primary bg-primary-soft text-text"
+                                    : "border-transparent text-text hover:bg-surface-2/60"
                                 }`}
                               >
-                                <span className="mt-0.5">
+                                <span className="mt-px">
                                   <ItemStatusDot item={item} />
                                 </span>
-                                <span className="min-w-0 flex-1">{item.title}</span>
-                                <span className="mt-0.5 shrink-0 text-muted">
-                                  <ItemTypeIcon type={item.type} size={14} />
+                                <span className="min-w-0 flex-1">
+                                  {item.title}
+                                  <ItemMeta item={item} />
                                 </span>
                               </Link>
                             </li>
@@ -120,7 +147,19 @@ function SidebarTree({ pathname, activeModuleId }: { pathname: string | null; ac
 
 function SidebarTreeWithPath({ activeModuleId }: { activeModuleId: string }) {
   const pathname = usePathname();
-  return <SidebarTree pathname={pathname} activeModuleId={activeModuleId} />;
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Gulir item aktif ke dalam tampilan sidebar, karena daftarnya panjang.
+  useEffect(() => {
+    const active = ref.current?.querySelector('[aria-current="page"]');
+    active?.scrollIntoView({ block: "nearest" });
+  }, [pathname]);
+
+  return (
+    <div ref={ref}>
+      <SidebarTree pathname={pathname} activeModuleId={activeModuleId} />
+    </div>
+  );
 }
 
 function Tree({ activeModuleId }: { activeModuleId: string }) {
@@ -131,13 +170,38 @@ function Tree({ activeModuleId }: { activeModuleId: string }) {
   );
 }
 
-/** Sidebar tetap untuk layar lebar. */
+function BackToDashboard() {
+  return (
+    <Link
+      href="/"
+      className="flex items-center gap-2 border-b border-line px-5 py-4 text-sm font-semibold text-primary hover:underline"
+    >
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        width="16"
+        height="16"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M19 12H5M11 6l-6 6 6 6" />
+      </svg>
+      Dashboard
+    </Link>
+  );
+}
+
+/** Sidebar penuh setinggi layar untuk layar lebar. */
 export function ModuleSidebar({ activeModuleId }: { activeModuleId: string }) {
   return (
     <nav
       aria-label="Daftar modul"
-      className="sticky top-20 hidden max-h-[calc(100dvh-6rem)] overflow-y-auto pr-1 lg:block"
+      className="sticky top-16 hidden h-[calc(100dvh-4rem)] overflow-y-auto border-r border-line bg-surface lg:block"
     >
+      <BackToDashboard />
       <Tree activeModuleId={activeModuleId} />
     </nav>
   );
@@ -156,7 +220,7 @@ export function MobileModuleMenu({ activeModuleId }: { activeModuleId: string })
       <button
         type="button"
         onClick={() => dialogRef.current?.showModal()}
-        className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-sm font-medium text-text hover:border-primary"
+        className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-text hover:border-primary"
       >
         <svg
           aria-hidden="true"
@@ -193,7 +257,7 @@ export function MobileModuleMenu({ activeModuleId }: { activeModuleId: string })
               Tutup
             </button>
           </div>
-          <nav aria-label="Daftar modul" className="flex-1 overflow-y-auto p-3">
+          <nav aria-label="Daftar modul" className="flex-1 overflow-y-auto">
             <Tree activeModuleId={activeModuleId} />
           </nav>
         </div>

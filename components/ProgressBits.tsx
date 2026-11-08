@@ -11,7 +11,6 @@ import {
   calendarWeekSpan,
   formatShort,
   formatSpanRange,
-  formatWeekLabel,
   itemDueDate,
   itemDueWeek,
   weekEnd,
@@ -46,7 +45,7 @@ export function ItemStatusDot({ item }: { item: Pick<Item, "id" | "week"> }) {
 
   if (status === "done") {
     return (
-      <span className="flex size-4 shrink-0 items-center justify-center rounded-full bg-done text-[0.6rem] font-bold text-white">
+      <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-done text-[0.65rem] font-bold text-white">
         <span aria-hidden="true">✓</span>
         <span className="sr-only">Selesai</span>
       </span>
@@ -54,36 +53,38 @@ export function ItemStatusDot({ item }: { item: Pick<Item, "id" | "week"> }) {
   }
   if (status === "late") {
     return (
-      <span className="size-4 shrink-0 rounded-full border-2 border-late bg-late/15">
+      <span className="block size-5 shrink-0 rounded-full border-2 border-late bg-late/10">
         <span className="sr-only">Tertinggal</span>
       </span>
     );
   }
   return (
-    <span className="size-4 shrink-0 rounded-full border-2 border-line">
+    <span className="block size-5 shrink-0 rounded-full border-2 border-muted/60">
       <span className="sr-only">Belum selesai</span>
     </span>
   );
 }
 
-export function ItemDueLabel({ item }: { item: Pick<Item, "id" | "week"> }) {
+export function ItemDueLabel({ item, prefix = false }: { item: Pick<Item, "id" | "week">; prefix?: boolean }) {
   const { completed, today, schedule } = useProgress();
   if (!schedule) return <span className="text-muted">…</span>;
   const late = itemStatus(item, completed, today, schedule) === "late";
   const due = itemDueDate(schedule, item);
   return (
     <time dateTime={due} className={late ? "font-medium text-late" : "text-muted"}>
-      {late ? `Tertinggal · ${formatShort(due)}` : formatShort(due)}
+      {late ? `Tertinggal · ${formatShort(due)}` : `${prefix ? "Tenggat " : ""}${formatShort(due)}`}
     </time>
   );
 }
 
-export function ModuleProgressBar({ moduleId, onPhase = false }: { moduleId: string; onPhase?: boolean }) {
-  const { completed } = useProgress();
+/** Bilah progres dan ringkasan di kepala modul (di atas latar gradasi fase). */
+export function ModuleHeaderProgress({ moduleId, hours }: { moduleId: string; hours: string }) {
+  const { completed, schedule } = useProgress();
   const mod = getModule(moduleId);
   if (!mod) return null;
   const { done, total } = moduleProgress(mod, completed);
   const percent = Math.round((done / total) * 100);
+  const due = schedule ? weekEnd(schedule, calendarWeekSpan(schedule, mod.weeks)[1]) : null;
 
   return (
     <div>
@@ -94,17 +95,36 @@ export function ModuleProgressBar({ moduleId, onPhase = false }: { moduleId: str
         aria-valuemax={total}
         aria-valuenow={done}
         aria-valuetext={`${done} dari ${total} item selesai`}
-        className={`h-2 overflow-hidden rounded-full ${onPhase ? "bg-white/25" : "bg-surface-2"}`}
+        className="h-2 max-w-md overflow-hidden rounded-full bg-on-phase/30"
       >
         <div
-          className={`h-full rounded-full transition-[width] duration-300 ${onPhase ? "bg-white" : "bg-done"}`}
+          className="h-full rounded-full bg-on-phase transition-[width] duration-300"
           style={{ width: `${percent}%` }}
         />
       </div>
-      <p className={`mt-2 text-sm ${onPhase ? "text-on-phase/90" : "text-muted"}`}>
-        <span className="font-semibold">{done}</span> dari {total} selesai
+      <p className="mt-3 text-sm font-bold">
+        {done} dari {total} selesai · {hours}
+        {due && (
+          <>
+            {" "}
+            · tenggat <time dateTime={due}>{formatShort(due)} {due.slice(0, 4)}</time>
+          </>
+        )}
       </p>
     </div>
+  );
+}
+
+/** "minggu 3–4 · 23 Nov–6 Des" sesuai jadwal pengguna. */
+export function ModuleSchedule({ weeks }: { weeks: [number, number] }) {
+  const { schedule } = useProgress();
+  if (!schedule) return <>minggu …</>;
+  const span = calendarWeekSpan(schedule, weeks);
+  const label = span[0] === span[1] ? `minggu ${span[0]}` : `minggu ${span[0]}–${span[1]}`;
+  return (
+    <>
+      {label} · {formatSpanRange(schedule, span)}
+    </>
   );
 }
 
@@ -116,15 +136,21 @@ export function ContinueButton({ moduleId }: { moduleId: string }) {
   const next = nextItem(mod.items, completed);
   const started = mod.items.some((item) => completed.has(item.id));
   const target = next ?? mod.items[0];
-  const label = !next ? "Modul selesai · ulas dari awal" : started ? `Lanjutkan: ${next.title}` : "Mulai modul";
+  const label = !next
+    ? "Modul selesai · ulas dari awal"
+    : started
+      ? `Lanjutkan: ${next.title}`
+      : `Mulai modul: ${next.title}`;
 
   return (
     <Link
       href={`/modul/${mod.id}/${target.id}`}
-      className="inline-flex max-w-full items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
+      className="inline-flex max-w-full items-center gap-2.5 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-on-primary shadow-sm transition-colors hover:bg-primary-hover sm:text-base"
     >
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" className="shrink-0">
+        <path d="M7 4.5v15l12-7.5z" fill="currentColor" />
+      </svg>
       <span className="truncate">{label}</span>
-      <span aria-hidden="true">→</span>
     </Link>
   );
 }
@@ -187,24 +213,6 @@ export function ItemDueInfo({ item }: { item: Pick<Item, "id" | "week"> }) {
       </time>
       <span className="text-muted"> · Minggu </span>
       <span className="font-medium text-text">{itemDueWeek(schedule, item)}</span>
-    </>
-  );
-}
-
-/** "Minggu 3–4" sesuai jadwal pengguna. */
-export function ModuleWeekLabel({ weeks }: { weeks: [number, number] }) {
-  const { schedule } = useProgress();
-  return <>{schedule ? formatWeekLabel(calendarWeekSpan(schedule, weeks)) : "Minggu …"}</>;
-}
-
-/** "23 Nov–6 Des · tenggat Min, 6 Des" sesuai jadwal pengguna. */
-export function ModuleDates({ weeks }: { weeks: [number, number] }) {
-  const { schedule } = useProgress();
-  if (!schedule) return <>…</>;
-  const span = calendarWeekSpan(schedule, weeks);
-  return (
-    <>
-      {formatSpanRange(schedule, span)} · tenggat {formatShort(weekEnd(schedule, span[1]))}
     </>
   );
 }
