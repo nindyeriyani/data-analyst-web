@@ -3,8 +3,9 @@ import { Suspense } from "react";
 import Logo from "./Logo";
 import { NavLinks, NavList } from "./NavLinks";
 
-// Sementara ditulis tetap. Nama pengguna diambil dari Supabase di tahap 8.
-const USER_INITIAL = "N";
+import { DISPLAY_NAME, initialOf } from "@/lib/user";
+
+const USER_INITIAL = initialOf(DISPLAY_NAME);
 
 export default function Header() {
   return (
@@ -26,7 +27,7 @@ export default function Header() {
 
         <span
           className="ml-auto flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-on-primary md:ml-2"
-          title="Profil"
+          title={DISPLAY_NAME}
         >
           {USER_INITIAL}
         </span>

@@ -295,7 +295,7 @@ Centang setiap tahap yang selesai.
 - [x] 3. Halaman item: render markdown, callout, tombol salin data csv, kartu tautan keluar.
 - [x] 4. Komponen kuis.
 - [x] 5. Halaman modul dengan sidebar.
-- [ ] 6. Dashboard lengkap.
+- [x] 6. Dashboard lengkap.
 - [ ] 7. Jadwal, glosarium, sumber.
 - [ ] 8. Supabase: migrasi, auth magic link, middleware, sinkronisasi progres, rubrik, catatan, tautan, nama pengguna.
 - [ ] 9. Rapikan tampilan di HP, uji alur lengkap, deploy produksi.

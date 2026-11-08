@@ -16,6 +16,7 @@ import {
 } from "@/content/course";
 import { getItemMarkdown, getQuiz } from "@/lib/content";
 import { formatDuration, formatLong, formatShort, itemDueDate } from "@/lib/schedule";
+import { PHASE_TEXT } from "@/components/phase-styles";
 
 type Props = PageProps<"/modul/[moduleId]/[itemId]">;
 
@@ -37,11 +38,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: found?.item.title ?? "Item tidak ditemukan" };
 }
 
-const PHASE_TEXT: Record<Module["phase"], string> = {
-  1: "text-phase-1",
-  2: "text-phase-2",
-  3: "text-phase-3",
-};
 
 function moduleLabel(mod: Module): string {
   const n = moduleNumber(mod);

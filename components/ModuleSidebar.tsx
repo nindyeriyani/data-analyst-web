@@ -8,12 +8,8 @@ import { ItemStatusDot } from "@/components/ProgressBits";
 import { useProgress } from "@/components/ProgressProvider";
 import { MODULES, SECTIONS, itemsBySection, moduleNumber, type Module } from "@/content/course";
 import { moduleProgress } from "@/lib/progress-rules";
+import { PHASE_BG } from "@/components/phase-styles";
 
-const PHASE_BG: Record<Module["phase"], string> = {
-  1: "bg-phase-1",
-  2: "bg-phase-2",
-  3: "bg-phase-3",
-};
 
 function moduleShortLabel(mod: Module): string {
   const n = moduleNumber(mod);

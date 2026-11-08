@@ -12,9 +12,9 @@ import {
   itemsBySection,
   moduleMinutes,
   moduleNumber,
-  type Module,
 } from "@/content/course";
 import { formatDuration, formatHours, formatShort, formatWeeksRange, weekEnd } from "@/lib/schedule";
+import { PHASE_BG, PHASE_TEXT } from "@/components/phase-styles";
 
 type Props = PageProps<"/modul/[moduleId]">;
 
@@ -27,17 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: getModule(moduleId)?.title ?? "Modul tidak ditemukan" };
 }
 
-const PHASE_BG: Record<Module["phase"], string> = {
-  1: "bg-phase-1",
-  2: "bg-phase-2",
-  3: "bg-phase-3",
-};
 
-const PHASE_TEXT: Record<Module["phase"], string> = {
-  1: "text-phase-1",
-  2: "text-phase-2",
-  3: "text-phase-3",
-};
 
 function weeksLabel([first, last]: [number, number]): string {
   return first === last ? `Minggu ${first}` : `Minggu ${first}–${last}`;

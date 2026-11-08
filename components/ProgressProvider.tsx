@@ -20,6 +20,8 @@ interface ProgressValue {
   /** Tanggal hari ini di zona waktu perangkat. Null saat render di server. */
   today: DateString | null;
   completed: ReadonlySet<string>;
+  /** item_id -> waktu selesai (ISO), untuk "Baru selesai". */
+  completedAt: Readonly<Record<string, string>>;
   isCompleted: (itemId: string) => boolean;
   setCompleted: (itemId: string, done: boolean) => void;
 }
@@ -54,10 +56,11 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     () => ({
       today,
       completed,
+      completedAt,
       isCompleted: (itemId) => completed.has(itemId),
       setCompleted,
     }),
-    [today, completed, setCompleted],
+    [today, completed, completedAt, setCompleted],
   );
 
   return <ProgressContext value={value}>{children}</ProgressContext>;

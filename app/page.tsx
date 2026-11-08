@@ -1,34 +1,27 @@
+import Badges from "@/components/dashboard/Badges";
+import Greeting from "@/components/dashboard/Greeting";
+import ModuleCards from "@/components/dashboard/ModuleCards";
+import RecentlyCompleted from "@/components/dashboard/RecentlyCompleted";
+import StatCards from "@/components/dashboard/StatCards";
+import ThisWeek from "@/components/dashboard/ThisWeek";
+import WeeklyChart from "@/components/dashboard/WeeklyChart";
+
 export default function DashboardPage() {
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-line bg-surface p-6">
-        <h1 className="text-2xl font-bold">Halo!</h1>
-        <p className="mt-2 text-muted">
-          Kursus dimulai Senin, 9 November 2026. Dashboard lengkap menyusul di
-          tahap berikutnya.
-        </p>
-      </section>
+      <Greeting />
+      <WeeklyChart />
+      <StatCards />
 
-      {/* Contoh sementara untuk memeriksa warna fase dan font kode. */}
-      <section aria-label="Contoh warna fase" className="grid gap-4 sm:grid-cols-3">
-        {[
-          { label: "Fase 1, fondasi", className: "bg-phase-1" },
-          { label: "Fase 2, analisis dan visualisasi", className: "bg-phase-2" },
-          { label: "Fase 3, portofolio dan karier", className: "bg-phase-3" },
-        ].map((phase) => (
-          <div
-            key={phase.label}
-            className="overflow-hidden rounded-2xl border border-line bg-surface"
-          >
-            <div className={`${phase.className} px-4 py-3 text-sm font-semibold text-on-phase`}>
-              {phase.label}
-            </div>
-            <p className="px-4 py-3 text-sm text-muted">
-              Contoh kode: <code className="font-mono text-text">SELECT * FROM orders;</code>
-            </p>
-          </div>
-        ))}
-      </section>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <ThisWeek />
+        <div className="space-y-6">
+          <Badges />
+          <RecentlyCompleted />
+        </div>
+      </div>
+
+      <ModuleCards />
     </div>
   );
 }
