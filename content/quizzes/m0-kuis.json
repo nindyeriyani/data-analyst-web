@@ -23,7 +23,12 @@
   },
   {
     "question": "Alat mana yang dipakai di kursus ini untuk menjalankan SQL pada dataset besar secara gratis?",
-    "options": ["Power BI Desktop", "BigQuery sandbox", "Microsoft Access", "Tableau Public"],
+    "options": [
+      "Power BI Desktop",
+      "BigQuery sandbox",
+      "Microsoft Access",
+      "Tableau Public"
+    ],
     "answer": 1,
     "explanation": "BigQuery sandbox gratis tanpa kartu kredit dan menyediakan dataset publik seperti theLook."
   },
@@ -48,5 +53,115 @@
     ],
     "answer": 2,
     "explanation": "Portofolio cukup menceritakan masalah, proses, dan dampak. Data internal dan informasi pribadi tidak boleh keluar dari instansi."
+  },
+  {
+    "question": "Perbedaan utama data analyst dan data scientist adalah…",
+    "options": [
+      "Data analyst tidak pernah memakai Python",
+      "Data analyst menjelaskan apa yang terjadi dan kenapa dari data yang ada, data scientist lebih banyak membangun model prediksi",
+      "Data scientist hanya membuat dashboard",
+      "Keduanya sama persis, hanya beda nama jabatan"
+    ],
+    "answer": 1,
+    "explanation": "Keduanya bisa memakai alat yang sama, tetapi fokusnya berbeda. Data analyst menjawab pertanyaan dan menyampaikan temuan, data scientist lebih sering membangun model untuk memprediksi."
+  },
+  {
+    "question": "Mana pertanyaan analisis yang paling baik?",
+    "options": [
+      "Bagaimana data layanan kita?",
+      "Apakah data kita bagus?",
+      "Kecamatan mana yang jumlah layanannya turun paling banyak antara 2025 dan 2026?",
+      "Tolong buatkan dashboard lengkap"
+    ],
+    "answer": 2,
+    "explanation": "Pertanyaan yang baik itu spesifik: jelas apa yang diukur, dibandingkan dengan apa, dan dalam rentang waktu kapan. Pertanyaan seperti itu langsung menunjukkan data apa yang dibutuhkan."
+  },
+  {
+    "question": "Dalam alur analisis, langkah \"siapkan\" berisi…",
+    "options": [
+      "Mengumpulkan data dan memastikan sumber serta izin pemakaiannya jelas",
+      "Membuat presentasi untuk atasan",
+      "Menghapus semua baris yang punya nilai kosong",
+      "Memilih warna grafik"
+    ],
+    "answer": 0,
+    "explanation": "Sebelum mengolah, pastikan Anda tahu dari mana data berasal, siapa pemiliknya, dan apakah boleh dipakai untuk analisis itu."
+  },
+  {
+    "question": "Dalam alur analisis, langkah \"olah\" berisi…",
+    "options": [
+      "Menulis kesimpulan",
+      "Membersihkan data: duplikat, nilai kosong, format tanggal, dan tipe data",
+      "Mengirim laporan ke pimpinan",
+      "Merumuskan pertanyaan"
+    ],
+    "answer": 1,
+    "explanation": "Data mentah hampir selalu berantakan. Langkah olah merapikannya supaya hasil analisis bisa dipercaya."
+  },
+  {
+    "question": "Apa yang perlu diingat saat menyimpan dashboard ke Tableau Public?",
+    "options": [
+      "Dashboard hanya bisa dilihat oleh Anda sendiri",
+      "Dashboard otomatis terhapus setelah 30 hari",
+      "Tableau Public hanya menerima data dari Excel",
+      "Semua yang disimpan bisa dilihat publik, jadi hanya pakai data terbuka"
+    ],
+    "answer": 3,
+    "explanation": "Sesuai namanya, isi Tableau Public bisa dilihat siapa saja. Karena itu data internal instansi tidak boleh diunggah ke sana."
+  },
+  {
+    "question": "Google Colab adalah…",
+    "options": [
+      "Aplikasi spreadsheet milik Google",
+      "Database untuk menyimpan data besar",
+      "Notebook Python yang berjalan di browser, gratis, tanpa instalasi",
+      "Alat untuk membuat dashboard"
+    ],
+    "answer": 2,
+    "explanation": "Colab menjalankan Python di server Google. Anda cukup membuka browser dan masuk dengan akun Google."
+  },
+  {
+    "question": "Apa perbedaan Git dan GitHub?",
+    "options": [
+      "Git mencatat riwayat perubahan file, GitHub adalah layanan untuk menyimpan repositori Git secara online",
+      "Git berbayar, GitHub gratis",
+      "Git hanya untuk Windows, GitHub untuk Mac",
+      "Keduanya nama lain untuk hal yang sama"
+    ],
+    "answer": 0,
+    "explanation": "Git adalah alat pencatat versi yang berjalan di komputer Anda. GitHub menyimpan repositori itu secara online sehingga bisa dibagikan sebagai portofolio."
+  },
+  {
+    "question": "Fungsi README di repositori proyek portofolio adalah…",
+    "options": [
+      "Menyimpan kata sandi database",
+      "Menjelaskan proyek: pertanyaan, sumber data, metode, dan temuan utama",
+      "Menyimpan seluruh dataset mentah",
+      "Hanya formalitas yang tidak dibaca orang"
+    ],
+    "answer": 1,
+    "explanation": "Perekrut sering hanya membaca README. Ringkasan yang jelas menunjukkan cara Anda berpikir, bukan hanya kode yang Anda tulis."
+  },
+  {
+    "question": "Saat memetakan sumber data di tempat magang, apa yang dicatat?",
+    "options": [
+      "Salinan lengkap isi setiap laporan",
+      "Kata sandi aplikasi yang dipakai kantor",
+      "Data pribadi pegawai yang mengisi laporan",
+      "Nama laporan, pemakainya, formatnya, dan seberapa sering diperbarui"
+    ],
+    "answer": 3,
+    "explanation": "Yang dipetakan adalah keterangan tentang data, bukan isinya. Dengan begitu Anda memahami alur data tanpa menyalin data internal."
+  },
+  {
+    "question": "AI memberi query yang berjalan, tetapi Anda tidak paham cara kerjanya. Langkah terbaik adalah…",
+    "options": [
+      "Langsung memakainya karena hasilnya sudah keluar",
+      "Meminta AI membuat query lain yang lebih panjang",
+      "Meminta penjelasan baris per baris, lalu menulis ulang dan mengujinya dengan data kecil",
+      "Menyimpannya untuk dipelajari setelah kursus selesai"
+    ],
+    "answer": 2,
+    "explanation": "Query yang berjalan belum tentu benar. Memahami dan menguji sendiri adalah cara memastikan hasilnya tepat dan sekaligus membangun kemampuan Anda."
   }
 ]

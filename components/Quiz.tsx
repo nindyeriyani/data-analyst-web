@@ -1,0 +1,303 @@
+"use client";
+
+// Kuis dengan bank soal. Setiap percobaan mengambil beberapa soal acak, soal yang
+// belum pernah muncul diutamakan. Setiap soal hanya bisa dijawab sekali, dan
+// kuis lulus jika semua soal dalam satu percobaan dijawab benar.
+
+import { useRef, useState } from "react";
+import { useQuizGate } from "@/components/QuizGate";
+import type { QuizQuestion } from "@/lib/content";
+import { QUESTIONS_PER_ATTEMPT } from "@/lib/progress-rules";
+
+/**
+ * Status kuis. Bentuk ini yang nanti disimpan di kolom item_state.quiz (tahap 8).
+ * Semua indeks soal mengacu ke urutan di file JSON, indeks jawaban ke urutan asli options.
+ */
+export interface QuizState {
+  questions: number[]; // soal percobaan saat ini, urut tampil
+  optionOrder: Record<string, number[]>; // urutan tampil pilihan per soal
+  answers: Record<string, number>; // indeks soal -> indeks pilihan yang dijawab
+  seen: number[]; // soal yang pernah muncul, paling lama di depan
+}
+
+const EMPTY_STATE: QuizState = { questions: [], optionOrder: {}, answers: {}, seen: [] };
+const LETTERS = ["A", "B", "C", "D", "E", "F"];
+
+function shuffle<T>(items: T[]): T[] {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function range(n: number): number[] {
+  return Array.from({ length: n }, (_, i) => i);
+}
+
+/** Pilih soal untuk percobaan baru: soal yang belum muncul dulu, lalu yang paling lama. */
+function drawQuestions(poolSize: number, seen: number[], count: number): number[] {
+  const validSeen = seen.filter((i) => i < poolSize);
+  const seenSet = new Set(validSeen);
+  const picked = shuffle(range(poolSize).filter((i) => !seenSet.has(i))).slice(0, count);
+  for (const index of validSeen) {
+    if (picked.length >= count) break;
+    if (!picked.includes(index)) picked.push(index);
+  }
+  return shuffle(picked);
+}
+
+function newAttempt(pool: QuizQuestion[], previous: QuizState): QuizState {
+  const count = Math.min(QUESTIONS_PER_ATTEMPT, pool.length);
+  const questions = drawQuestions(pool.length, previous.seen, count);
+  const optionOrder = Object.fromEntries(
+    questions.map((q) => [q, shuffle(range(pool[q].options.length))]),
+  );
+  const seen = [...previous.seen.filter((i) => !questions.includes(i) && i < pool.length), ...questions];
+  return { questions, optionOrder, answers: {}, seen };
+}
+
+type OptionState = "idle" | "correct" | "wrong" | "reveal" | "locked";
+
+const OPTION_STYLES: Record<OptionState, string> = {
+  idle: "border-line bg-surface text-text hover:border-primary hover:bg-surface-2",
+  correct: "border-done bg-done/10 text-text",
+  wrong: "border-late bg-late/10 text-text",
+  reveal: "border-done border-dashed bg-surface text-text",
+  locked: "border-line bg-surface text-muted",
+};
+
+const BADGE_STYLES: Record<OptionState, string> = {
+  idle: "bg-surface-2 text-muted",
+  correct: "bg-done text-white",
+  wrong: "bg-late text-white",
+  reveal: "border-2 border-done text-done",
+  locked: "bg-surface-2 text-muted",
+};
+
+export default function Quiz({ questions: pool }: { questions: QuizQuestion[] }) {
+  const gate = useQuizGate();
+  const [state, setState] = useState<QuizState>(EMPTY_STATE);
+  const [passed, setPassed] = useState(false);
+  const [announcement, setAnnouncement] = useState("");
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  const total = state.questions.length;
+  const started = total > 0;
+  const answered = state.questions.filter((q) => state.answers[q] !== undefined).length;
+  const correct = state.questions.filter((q) => state.answers[q] === pool[q].answer).length;
+  const finished = started && answered === total;
+  const perfect = finished && correct === total;
+  const attemptSize = Math.min(QUESTIONS_PER_ATTEMPT, pool.length);
+
+  // Satu-satunya tempat status kuis berubah. Di tahap 8, perubahan ini di-upsert
+  // ke item_state.quiz, dan item ditandai selesai saat kuis lulus.
+  function updateState(next: QuizState) {
+    setState(next);
+  }
+
+  function markPassed() {
+    setPassed(true);
+    gate?.setPassed(true);
+  }
+
+  function start() {
+    updateState(newAttempt(pool, state));
+    setAnnouncement(`Percobaan baru dimulai dengan ${attemptSize} soal.`);
+    headingRef.current?.focus();
+    headingRef.current?.scrollIntoView({ block: "start" });
+  }
+
+  function choose(questionIndex: number, optionIndex: number) {
+    if (state.answers[questionIndex] !== undefined) return;
+
+    const answers: QuizState["answers"] = { ...state.answers, [questionIndex]: optionIndex };
+    updateState({ ...state, answers });
+
+    const question = pool[questionIndex];
+    const position = state.questions.indexOf(questionIndex) + 1;
+    const isRight = optionIndex === question.answer;
+    let message = isRight
+      ? `Soal ${position} benar.`
+      : `Soal ${position} salah. Jawaban yang benar: ${question.options[question.answer]}.`;
+
+    const doneCount = state.questions.filter((q) => answers[q] !== undefined).length;
+    if (doneCount === total) {
+      const score = state.questions.filter((q) => answers[q] === pool[q].answer).length;
+      if (score === total) {
+        markPassed();
+        message += ` Percobaan selesai. Nilai ${score} dari ${total}. Kuis lulus.`;
+      } else {
+        message += ` Percobaan selesai. Nilai ${score} dari ${total}. Perlu nilai sempurna untuk lulus.`;
+      }
+    }
+    setAnnouncement(message);
+  }
+
+  return (
+    <section aria-labelledby="kuis-judul" className="my-8 scroll-mt-20">
+      <div className="mb-5 rounded-2xl border border-line bg-surface p-5">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 id="kuis-judul" ref={headingRef} tabIndex={-1} className="text-lg font-semibold text-text">
+            Kuis
+          </h2>
+          {started && (
+            <p className="text-sm text-muted">
+              Terjawab <span className="font-semibold text-text">{answered}</span> dari {total}
+              {" · "}
+              <span className="font-semibold text-text">{correct}</span> benar
+            </p>
+          )}
+          {!started && passed && <p className="text-sm font-semibold text-done">Sudah lulus</p>}
+        </div>
+
+        {started ? (
+          <div
+            role="progressbar"
+            aria-label="Soal terjawab"
+            aria-valuemin={0}
+            aria-valuemax={total}
+            aria-valuenow={answered}
+            aria-valuetext={`${answered} dari ${total} soal terjawab`}
+            className="mt-3 h-2 overflow-hidden rounded-full bg-surface-2"
+          >
+            <div
+              className="h-full rounded-full bg-primary transition-[width] duration-300"
+              style={{ width: `${Math.round((answered / total) * 100)}%` }}
+            />
+          </div>
+        ) : (
+          <>
+            <ul className="mt-3 space-y-1 text-sm leading-relaxed text-muted">
+              <li>{attemptSize} soal diambil acak dari bank {pool.length} soal.</li>
+              <li>Setiap soal hanya bisa dijawab sekali.</li>
+              <li>Nilai lulus {attemptSize}/{attemptSize}. Modul berikutnya terbuka setelah lulus.</li>
+            </ul>
+            <button
+              type="button"
+              onClick={start}
+              className="mt-4 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
+            >
+              Mulai kuis
+            </button>
+          </>
+        )}
+      </div>
+
+      <p aria-live="polite" className="sr-only">
+        {announcement}
+      </p>
+
+      {started && (
+        <ol className="space-y-4">
+          {state.questions.map((qIndex, position) => {
+            const question = pool[qIndex];
+            const chosen = state.answers[qIndex];
+            const isAnswered = chosen !== undefined;
+            const isRight = chosen === question.answer;
+            const order = state.optionOrder[qIndex] ?? range(question.options.length);
+            const answerLetter = LETTERS[order.indexOf(question.answer)];
+
+            return (
+              <li
+                key={qIndex}
+                className={`rounded-2xl border bg-surface p-5 ${
+                  !isAnswered ? "border-line" : isRight ? "border-done/50" : "border-late/50"
+                }`}
+              >
+                <fieldset>
+                  <legend className="mb-4 flex gap-3 font-semibold leading-relaxed text-text">
+                    <span className="text-muted">{position + 1}.</span>
+                    <span>{question.question}</span>
+                  </legend>
+
+                  <div className="grid gap-2">
+                    {order.map((oIndex, displayIndex) => {
+                      const optionState: OptionState = !isAnswered
+                        ? "idle"
+                        : oIndex === chosen
+                          ? isRight
+                            ? "correct"
+                            : "wrong"
+                          : oIndex === question.answer
+                            ? "reveal"
+                            : "locked";
+
+                      return (
+                        <button
+                          key={oIndex}
+                          type="button"
+                          onClick={() => choose(qIndex, oIndex)}
+                          disabled={isAnswered}
+                          aria-pressed={oIndex === chosen}
+                          className={`flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-left leading-relaxed transition-colors disabled:cursor-default ${OPTION_STYLES[optionState]}`}
+                        >
+                          <span
+                            aria-hidden="true"
+                            className={`flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${BADGE_STYLES[optionState]}`}
+                          >
+                            {optionState === "correct" || optionState === "reveal"
+                              ? "✓"
+                              : optionState === "wrong"
+                                ? "✕"
+                                : LETTERS[displayIndex]}
+                          </span>
+                          <span className="min-w-0 flex-1">{question.options[oIndex]}</span>
+                          {optionState === "correct" && <span className="sr-only">(jawaban Anda, benar)</span>}
+                          {optionState === "wrong" && <span className="sr-only">(jawaban Anda, salah)</span>}
+                          {optionState === "reveal" && <span className="sr-only">(jawaban yang benar)</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+
+                {isAnswered && (
+                  <div
+                    className={`mt-4 rounded-xl px-4 py-3 text-sm leading-relaxed text-text ${
+                      isRight ? "bg-done/10" : "bg-late/10"
+                    }`}
+                  >
+                    <p className={`mb-1 font-semibold ${isRight ? "text-done" : "text-late"}`}>
+                      {isRight ? "Benar" : `Belum tepat. Jawaban yang benar: ${answerLetter}`}
+                    </p>
+                    <p>{question.explanation}</p>
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      )}
+
+      {finished && (
+        <div
+          className={`mt-5 rounded-2xl border p-5 ${
+            perfect ? "border-done/50 bg-done/10" : "border-late/50 bg-late/10"
+          }`}
+        >
+          <p className={`font-semibold ${perfect ? "text-done" : "text-late"}`}>
+            {perfect ? `Kuis lulus. Nilai ${correct}/${total}.` : `Nilai ${correct}/${total}.`}
+          </p>
+          <p className="mt-1 text-sm leading-relaxed text-text">
+            {perfect
+              ? "Modul berikutnya terbuka. Anda tetap bisa berlatih lagi dengan soal lain."
+              : `Perlu ${total}/${total} untuk membuka modul berikutnya. Pelajari penjelasan di atas, lalu coba lagi dengan soal baru.`}
+          </p>
+          <button
+            type="button"
+            onClick={start}
+            className={
+              perfect
+                ? "mt-4 rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-text transition-colors hover:border-primary hover:text-primary"
+                : "mt-4 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
+            }
+          >
+            {perfect ? "Latihan lagi dengan soal lain" : "Ulangi dengan soal baru"}
+          </button>
+        </div>
+      )}
+    </section>
+  );
+}

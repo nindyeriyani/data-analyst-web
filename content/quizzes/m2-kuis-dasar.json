@@ -1,7 +1,12 @@
 [
   {
     "question": "Filter hasil agregasi ditulis di…",
-    "options": ["WHERE", "HAVING", "ORDER BY", "FROM"],
+    "options": [
+      "WHERE",
+      "HAVING",
+      "ORDER BY",
+      "FROM"
+    ],
     "answer": 1,
     "explanation": "HAVING memfilter setelah GROUP BY. WHERE memfilter baris sebelum dikelompokkan."
   },
@@ -48,5 +53,115 @@
     ],
     "answer": 1,
     "explanation": "Setelah dikelompokkan, setiap baris mewakili satu city. Kolom lain harus diringkas dengan fungsi agregat seperti SUM atau COUNT."
+  },
+  {
+    "question": "Urutan penulisan klausa yang benar dalam query SQL adalah…",
+    "options": [
+      "SELECT, WHERE, FROM, ORDER BY, GROUP BY",
+      "SELECT, FROM, WHERE, GROUP BY, HAVING, ORDER BY, LIMIT",
+      "FROM, SELECT, GROUP BY, WHERE, LIMIT",
+      "SELECT, FROM, GROUP BY, WHERE, HAVING, LIMIT"
+    ],
+    "answer": 1,
+    "explanation": "Urutan penulisannya tetap: SELECT, FROM, WHERE, GROUP BY, HAVING, ORDER BY, lalu LIMIT. Menukar urutannya menghasilkan error sintaks."
+  },
+  {
+    "question": "Kondisi untuk mencari pelanggan yang namanya diawali \"Ba\" adalah…",
+    "options": [
+      "WHERE name = 'Ba'",
+      "WHERE name LIKE '%Ba'",
+      "WHERE name LIKE 'Ba%'",
+      "WHERE name IN ('Ba')"
+    ],
+    "answer": 2,
+    "explanation": "Tanda % berarti \"karakter apa saja, berapa pun jumlahnya\". 'Ba%' cocok dengan Bandi dan Bambang. '%Ba' justru mencari nama yang diakhiri Ba."
+  },
+  {
+    "question": "Cara yang benar mencari baris yang kolom email-nya kosong (NULL) adalah…",
+    "options": [
+      "WHERE email IS NULL",
+      "WHERE email = NULL",
+      "WHERE email = ''",
+      "WHERE email == NULL"
+    ],
+    "answer": 0,
+    "explanation": "NULL berarti nilai tidak diketahui, sehingga tidak bisa dibandingkan dengan =. Hasil email = NULL selalu kosong. Pakai IS NULL atau IS NOT NULL."
+  },
+  {
+    "question": "Apa hasil dari SELECT DISTINCT city FROM customers?",
+    "options": [
+      "Jumlah kota",
+      "Semua baris pelanggan, diurutkan per kota",
+      "Kota yang hanya muncul satu kali",
+      "Daftar kota tanpa duplikat"
+    ],
+    "answer": 3,
+    "explanation": "DISTINCT membuang baris yang sama persis. Kalau 50 pelanggan tinggal di Bandung, Bandung tetap muncul sekali."
+  },
+  {
+    "question": "WHERE amount BETWEEN 100000 AND 200000 mengambil baris dengan amount…",
+    "options": [
+      "Lebih dari 100000 dan kurang dari 200000, tanpa batasnya",
+      "Dari 100000 sampai 200000, termasuk kedua batasnya",
+      "Tepat 100000 atau tepat 200000",
+      "Kurang dari 100000 atau lebih dari 200000"
+    ],
+    "answer": 1,
+    "explanation": "BETWEEN selalu menyertakan kedua batas. Kondisi itu sama dengan amount >= 100000 AND amount <= 200000."
+  },
+  {
+    "question": "Kolom amount berisi 100, 200, dan NULL. Berapa hasil AVG(amount)?",
+    "options": [
+      "150, karena NULL diabaikan",
+      "100, karena NULL dihitung sebagai 0",
+      "NULL, karena ada nilai kosong",
+      "Error"
+    ],
+    "answer": 0,
+    "explanation": "Fungsi agregat seperti AVG, SUM, dan COUNT(kolom) mengabaikan NULL. Rata-ratanya dihitung dari 100 dan 200 saja. Kalau NULL seharusnya dianggap 0, ubah dulu dengan COALESCE(amount, 0)."
+  },
+  {
+    "question": "Tabel orders punya kolom order_id, city, dan amount. Query mana yang menghitung jumlah pesanan per kota?",
+    "options": [
+      "SELECT city, COUNT(*) FROM orders;",
+      "SELECT COUNT(city) FROM orders GROUP BY order_id;",
+      "SELECT city, COUNT(*) FROM orders GROUP BY city;",
+      "SELECT city, SUM(order_id) FROM orders GROUP BY city;"
+    ],
+    "answer": 2,
+    "explanation": "GROUP BY city membuat satu kelompok per kota, lalu COUNT(*) menghitung baris di setiap kelompok. Tanpa GROUP BY, query pertama menghasilkan error."
+  },
+  {
+    "question": "Anda ingin menghitung jumlah pesanan per kota, tetapi hanya pesanan di atas 100000. Di mana filter amount > 100000 ditulis?",
+    "options": [
+      "Di HAVING, setelah GROUP BY",
+      "Di ORDER BY",
+      "Di SELECT",
+      "Di WHERE, sebelum GROUP BY"
+    ],
+    "answer": 3,
+    "explanation": "Filter yang berlaku per baris, sebelum data dikelompokkan, ditulis di WHERE. HAVING dipakai untuk memfilter hasil agregat, misalnya kota dengan lebih dari 10 pesanan."
+  },
+  {
+    "question": "Apa arti WHERE city = 'Bandung' OR city = 'Medan' AND amount > 100000?",
+    "options": [
+      "Pesanan dari Bandung atau Medan yang amount-nya di atas 100000",
+      "Semua pesanan dari Bandung, ditambah pesanan dari Medan yang amount-nya di atas 100000",
+      "Hanya pesanan dari Medan",
+      "Query error karena AND dan OR tidak boleh digabung"
+    ],
+    "answer": 1,
+    "explanation": "AND dikerjakan lebih dulu daripada OR. Kalau maksudnya pilihan pertama, tulis dengan kurung: WHERE (city = 'Bandung' OR city = 'Medan') AND amount > 100000."
+  },
+  {
+    "question": "Tanpa kata ASC atau DESC, ORDER BY amount mengurutkan…",
+    "options": [
+      "Dari kecil ke besar",
+      "Dari besar ke kecil",
+      "Secara acak",
+      "Sesuai urutan baris dimasukkan"
+    ],
+    "answer": 0,
+    "explanation": "Urutan bawaan ORDER BY adalah ASC (naik, dari kecil ke besar). Tambahkan DESC untuk mengurutkan dari besar ke kecil."
   }
 ]

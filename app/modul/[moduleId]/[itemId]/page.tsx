@@ -5,6 +5,8 @@ import ExternalLinkCard from "@/components/ExternalLinkCard";
 import ItemPager from "@/components/ItemPager";
 import ItemTypeIcon from "@/components/ItemTypeIcon";
 import Markdown from "@/components/Markdown";
+import Quiz from "@/components/Quiz";
+import { QuizGateProvider } from "@/components/QuizGate";
 import {
   ITEM_TYPE_LABELS,
   MODULES,
@@ -57,7 +59,7 @@ export default async function ItemPage({ params }: Props) {
   // Untuk item dengan tautan, note tampil di kartu tautan, bukan di atas.
   const showNoteAsBody = !markdown && !item.url && item.note;
 
-  return (
+  const content = (
     <article className="mx-auto max-w-3xl">
       <nav aria-label="Breadcrumb" className="mb-5 text-sm text-muted">
         <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -113,7 +115,7 @@ export default async function ItemPage({ params }: Props) {
         </div>
       )}
 
-      {!markdown && (
+      {!markdown && !quiz && (
         <p className="mt-6 rounded-xl border border-dashed border-line px-4 py-3 text-sm text-muted">
           Materi lengkap untuk item ini belum ditulis.
         </p>
@@ -121,15 +123,12 @@ export default async function ItemPage({ params }: Props) {
 
       {item.url && <ExternalLinkCard url={item.url} note={item.note} type={item.type} />}
 
-      {item.type === "quiz" && (
-        <section aria-label="Kuis" className="my-8 rounded-2xl border border-line bg-surface p-5">
-          <h2 className="font-semibold text-text">Kuis</h2>
-          <p className="mt-1 text-sm text-muted">
-            {quiz
-              ? `${quiz.length} soal. Kuis interaktif sedang disiapkan.`
-              : "Soal untuk kuis ini belum ditulis."}
-          </p>
-        </section>
+      {quiz && <Quiz questions={quiz} />}
+
+      {item.type === "quiz" && !quiz && (
+        <p className="my-8 rounded-xl border border-dashed border-line px-4 py-3 text-sm text-muted">
+          Soal untuk kuis ini belum ditulis.
+        </p>
       )}
 
       {item.type === "project" && item.rubric && (
@@ -151,7 +150,10 @@ export default async function ItemPage({ params }: Props) {
         </section>
       )}
 
-      <ItemPager itemId={item.id} />
+      <ItemPager itemId={item.id} gated={Boolean(quiz)} />
     </article>
   );
+
+  // Di halaman kuis, tombol "Berikutnya" terkunci sampai kuis lulus.
+  return quiz ? <QuizGateProvider>{content}</QuizGateProvider> : content;
 }

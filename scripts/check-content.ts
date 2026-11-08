@@ -12,6 +12,7 @@ const QUIZZES_DIR = join(ROOT, "content", "quizzes");
 
 const errors: string[] = [];
 const warnings: string[] = [];
+const QUIZ_BANK_SIZE = 15; // 5 soal per percobaan, cukup untuk 3 percobaan berbeda
 const sectionIndex = new Map(SECTIONS.map((s, i) => [s.id, i]));
 
 // --- Struktur modul dan item -------------------------------------------------
@@ -90,6 +91,9 @@ for (const file of readdirSync(QUIZZES_DIR).filter((f) => f.endsWith(".json"))) 
     }
     if (typeof q?.explanation !== "string" || !q.explanation) errors.push(`${n}: explanation kosong`);
   });
+  if (questions.length < QUIZ_BANK_SIZE) {
+    warnings.push(`${where}: bank soal baru ${questions.length}, target ${QUIZ_BANK_SIZE}`);
+  }
 }
 
 // --- Ringkasan per minggu ------------------------------------------------------

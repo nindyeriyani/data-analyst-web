@@ -134,6 +134,13 @@ Isi materi item ada di `content/items/<itemId>.md`. Kalau file tidak ada, halama
 ]
 ```
 
+- Setiap file adalah bank soal berisi 15 soal (`npm run check:content` memberi peringatan jika kurang). Setiap percobaan memakai 5 soal (`QUESTIONS_PER_ATTEMPT` di `lib/progress-rules.ts`).
+- `answer` adalah indeks pilihan dalam urutan di file. Urutan tampil diacak, jadi jangan menulis pilihan seperti "Semua jawaban di atas".
+
+### Penguncian modul
+
+Sebuah modul terkunci jika ada kuis di modul sebelumnya yang belum lulus dengan nilai sempurna. Modul tanpa kuis tidak menambah syarat. Aturannya ada di `lib/progress-rules.ts` (`isModuleLocked`, `blockingQuizzes`) dan dipasang di halaman item, modul, dashboard, dan jadwal pada tahap 8, setelah status lulus tersimpan. Item di modul yang terkunci menampilkan pesan "Modul ini terbuka setelah {kuis} lulus".
+
 ## Rencana kursus
 
 Mulai Senin, 9 November 2026. Setiap minggu berakhir hari Minggu. Tenggat item = hari Minggu di minggu `week` item tersebut. Minggu 13 adalah minggu ekstra dengan tenggat khusus Selasa, 9 Februari 2027.
@@ -179,7 +186,7 @@ Sidebar kiri berisi daftar semua modul yang bisa dibuka-tutup (modul aktif terbu
 ### Halaman item (`/modul/[moduleId]/[itemId]`)
 Breadcrumb, judul, tipe, durasi, tenggat, isi materi, lalu:
 - `course`: kartu tautan keluar dengan `note`.
-- `quiz`: soal satu per kartu. Jawaban salah ditandai merah dan bisa dicoba lagi, jawaban benar hijau dengan penjelasan. Item otomatis selesai saat semua soal dijawab benar.
+- `quiz`: kartu pembuka dengan tombol "Mulai kuis". Setiap percobaan mengambil 5 soal acak dari bank soal (soal yang belum pernah muncul diutamakan), dengan urutan pilihan diacak. Soal satu per kartu dan hanya bisa dijawab sekali: setelah memilih, kartu terkunci; jawaban salah ditandai merah, jawaban benar ditandai hijau, lalu penjelasan muncul. Nilai lulus 5/5. Jika belum sempurna, tampil nilai dan tombol "Ulangi dengan soal baru". Item otomatis selesai saat kuis lulus. Tombol "Berikutnya" di halaman kuis terkunci sampai lulus.
 - `project`: rubrik berupa kotak centang yang tersimpan, kolom “Tautan hasil kerja” yang tersimpan, dan tombol tandai selesai.
 - `wrap`: pertanyaan refleksi (dari markdown) dan kolom catatan yang tersimpan otomatis.
 - Semua tipe lain: tombol “Tandai selesai” atau “Batalkan selesai”.
@@ -205,7 +212,7 @@ create table public.item_state (
   user_id uuid not null default auth.uid() references auth.users(id) on delete cascade,
   item_id text not null,
   completed_at timestamptz,
-  quiz jsonb not null default '{}'::jsonb,     -- { "0": 2, "1": 0 } indeks soal -> indeks jawaban
+  quiz jsonb not null default '{}'::jsonb,     -- { "questions": [3, 7], "optionOrder": { "3": [2, 0, 1, 3] }, "answers": { "3": 1 }, "seen": [3, 7] }
   rubric jsonb not null default '{}'::jsonb,   -- { "0": true, "3": true }
   note text,
   link text,
@@ -286,7 +293,7 @@ Centang setiap tahap yang selesai.
 - [x] 1. Inisialisasi Next.js + TypeScript + Tailwind, font, CSS variables dan dark mode, header, deploy pertama ke Vercel.
 - [x] 2. Model konten: `course.ts` dengan semua modul dan item, `lib/schedule.ts`, beberapa file materi dan kuis contoh.
 - [x] 3. Halaman item: render markdown, callout, tombol salin data csv, kartu tautan keluar.
-- [ ] 4. Komponen kuis.
+- [x] 4. Komponen kuis.
 - [ ] 5. Halaman modul dengan sidebar.
 - [ ] 6. Dashboard lengkap.
 - [ ] 7. Jadwal, glosarium, sumber.
