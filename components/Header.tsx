@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import UserAvatar from "@/components/UserAvatar";
-import { HeaderSubtitle, SyncStatus } from "./HeaderStatus";
+import { HeaderSubtitle } from "./HeaderStatus";
 import Logo from "./Logo";
 import { NavLinks, NavList } from "./NavLinks";
 
@@ -25,8 +25,7 @@ export default function Header() {
           </Suspense>
         </nav>
 
-        <div className="ml-auto flex items-center gap-4 md:ml-2">
-          <SyncStatus />
+        <div className="ml-auto md:ml-2">
           <UserAvatar />
         </div>
       </div>

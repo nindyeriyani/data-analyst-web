@@ -19,22 +19,3 @@ export function HeaderSubtitle() {
     </>
   );
 }
-
-/** Penanda sinkronisasi dengan Supabase. */
-export function SyncStatus() {
-  const { ready, saving, loadError } = useProgress();
-  const state = loadError
-    ? { dot: "bg-late", label: "Tidak tersambung" }
-    : !ready
-      ? { dot: "bg-muted/50", label: "Memuat…" }
-      : saving
-        ? { dot: "bg-primary animate-pulse", label: "Menyimpan…" }
-        : { dot: "bg-muted", label: "Tersimpan" };
-
-  return (
-    <p role="status" className="hidden items-center gap-2 text-sm text-muted sm:flex">
-      <span aria-hidden="true" className={`size-2 rounded-full ${state.dot}`} />
-      {state.label}
-    </p>
-  );
-}
