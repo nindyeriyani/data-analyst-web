@@ -10,7 +10,7 @@ export default function Header() {
       <div className="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4 sm:px-6">
         <Link
           href="/"
-          className="flex items-center gap-2 font-semibold text-text"
+          className="-my-2 flex items-center gap-2 py-2 font-semibold text-text"
         >
           <Logo />
           <span>Kursus Data Analyst</span>

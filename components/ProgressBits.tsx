@@ -38,21 +38,24 @@ export function ItemCheckbox({ item }: { item: ItemRef }) {
   const isQuiz = item.type === "quiz";
 
   return (
-    <input
-      type="checkbox"
-      checked={done}
-      disabled={isQuiz || !ready || locked}
-      onChange={(e) => setCompleted(item.id, e.target.checked)}
-      aria-label={`${done ? "Selesai" : "Tandai selesai"}: ${item.title}${locked ? " (modul terkunci)" : ""}`}
-      title={
-        locked
-          ? "Modul ini masih terkunci"
-          : isQuiz
-            ? "Selesai otomatis saat kuis lulus dengan nilai sempurna"
-            : undefined
-      }
-      className="size-5 shrink-0 cursor-pointer accent-[var(--done)] disabled:cursor-not-allowed"
-    />
+    // Label membesarkan area sentuh menjadi 44px di HP tanpa menggeser tata letak.
+    <label className="-m-3 flex shrink-0 cursor-pointer items-center justify-center p-3 has-disabled:cursor-not-allowed">
+      <input
+        type="checkbox"
+        checked={done}
+        disabled={isQuiz || !ready || locked}
+        onChange={(e) => setCompleted(item.id, e.target.checked)}
+        aria-label={`${done ? "Selesai" : "Tandai selesai"}: ${item.title}${locked ? " (modul terkunci)" : ""}`}
+        title={
+          locked
+            ? "Modul ini masih terkunci"
+            : isQuiz
+              ? "Selesai otomatis saat kuis lulus dengan nilai sempurna"
+              : undefined
+        }
+        className="size-5 shrink-0 cursor-pointer accent-[var(--done)] disabled:cursor-not-allowed"
+      />
+    </label>
   );
 }
 

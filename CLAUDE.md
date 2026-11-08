@@ -235,11 +235,13 @@ alter table public.item_state enable row level security;
 alter table public.settings enable row level security;
 
 create policy "own item_state" on public.item_state
-  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+  for all using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
 
 create policy "own settings" on public.settings
-  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+  for all using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
 ```
+
+Migrasi: `0001_init.sql` (skema awal), `0002_rls_select_uid.sql` (policy memakai `(select auth.uid())` untuk performa). Setiap perubahan skema berikutnya dibuat sebagai file migrasi baru dengan nomor berurutan.
 
 ### Akses satu pengguna
 

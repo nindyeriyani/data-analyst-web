@@ -61,7 +61,7 @@ export default function SchedulePage() {
                         <Link
                           key={mod.id}
                           href={`/modul/${mod.id}`}
-                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold text-on-phase ${PHASE_BG[mod.phase]} hover:opacity-90`}
+                          className={`inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold text-on-phase ${PHASE_BG[mod.phase]} hover:opacity-90`}
                         >
                           {n === null ? "Ekstra" : `Modul ${n}`} · {mod.title}
                         </Link>

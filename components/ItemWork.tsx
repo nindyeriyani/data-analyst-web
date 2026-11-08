@@ -170,7 +170,7 @@ export function ReflectionNote({ itemId }: { itemId: string }) {
         </label>
         <SaveIndicator status={status} />
       </div>
-      <p className="mt-1 text-sm text-muted">Tersimpan otomatis. Jawab pertanyaan refleksi di atas dengan kata-kata sendiri.</p>
+      <p className="mt-1 text-sm text-muted">Tersimpan otomatis saat Anda mengetik. Tulis dengan kata-kata sendiri.</p>
       <textarea
         id={inputId}
         value={draft ?? saved}

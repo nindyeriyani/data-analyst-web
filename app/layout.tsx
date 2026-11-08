@@ -21,11 +21,14 @@ export const metadata: Metadata = {
   },
   description: "Pelacak belajar 12 minggu menjadi data analyst.",
   robots: { index: false, follow: false },
+  appleWebApp: { capable: true, title: "Kursus DA", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {
   themeColor: "#F3F6F6",
   colorScheme: "light",
+  // Konten boleh memakai area notch; jaraknya diatur dengan env(safe-area-inset-*).
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

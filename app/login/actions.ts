@@ -10,6 +10,8 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 export interface LoginState {
   status: "idle" | "sent" | "error";
   message?: string;
+  email?: string; // untuk tombol "Kirim ulang"
+  sentAt?: number; // waktu kirim (ms), untuk hitung mundur
 }
 
 const SENT_MESSAGE =
@@ -27,7 +29,7 @@ export async function sendMagicLink(_prev: LoginState, formData: FormData): Prom
 
   // Email selain pemilik tidak pernah dikirimi tautan, tetapi pesannya dibuat sama
   // agar halaman ini tidak membocorkan email mana yang terdaftar.
-  if (email !== allowedEmail()) return { status: "sent", message: SENT_MESSAGE };
+  if (email !== allowedEmail()) return { status: "sent", message: SENT_MESSAGE, email, sentAt: Date.now() };
 
   const origin = (await headers()).get("origin");
   if (!origin) return { status: "error", message: "Tidak bisa menentukan alamat situs. Muat ulang halaman lalu coba lagi." };
@@ -54,11 +56,11 @@ export async function sendMagicLink(_prev: LoginState, formData: FormData): Prom
     return {
       status: "error",
       message: tooMany
-        ? "Terlalu banyak permintaan. Tunggu sekitar satu menit lalu coba lagi."
+        ? "Batas pengiriman email tercapai. Tautan di email terakhir Anda masih bisa dipakai. Jika perlu tautan baru, tunggu sekitar satu menit (atau lebih lama jika sudah beberapa kali dalam satu jam), lalu coba lagi."
         : "Gagal mengirim tautan. Periksa koneksi lalu coba lagi.",
     };
   }
-  return { status: "sent", message: SENT_MESSAGE };
+  return { status: "sent", message: SENT_MESSAGE, email, sentAt: Date.now() };
 }
 
 export async function signOut() {
