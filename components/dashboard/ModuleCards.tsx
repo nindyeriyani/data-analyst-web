@@ -1,11 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { hoursPerWeek } from "@/components/HeaderStatus";
 import { PHASE_BG, PHASE_GRADIENT, PHASE_TEXT } from "@/components/phase-styles";
 import { useProgress } from "@/components/ProgressProvider";
 import { MODULES, PHASES, moduleMinutes, moduleNumber, type Module, type PhaseId } from "@/content/course";
-import { MODULE_STATUS_LABELS, moduleProgress, moduleStatus, type ModuleStatus } from "@/lib/progress-rules";
+import {
+  MODULE_STATUS_LABELS,
+  hoursPerWeek,
+  moduleProgress,
+  moduleStatus,
+  type ModuleStatus,
+} from "@/lib/progress-rules";
 import {
   DEFAULT_TOTAL_WEEKS,
   calendarWeekSpan,

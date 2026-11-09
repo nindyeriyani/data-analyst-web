@@ -174,7 +174,7 @@ Sumber belajar utama (semua gratis): Kaggle Learn, SQLBolt, BigQuery sandbox, Go
 ## Halaman dan fitur
 
 ### Header (semua halaman)
-Logo dan judul “Data Analyst” dengan baris kecil “Kursus pribadi · n minggu · ≈x jam/minggu”, navigasi Dashboard, Jadwal, Glosarium, Sumber (menu aktif berlatar pil), lalu foto atau inisial nama pengguna. Di layar kecil, navigasi pindah ke bar bawah.
+Logo dan judul “Data Analyst”, navigasi Dashboard, Jadwal, Glosarium, Sumber (menu aktif berlatar pil), lalu foto atau inisial nama pengguna. Di layar kecil, navigasi pindah ke bar bawah.
 
 ### Dashboard (`/`)
 1. Hero berlatar biru tipis: baris kecil (“Mulai Sen, 9 Nov” atau “Minggu n dari m”), sapaan “Halo, {nama}”, kalimat status (dan tautan “Atur jadwal” selama jadwal masih bawaan), tombol pil “Lanjutkan: {item berikutnya}” (item pertama yang belum selesai, urut tenggat) dan “Lihat jadwal”, serta ilustrasi alur data di kanan (disembunyikan di HP).

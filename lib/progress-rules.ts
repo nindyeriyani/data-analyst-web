@@ -158,3 +158,9 @@ export function badges(completed: ReadonlySet<string>): Badge[] {
     itemBadge("firstApplication", "Lamaran pertama"),
   ];
 }
+
+/** Beban belajar per minggu, dibulatkan ke 0,5 jam: "4,5". */
+export function hoursPerWeek(totalWeeks: number): string {
+  const hours = Math.round((sumMinutes(COURSE_ITEMS) / 60 / totalWeeks) * 2) / 2;
+  return String(hours).replace(".", ",");
+}
